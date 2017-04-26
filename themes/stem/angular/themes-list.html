@@ -1,0 +1,33 @@
+<h1 class="page-header">Themes</h1>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Name</th>
+	  <th>Status</th>
+	  <th>Info</th>
+	  <th>Actions</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in theme">
+	  <td>{{ item.name }}</td>
+	  <td><span ng-if="item.active">Active</span></td>
+	  <td>{{ item.description }}<br/>
+		<em>Dependencies:
+		<span ng-if="item.dependency.dependencies | isOfSize : 0">None</span>
+		<span ng-repeat="dep in item.dependency.dependencies">
+		{{ dep.name }} - {{ dep.collection }}
+		<span class="coontiDependencyOk" ng-if="dep.satisfied">[Ok]</span><span class="coontiDependencyNotOk" ng-if="!dep.satisfied">[Not Ok]</span>{{$last ? '' : ', '}}
+		</span>
+		</em><br/>
+		Version {{ item.version }} |
+		Author <a ng-if="item.authorUrl" href="{{ item.authorUrl }}" target="_blank">{{ item.author }}</a><span ng-if="!item.authorUrl">{{ item.author }}</span>
+		<span ng-if="item.moduleUrl"> | <a href="{{ item.themeUrl }}" target="_blank">View Theme Site</a></span>
+	  </td>
+	  <td>
+		<a href="#/themes/config/{{ item.name }}">Configure</a> |
+		<a ng-if="item.active" ng-click="deactivate(item)">Deactivate</a><a ng-if="!item.active" ng-click="activate(item)">Activate</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>

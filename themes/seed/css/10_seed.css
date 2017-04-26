@@ -1,0 +1,164 @@
+body {
+    font: 14px helvetica, sans-serif;
+    padding: 20px;
+    line-height: 1.5em;
+}
+
+section {
+    padding-bottom: 1em;
+}
+
+h1 {
+    font-size: 2em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+label {
+    display: block;
+    width: 260px;
+    float: left;
+}
+
+input, select {
+    margin-left: 280px;
+    display: block;
+}
+
+input {
+    border: 1px solid #333;
+    padding: 2px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    margin-left: 280px;
+}
+
+label.formElementRequired {
+    font-weight: bold;
+}
+
+label.formElementRequired:after {
+    content: " *";
+}
+
+.coontiFormElement {
+    clear: left;
+    display: block;
+    padding-bottom: 20px;
+}
+
+.coontiFormElement .formElementError {
+    border: 1px solid #f05c25;
+    background-color: #ffc7b2;
+}
+
+.coontiFormElement .formError {
+    display: block;
+    margin-left: 280px;
+    margin-top: 0.25em;
+    color: #f05c25;
+    font-weight: bold;
+    width: 258px;
+    font-size: 12px;
+}
+
+input.coontiFormElement-text,
+input.coontiFormElement-email,
+input.coontiFormElement-password {
+    width: 258px;
+}
+
+input.coontiFormElement-submit {
+    padding: 5px 10px;
+}
+
+body.initial #content {
+    color: #fff;
+}
+
+body.initial #content a {
+    color: #fff;
+}
+
+#installWrapper, #installStarter {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    padding: 1px;
+    top: 50px;
+}
+
+body.initial #installWrapper {
+    display: none;
+}
+
+#installWrapper {
+    border: 10px solid #fff;
+    width: 600px;
+}
+
+#installBorder {
+    background-color: #fff;
+    color: #000;
+    padding: 20px;
+}
+
+body.initial #installStarter {
+    text-align: center;
+    font-size: 3.4em;
+    font-weight: 100;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+body.rest #installStarter {
+    display: none;
+}
+
+body.initial #coontiLogoWhite {
+    display: block;
+    padding-top: 20px;
+    margin: 0 auto;
+}
+
+body.initial #letsStart {
+    display: block;
+    margin-top: 2em;
+    text-decoration: none;
+}
+
+body.rest #letsStart {
+    display: none;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #ccc;
+}
+
+#content #footer a {
+    color: #ccc;
+}
+
+#imageCredits {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+#coontiVersion {
+    text-align: right;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}

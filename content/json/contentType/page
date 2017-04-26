@@ -1,0 +1,29 @@
+{
+        "name": "page",
+        "displayName": "Page",
+        "description": "Normal web page",
+        "fields": {
+                "title": {
+                        "name": "Page title",
+                        "type": "text",
+                        "width": 250,
+                        "default": false,
+                        "description": "Page title will be shown at the browser title bar and also as the first heading on the page.",
+                        "json": true
+                },
+                "body": {
+                        "name": "Page content",
+                        "type": "wysiwyg",
+                        "default": false,
+                        "description": "Page content contains the texts and images for the page.",
+                        "json": true
+                },
+                "image": {
+                        "name": "Top image",
+                        "type": "image",
+                        "default": false,
+                        "description": "If an image is set, it will be shown on top of the page.",
+                        "json": false
+                }
+        }
+}

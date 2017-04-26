@@ -1,0 +1,11 @@
+{% contentType ['forms/formElement/*', 'forms/formElement/text', 'forms/formElement/integer', 'forms/formElement/email'] %}
+<span class="coontiFormElement coontiFormElement-{{ coontiFormElement.get('type') }}" id="coontiFormElement-{{ coontiFormElement.get('id') }}">
+{% if coontiFormElement.has('label') %}<label for="{{ coontiFormElement.get('id') }}" class="coontiLabel{% if coontiFormElement.has('required') %} formElementRequired{% endif %}">{{ coontiFormElement.get('label') }}</label>{% endif %}
+{% set coontiInputType=coontiFormElement.get('type') %}
+<input class="coontiFormElement-{{ coontiInputType }}{% if coontiFormElement.has('required') %} formElementRequired{% endif %}{% if coontiFormElement.has('errors') %} formElementError{% endif %}" id="{{ coontiFormElement.get('id') }}" type="{{ coontiInputType }}" name="{{ coontiFormElement.get('name') }}"{% if coontiInputType=='checkbox' %}{% if coontiFormElement.get('value') == true %} checked="checked"{% endif %}{% else %} value="{{ coontiFormElement.get('value') }}{% endif %}"/>
+{% if coontiFormElement.has('errors') %}<span class="formError">
+{% for err in coontiFormElement.get('errors') %}
+  {{ err }}<br/>
+{% endfor %}
+</span>{% endif %}
+</span>

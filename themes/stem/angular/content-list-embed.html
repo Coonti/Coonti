@@ -1,0 +1,24 @@
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr class="coontiSelectedSort_{{ content.pagination.sort }}">
+	  <th><coonti-sort-link-embed sort-data="content.pagination" href="#/content/" title="Title" key="content.title"/></th>
+	  <th><coonti-sort-link-embed sort-data="content.pagination" href="#/content/" title="Type" key="contentType"/></th>
+	  <th><coonti-sort-link-embed sort-data="content.pagination" href="#/content/" title="Path" key="path"/></th>
+	  <th><coonti-sort-link-embed sort-data="content.pagination" href="#/content/" title="Modified" key="mtime"/></th>
+	  <th></th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in content.items">
+	  <td>{{ item.content.title }}</td>
+	  <td>{{ item.contentType }}</td>
+	  <td>/{{ item.path }}</td>
+	  <td>{{ item.mtime | date : 'MMM d, yyyy H.mm' }}</td>
+	  <td>
+		<a ng-click="onContentAction(item)">{{ contentAction }}</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>
+
+<coonti-pagination sort-data="content.pagination" embed="true" page="content" href="#/content/"></coonti-pagination>

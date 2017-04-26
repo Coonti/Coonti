@@ -1,0 +1,46 @@
+{% if content.image %}
+  {% set pageId='coontiImagePage' %}
+{% endif %}
+{% include 'include/header.twig' %}
+{% contentType "Page" %}
+{% if content.image %}
+<section id="contentImagePage">
+    <div id="frontPageMenu">
+    	<div id="frontPageBackgrounds">
+	    <div id="contentImageBackground" style="background-image: url('{{ content.image }}');">
+	    </div>
+	</div>
+    	<div id="coontiLogo"><a href="/"><img src="/media/_/leaf/img/coonti-grey.png" alt="Coonti"/></a></div>
+	<div id="frontMenu"> 
+            <div class="frontMenuItemStatic">
+      	        <span class="contentImageTitle">{{ content.title }}</span>
+                <span class="frontMenuItemIngress">{{ content.ingress }}</span>
+            </div>
+	</div>
+    </div>
+</section>
+{% else %}
+<section id="contentNoImagePage">
+    <div id="frontPageMenu">
+    	<div id="coontiLogo"><a href="/"><img src="/media/_/leaf/img/coonti-grey-darker.png" alt="Coonti"/></a></div>
+	<div id="frontMenu"> 
+            <div class="frontMenuItemStatic">
+      	        <span class="contentImageTitle">{{ content.title }}</span>
+                <span class="frontMenuItemIngress">{{ content.ingress }}</span>
+            </div>
+	</div>
+    </div>
+</section>
+{% endif %}
+
+<section id="pageContent">
+    <div id="contentArea">
+        {{ content.body }}
+<!-- ##TODO## Add to documentation and remove here
+     	{% getContent about from 'mongo:page' %}
+        <img src="{% media 'uploads/test.jpg' resize 100x100 scale middle center %}"/>
+-->
+    </div>
+</section>
+
+{% include 'include/footer.twig' %}

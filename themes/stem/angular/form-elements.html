@@ -1,0 +1,94 @@
+<div id="{{ form.name }}-wrapper">
+  <form id="{{ form.name }}">
+    <div class="coontiNgFormElement row" ng-repeat="field in form.fields |filter:{skip:'!yes'}">
+	  <div ng-if="field.formElement.type=='text'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <input id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" type="text" ng-model="field.value"/>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='password'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <input name="{{ field.name }}" type="password" ng-model="field.value""/>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='display'">
+	    <div class="col-sm-12">{{ field.value }}</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='integer'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <input name="{{ field.name }}" type="text" ng-model="field.value"/>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='email'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <input name="{{ field.name }}" type="text"  ng-model="field.value"/>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='textarea'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <textarea id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" ng-model="field.value"></textarea>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='wysiwyg'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <div text-angular ng-model="field.value"></div>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='image'">
+		<div class="col-sm-2">
+		  <label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label>
+		</div>
+		<div class="col-sm-10">
+		  <!--		  <input id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" type="text" ng-model="field.value"/>-->
+		  <div ng-if="field.value">
+			<img src="{{ field.value_thumbnail }}"/><br/>
+			{{ field.value }} <button ng-click="field.value = ''">Remove</button>
+		  </div>
+		  <div ng-if="!field.value">
+			Please select image.
+		  </div>
+		  <coonti-select-image></coonti-select-image>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='checkbox'">
+		<div class="col-sm-2">
+		</div>
+		<div class="col-sm-10">
+		  <input name="{{ field.name }}" type="checkbox"/>
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='select'">
+		<div class="col-sm-2">
+		</div>
+		<div class="col-sm-10">
+		  ##TODO##
+		</div>
+	  </div>
+	  <div ng-if="field.formElement.type=='submit'">
+		<div class="col-sm-2">
+		</div>
+		<div class="col-sm-10">
+		  <input name="{{ field.name }}" type="submit" value="{{ field.value }}"/>
+		</div>
+	  </div>
+	</div>
+  </form>
+</div>

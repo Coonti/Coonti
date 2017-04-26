@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>{{ content.title }}</title>
+{% js %}
+{% css %}
+</head>
+
+<body{% if pageId %} id="{{ pageId }}"{% endif %}>
+  <section id="leafHeader">
+    <div class="menuRight">
+      <button class="c-hamburger c-hamburger--htx">
+        <span>Toggle Menu</span>
+	  </button>
+
+	  <div class="menuContainer">
+	    <div class="menuContent">
+		  {% menu mainMenu from 'Main menu' %}
+		  {% for menuItem in mainMenu.menuItems %}
+		  <a href="{{ menuItem.url }}">{{ menuItem.title }}</a>
+		  {% endfor %}
+		</div>
+	  </div>
+	</div>
+  </section>

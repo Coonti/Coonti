@@ -1,0 +1,42 @@
+{
+	"name": "Leaf",
+	"description": "Coonti default user interface theme.",
+	"author": "Coonti Project",
+	"authorUrl": "http://coonti.org",
+	"version": "0.1.0",
+	"themeUrl": "http://coonti.org",
+	"themeIcon": "img/leaf-icon.png",
+	"themeScreenshot": "img/leaf-screenshot.jpg",
+	"clientAccess": true,
+	"clientDenyList": [
+		"page.twig",
+		"includes/*"
+	],
+	"staticCollections": {
+		"js": {
+			"path": "js",
+			"contentType": "text/javascript",
+			"load": ["^js/.+.js$"],
+			"directories": ["coonti/assets/js"]
+		},
+		"css": {
+			"path": "css",
+			"load": ["^css/.+.css$", "^root.css$"],
+			"contentType": "text/css"
+		},
+		"twig": {
+			"path": "twig",
+			"contentType": "text/javascript"
+		}
+	},
+	"mediaDirectories": {
+		"img": "img"
+	},
+	"dependencies": [
+		{
+			"collection": "module",
+			"name": "MenuManager",
+			"states": "started"
+		}
+	]
+}

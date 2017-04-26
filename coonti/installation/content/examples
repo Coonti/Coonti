@@ -1,0 +1,12 @@
+{
+	"contentType": "installPage",
+	"template": "installPage",
+	"path": "examples",
+	"content": {
+		"title": "Coonti Installation - Content",
+		"heading": "Install Default Users or Demo Content?",
+		"body": "<p>Do you want to install default user roles and groups or demo content?</p><p>The user roles and groups define the most commonly used user roles for managing a site.</p></p>The content includes a fully functional demo site with a few pages and a couple of content types.</p>",
+		"form": "installation/dbContent",
+		"afterForm": ""
+	}
+}

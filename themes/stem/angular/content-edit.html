@@ -1,0 +1,20 @@
+<h1 class="page-header">Edit Content '{{ content.content.title }}'</h1>
+<p>ContentType: {{ content.contentType }}</p>
+<div class="coontiNgFormElement row">
+  <div class="col-sm-2">
+	<label for="path">Content Path</label>
+  </div>
+  <div class="col-sm-10" ng-hide="contentType.contentType.config.path.from">
+	/<input id="path" name="path" type="text" ng-model="content.path"/>
+  </div>
+  <div class="col-sm-6" ng-hide="!contentType.contentType.config.path.from">
+	<span editable-text="content.path" e-name="pathName" e-form="pathForm" onaftersave="pathModified()">/{{ content.path }}</span>
+	<p class="inputNote small" ng-hide="pathForm.$visible || !content.pathEdited">Modified by user.</p>
+  </div>
+  <div class="col-sm-4" ng-hide="!contentType.contentType.config.path.from">
+	<button ng-click="pathForm.$show()" ng-hide="pathForm.$visible">Edit</button>
+	<button ng-click="resetPath()" ng-hide="pathForm.$visible || !content.pathEdited">Reset</button>
+  </div>
+</div>
+<coonti-form form-name="contentType/{{ content.contentType }}" form-data="content.content" form-options="{skipTypes:['submit']}"></coonti-form>
+<p><button ng-click="submit()">Save</button> <button back>Cancel</button></p>

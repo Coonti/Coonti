@@ -1,0 +1,55 @@
+<h1 class="page-header">Insert Link</h1>
+
+<div class="row formRow">
+  <div class="col-sm-2">
+	<label for="title">Title</label>
+  </div>
+  <div class="col-sm-10">
+	<input ng-model="link.title" name="title"/>
+  </div>
+</div>
+<div class="row formRow">
+  <div class="col-sm-2">
+	<label for="anchor">Anchor</label>
+  </div>
+  <div class="col-sm-10">
+	<input ng-model="link.anchor" name="anchor"/>
+  </div>
+</div>
+<div class="row formRow">
+  <div class="col-sm-2">
+	<label for="title">Target</label>
+  </div>
+  <div class="col-sm-10">
+	<select ng-model="link.target" name="target"/>
+	  <option value="">Normal</option>
+	  <option value="_blank">New window / tab (_blank)</option>
+	  <option value="_top">Whole window / tab (_top</option>
+	</select>
+  </div>
+</div>
+
+
+<uib-tabset>
+  <uib-tab heading="Coonti">
+    <coonti-content></coonti-content>
+  </uib-tab>
+  <uib-tab heading="External">
+    <div id="wysiwygExternalLink" class="row">
+	  <div class="col-sm-2">
+		<label for="url">Address</label>
+	  </div>
+	  <div class="col-sm-8">
+		<input ng-model="link.url" name="url"/>
+	  </div>
+	  <div class="col-sm-2">
+		<button ng-click="insertExternalUrl()">Insert</button>
+	  </div>
+	</div>
+  </uib-tab>
+  <uib-tab heading="Media">
+    <coonti-media></coonti-media>
+  </uib-tab>
+</uib-tabset>
+
+<p><button modalclose>Cancel</button></p>

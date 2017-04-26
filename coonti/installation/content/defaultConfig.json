@@ -1,0 +1,129 @@
+{
+	"config": "coontiConfiguration",
+	"coontiMode": "development",
+	"adminPath": "admin",
+	"httpPort": "8080",
+	"httpsPort": "0",
+	"pathPrefix": "",
+	"cookieKey": "ratiritiralla",
+	"session": {
+		"key": "coontiSession",
+		"cookiePath": "coonti"
+	},
+	"userManager": {
+		"database": "mongo",
+		"collection": "users"
+	},
+	"databases": [
+		{ 
+			"name": "mongo",
+			"type": "mongodb",
+			"url": "127.0.0.1:27017/coonti"
+		},
+		{
+			"name": "file",
+			"type": "file",
+			"dir": "content/json",
+			"encoding": "utf-8"
+		}
+	],
+	"media": {
+		"path": "media",
+		"cacheDirectory": "content/cache",
+		"iconDefinition": "128x128scm",
+		"directories": {
+			"uploads": {
+				"path": "content/media",
+				"type": "content"
+			},
+			"coonti": {
+				"path": "coonti/assets/images",
+				"type": "theme"
+			}
+		}
+	},
+	"forms": {
+		"path": "_/form",
+		"jsTemplates": "_/formtemplates"
+	},
+	"themes": [
+		{
+			"name": "Stem",
+			"active": true,
+			"routes": [
+				"/admin"
+			],
+			"staticCollections": {
+				"js": { "path": "js", "contentType": "text/javascript", "directories": [ "coonti/assets/js", "coonti/assets/admin_js" ] },
+				"css": { "path": "css", "contentType": "text/css" },
+				"twig": { "path": "twig", "contentType": "text/javascript" },
+				"angular": { "path": "angular", "contentType": "text/html" }
+			}
+		},
+		{
+			"name": "Leaf",
+			"active": true,
+			"staticCollections": {
+				"js": { "path": "js", "contentType": "text/javascript", "directories": [ "coonti/assets/js" ] },
+				"css": { "path": "css", "contentType": "text/css" },
+				"twig": { "path": "twig", "contentType": "text/javascript" }
+			}
+		}
+	],
+	"executionPaths": {
+		"json": [
+			{ "name": "cookies", "priority": 800 },
+			{ "name": "session", "priority": 700 },
+			{ "name": "route", "priority": 600 },
+			{ "name": "access", "priority": 500 },
+			{ "name": "form", "priority": 400 },
+			{ "name": "content", "priority": 300 },
+			{ "name": "json", "priority": 200 },
+			{ "name": "end", "priority": 100 }
+		],
+		"default": [
+			{ "name": "cookies", "priority": 800 },
+			{ "name": "session", "priority": 700 },
+			{ "name": "route", "priority": 600 },
+			{ "name": "access", "priority": 500 },
+			{ "name": "form", "priority": 400 },
+			{ "name": "content", "priority": 300 },
+			{ "name": "template", "priority": 200 },
+			{ "name": "end", "priority": 100 }
+		]
+	},
+	"modules": {
+		"path": "_/module",
+		"modulePath": [ "coonti/modules", "modules" ],
+		"moduleConfig": {
+			"CoontiAdmin": 
+			{ "name": "CoontiAdmin", "initialise": true, "start": true },
+			"MongoConnect":
+			{ "name": "MongoConnect", "initialise": true, "start": true },
+			"FileConnect":
+			{ "name": "FileConnect", "initialise": false, "start": false },
+			"MongoContent":
+			{ "name": "MongoContent", "initialise": true, "start": true, "config": 
+			  { 
+				  "handlerName": "mongo", 
+				  "database": "mongo", 
+				  "contentCollection": "content", 
+				  "contentTypeCollection": "contentType",
+				  "default": true
+			  } 
+			},
+			"FileContent":
+			{ "name": "FileContent", "initialise": false, "start": false, "config": 
+			  { 
+				  "handlerName": "file", 
+				  "database": "file", 
+				  "contentCollection": "content", 
+				  "contentTypeCollection": "contentType",
+				  "default": false 
+			  } 
+			},
+			"MenuManager":
+			{ "name": "MenuManager", "initialise": true, "start": true }
+		}
+	}
+}

@@ -1,0 +1,4 @@
+content/cache/**
+jsdoc/**
+logs/**
+node_modules/**

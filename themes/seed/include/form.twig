@@ -1,0 +1,10 @@
+{% contentType ['forms/form'] %}
+<form method="post" name="{{ coontiForm.getName }}" action="{{ coontiForm.getHandler }}">
+<input type="hidden" name="coontiFormId" value="{{ coontiForm.getId }}"/>
+{% if coontiForm.getMessage %}
+  <div class="coontiFormMessage">{{ coontiForm.getMessage }}</div>
+{% endif %}
+{% for element in coontiForm.getFields %}
+{% formElement element.get('name') %}
+{% endfor %}
+</form>

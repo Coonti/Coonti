@@ -1,0 +1,53 @@
+<h1 class="page-header">Media</h1>
+
+<div ng-if="!(media.directories | isOfSize : 1)">
+  <label for="mediaDir">Select Media Directory</label>
+  <select id="mediaDir" ng-model="media.dir" ng-options="k as k for (k, v) in media.directories">
+  </select>
+</div>
+
+<button ng-click="uploadShowing = !uploadShowing">Upload</button>
+
+<div class="modal" ng-show="uploadShowing">
+  <div class="modal-dialog modal-lg">
+    <div class="coontiFileUpload modal-content">
+      <div class="modal-body coontiFileUploadContent" ngf-drop ng-model="files" ngf-select ngf-drop-available="dropSupported" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="false">
+	    <div class="text-center">
+	      <h1>Click to select files to upload<span ng-if="dropSupported"><br/>or<br/>drag files here</span>.</h1>
+	      <button ng-click="uploadShowing = !uploadShowing" stop-event="click">Cancel</button>
+	    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr class="coontiSelectedSort_{{ media.pagination.sort }}">
+	  <th>Thumbnail</th>
+	  <th><coonti-sort-link sort-data="media.pagination" href="#/media/{{ media.dir }}/" title="Name" key="name"/></th>
+	  <th><coonti-sort-link sort-data="media.pagination" href="#/media/{{ media.dir }}/" title="Type" key="type"/></th>
+	  <th><coonti-sort-link sort-data="media.pagination" href="#/media/{{ media.dir }}/" title="Size" key="size"/></th>
+	  <th><coonti-sort-link sort-data="media.pagination" href="#/media/{{ media.dir }}/" title="Modified" key="mtime"/></th>
+	  <th>Actions</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="file in media.items">
+	  <td class="center">
+		<a href="{{ media.path }}{{ media.dir }}/{{ file.name }}" target="_blank"><img class="coontiThumbnail" ng-attr-src="{{ media.path }}{{ file.thumbnail }}"/></a>
+	  </td>
+	  <td><a href="{{ media.path }}{{ media.dir }}/{{ file.name }}" target="_blank">{{ file.name }}</a></td>
+	  <td>{{ file.type }}</td>
+	  <td>{{ file.size }}</td>
+	  <td>{{ file.mtime | date : 'MMM d, yyyy H.mm' }}</td>
+	  <td>
+		<a ng-click="move(media.dir, file)" href="">Move</a>
+		<a ng-click="remove(media.dir, file)" href="">Remove</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>
+
+<coonti-pagination page="media" href="#/media/{{ media.dir }}/"/>
+

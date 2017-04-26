@@ -1,0 +1,37 @@
+{
+	"name": "installPage",
+	"displayName": "Installation Page",
+	"description": "Page Content Type used by installation wizard",
+	"fields": {
+		"title": {
+			"name": "Page title",
+			"type": "text",
+			"width": 250,
+			"default": false,
+			"description": "Page title will be shown at the browser title bar.",
+			"json": false
+		},
+		"heading": {
+			"name": "Page heading",
+			"type": "text",
+			"width": 250,
+			"default": false,
+			"description": "Page heading will be shown on top of the page.",
+			"json": false
+		},
+		"body": {
+			"name": "Page content",
+			"type": "wysiwyg",
+			"default": false,
+			"description": "Page content contains the texts and images for the page.",
+			"json": false
+		},
+		"image": {
+			"name": "Top image",
+			"type": "image",
+			"default": false,
+			"description": "If an image is set, it will be shown on top of the page.",
+			"json": false
+		}
+	}
+}

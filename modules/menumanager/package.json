@@ -1,0 +1,25 @@
+{
+	"info": {
+		"name": "MenuManager",
+		"description": "Provides menus.",
+		"author": "Coonti Project",
+		"authorUrl": "http://coonti.org",
+		"version": "0.1.0",
+		"moduleUrl": "http://coonti.org",
+		"dependencies": [
+			{
+				"collection": "module",
+				"name": "MongoConnect",
+				"states": "started"
+			},
+			{
+				"collection": "module",
+				"name": "CoontiAdmin",
+				"states": "started"
+			}
+		]
+	},
+	"module": "menumanager.js",
+	"config": {
+	}
+}

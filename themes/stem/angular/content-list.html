@@ -1,0 +1,30 @@
+<h1 class="page-header">Content</h1>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr class="coontiSelectedSort_{{ content.pagination.sort }}">
+	  <th><coonti-sort-link sort-data="content.pagination" href="#/content/" title="Title" key="content.title"/></th>
+	  <th><coonti-sort-link sort-data="content.pagination" href="#/content/" title="Type" key="contentType"/></th>
+	  <th><coonti-sort-link sort-data="content.pagination" href="#/content/" title="Path" key="path"/></th>
+	  <th><coonti-sort-link sort-data="content.pagination" href="#/content/" title="Modified" key="mtime"/></th>
+	  <th>Actions</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in content.items">
+	  <td>{{ item.content.title }}</td>
+	  <td>{{ item.contentType }}</td>
+	  <td>/{{ item.path }}</td>
+	  <td>{{ item.mtime | date : 'MMM d, yyyy H.mm' }}</td>
+	  <td>
+		<a href="/{{ item.path }}">View</a>
+		<a href="#/content/edit/{{ item._id }}">Edit</a>
+		<a href="#/content/duplicate/{{ item._id }}">Duplicate</a>
+		<a ng-click="remove(item)" href="">Remove</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>
+
+<coonti-pagination page="content" href="#/content/"></coonti-pagination>
+
+<p><button goto="/content/add">Add Content</button></p>

@@ -1,0 +1,24 @@
+<h1 class="page-header">List of Content Types</h1>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Title</th>
+	  <th>Description</th>
+	  <th>Actions</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in data.contentTypes">
+	  <td>{{ item.displayName }}</td>
+	  <td>{{ item.description }}</td>
+	  <td>	
+		<a href="#/content/add/{{ item.name }}">Add Content</a> |
+		<a href="#/contentType/view/{{ item.name }}">View</a> |
+		<a href="#/contentType/edit/{{ item.name }}">Edit</a> |
+		<a ng-click="remove(item)" href="">Remove</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>
+
+<p><button goto="/contentType/add">Add a New Content Type</button></p>

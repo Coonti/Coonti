@@ -1,0 +1,20 @@
+{
+	"info": {
+		"name": "ExampleModule",
+		"description": "A simple example module that can be used as an example for building new modules.",
+		"author": "Coonti Project",
+		"authorUrl": "http://coonti.org",
+		"version": "0.1.0",
+		"moduleUrl": "http://coonti.org",
+		"dependencies": [
+			{
+				"collection": "module",
+				"name": "CoontiAdmin",
+				"states": "started"
+			}
+		]
+	},
+	"module": "examplemodule.js",
+	"config": {
+	}
+}

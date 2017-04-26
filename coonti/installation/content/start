@@ -1,0 +1,12 @@
+{
+	"contentType": "installPage",
+	"template": "installPage",
+	"path": "",
+	"content": {
+		"title": "Coonti Installation - Welcome",
+		"heading": "Welcome to Coonti",
+		"body": "<p>Welcome to Coonti installation</p>",
+		"form": "installation/languageSelection",
+		"afterForm": ""
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"contentType": "installPage",
+	"template": "installPage",
+	"path": "account",
+	"content": {
+		"title": "Coonti Installation - Administrator Account",
+		"heading": "Administrator Details",
+		"body": "<p>Please provide administrator details. This account has full control over Coonti. Please note that the credentials are not automatically sent to the user.</p>",
+		"form": "installation/userAccount",
+		"afterForm": ""
+	}
+}

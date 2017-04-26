@@ -1,0 +1,34 @@
+<h1 class="page-header">Modules</h1>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Name</th>
+	  <th>Status</th>
+	  <th>Info</th>
+	  <th>Actions</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in modules">
+	  <td>{{ item.name }}</td>
+	  <td><span ng-if="item.started">Started</span><span ng-if="!item.started && item.initialised">Initialised</span></td>
+	  <td>
+		{{ item.info.description }}<br/>
+		<em>Dependencies:
+		<span ng-if="item.dependency.dependencies | isOfSize : 0">None</span>
+		<span ng-repeat="dep in item.dependency.dependencies">
+		{{ dep.name }} - {{ dep.collection }}
+		<span class="coontiDependencyOk" ng-if="dep.satisfied">[Ok]</span><span class="coontiDependencyNotOk" ng-if="!dep.satisfied">[Not Ok]</span>{{$last ? '' : ', '}}
+		</span>
+		</em><br/>
+		Version {{ item.info.version }} |
+		Author <a ng-if="item.info.authorUrl" href="{{ item.info.authorUrl }}" target="_blank">{{ item.info.author }}</a><span ng-if="!item.info.authorUrl">{{ item.info.author }}</span>
+		<span ng-if="item.info.moduleUrl"> | <a href="{{ item.info.moduleUrl }}" target="_blank">View Module Site</a></span>
+	  </td>
+	  <td>
+		<!--<a href="#/modules/config/{{ item._id }}">Configure</a><br/>-->
+		<a ng-if="item.started" ng-click="stop(item)">Stop</a><a ng-if="!item.started && item.initialised && item.dependency.resolved" ng-click="start(item)">Start</a><a ng-if="!item.initialised && item.dependency.resolved" ng-click="init(item)">Initialise</a>
+	  </td>
+	</tr>
+  </tbody>
+</table>

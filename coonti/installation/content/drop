@@ -1,0 +1,11 @@
+{
+	"contentType": "installPage",
+	"template": "installPage",
+	"path": "drop",
+	"content": {
+		"title": "Coonti Installation - Done",
+		"heading": "",
+		"body": "Coonti Install module shutting down.",
+		"afterForm": ""
+	}
+}

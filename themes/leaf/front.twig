@@ -1,0 +1,32 @@
+{% set pageId='coontiFront' %}
+{% include 'include/header.twig' %}
+{% contentType "Front" %}
+<section id="frontPage">
+    <div id="frontPageMenu">
+    	<div id="frontPageBackgrounds">
+	    {% menu frontMenu from 'Front page' with 'content.ingress, content.image' %}
+            {% for menuItem in frontMenu.menuItems %}
+	    <div id="frontPageBackground-{{ loop.index }}" style="background-image: url('{{ menuItem.content.image }}');">
+	    </div>
+	    {% endfor %}
+	</div>
+    	<div id="coontiLogo"><a href="/"><img src="/media/_/leaf/img/coonti-grey.png" alt="Coonti"/></a></div>
+	<div id="frontMenu"> 
+            {% for menuItem in frontMenu.menuItems %}
+            <div id="frontMenuItem-{{ loop.index }}" class="frontMenuItem" data-menuItem="{{ loop.index }}">
+      	        <a href="{{ menuItem.url }}">{{ menuItem.title }}</a>
+                <span class="frontMenuItemIngress">{{ menuItem.content.ingress }}</span>
+            </div>
+            {% endfor %}
+	</div>
+	<div id="scrollInstructions">Scroll down, please</div>
+    </div>
+</section>
+
+<section id="pageContent">
+    <div id="contentArea">
+        {{ content.body }}
+    </div>
+</section>
+
+{% include 'include/footer.twig' %}

@@ -1,0 +1,36 @@
+{
+	"name": "Seed",
+	"description": "Coonti installation user interface theme.",
+	"author": "Coonti Project",
+	"authorUrl": "http://coonti.org",
+	"version": "0.1.0",
+	"themeUrl": "http://coonti.org",
+	"themeIcon": "img/seed-icon.png",
+	"themeScreenshot": "img/seed-screenshot.jpg",
+	"clientAccess": false,
+	"imageDir": "img",
+	"staticCollections": {
+		"js": {
+			"path": "js",
+			"load": ["^js/.+.js$"],
+			"contentType": "text/javascript"
+		},
+		"js-after": {
+			"path": "js-after",
+			"contentType": "text/javascript",
+			"directories": ["themes/seed/js-after"]
+		},
+		"css": {
+			"path": "css",
+			"load": ["^css/.+.css$","^root.css$"],
+			"contentType": "text/css"
+		},
+		"fonts": {
+			"path": "fonts",
+			"directories": ["themes/seed/fonts"]
+		}
+	},
+	"mediaDirectories": {
+		"img": "img"
+	}
+}

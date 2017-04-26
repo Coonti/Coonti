@@ -1,0 +1,14 @@
+{% contentType ["page", 'foobar'] %}
+{% include 'include/header.twig' %}
+{% static twig='twig' %}
+{% for t in twig %}
+{{ t }}
+{% endfor %}
+<h1>{{ content.title }}</h1>
+{{ content.body }}
+<br/><br/>Count: {{ session.count }}
+<img src="{% media 'uploads/test.jpg' resize 500x200 crop top left %}"/><br/>
+{% getContent about from 'mongo:project/about' %}
+<h2>{{ about.title }}</h2>
+{{ about.body }}
+{% include 'include/footer.twig' %}

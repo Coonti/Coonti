@@ -1,0 +1,11 @@
+{
+  "coontiMode": "development",
+  "databases": [
+    {
+      "name": "mongo",
+      "type": "mongodb",
+      "url": "mongodb://localhost:27017/coonti"
+    }
+  ]
+
+}

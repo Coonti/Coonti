@@ -1,0 +1,12 @@
+{
+	"contentType": "installPage",
+	"template": "installPage",
+	"path": "mongo",
+	"content": {
+		"title": "Coonti Installation - Welcome",
+		"heading": "Connect to MongoDB",
+		"body": "<p>Coonti requires MongoDB database. Please ensure that you have a MongoDB running and provide connection details here.</p><p><strong>Note:</strong> All collections in the database will be dropped.",
+		"form": "installation/mongoDB",
+		"afterForm": ""
+	}
+}

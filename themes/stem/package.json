@@ -1,0 +1,38 @@
+{
+	"name": "Stem",
+	"description": "Coonti default admin user interface theme.",
+	"author": "Coonti Project",
+	"authorUrl": "http://coonti.org",
+	"version": "0.1.0",
+	"themeUrl": "http://coonti.org",
+	"themeIcon": "img/stem-icon.png",
+	"themeScreenshot": "img/stem-screenshot.jpg",
+	"themeSettings": {
+		"js": {
+			"angularFormTemplate": "angular/stem/form-elements.html"
+		}
+	},
+	"imageDir": "img",
+	"staticCollections": {
+		"js": {
+			"path": "js",
+			"contentType": "text/javascript",
+			"load": ["^js/.+.js$"],
+			"directories": ["coonti/assets/js", "coonti/assets/admin_js"]
+		},
+		"css": {
+			"path": "css",
+			"load": ["^css/.+.css$", "^css/.+.otf$", "^css/.+.woff$", "^css/.+.woff2$", "^css/.+.ttf$", "^css/.+.eot$", "^css/.+.svg$"],
+			"contentType": "text/css"
+		},
+		"twig": {
+			"path": "twig",
+			"contentType": "text/javascript"
+		},
+		"angular": {
+			"path": "angular",
+			"load": ["^angular/.+.html$"],
+			"contentType": "text/html"
+		}
+	}
+}

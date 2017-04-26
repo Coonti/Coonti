@@ -1,0 +1,248 @@
+{
+	"contentTypes": [
+		{
+			"fields": [
+				{
+					"id": "title",
+					"name": "Title",
+					"type": "text",
+					"description": "The title of the site",
+					"required": true,
+					"json": true
+				},
+				{
+					"id": "body",
+					"name": "Body",
+					"type": "wysiwyg",
+					"description": "The front page content",
+					"required": false,
+					"json": true
+				}
+			],
+			"name": "Front",
+			"displayName": "Front",
+			"description": "Content type for front pages",
+			"config": {
+				"path": {
+					"from": "title"
+				}
+			}
+		},
+		{
+			"fields": [
+				{
+					"id": "title",
+					"name": "Title",
+					"type": "text",
+					"description": "The title of the page.",
+					"required": true,
+					"json": true
+				},
+				{
+					"id": "ingress",
+					"name": "Ingress",
+					"type": "text",
+					"description": "The excerpt to be shown on the front page.",
+					"required": false,
+					"json": true
+				},
+				{
+					"id": "body",
+					"name": "Body",
+					"type": "wysiwyg",
+					"description": "The contents of the page.",
+					"required": false,
+					"json": true
+				},
+				{
+					"id": "image",
+					"name": "Image",
+					"type": "image",
+					"description": "The image of the page, used also on the front page.",
+					"required": false,
+					"json": true
+				}
+			],
+			"name": "Page",
+			"displayName": "Page",
+			"description": "Content Type for normal pages.",
+			"config": {
+				"path": {
+					"from": "title"
+				}
+			}
+		}
+	],
+	"content": [
+		{
+			"_id": "56f514551e06ff5721825d48",
+			"content": {
+				"title": "Coonti",
+				"body": "<h1>Welcome!</h1><p>Coonti is a powerful, versatile, and flexible content management system powered by Node.js and Koa application framework.</p><p>It is designed to be simple to use for content owners while still being able to provide comprehensive and extensible content management framework for developers.</p><p>Coonti is under development and this version should not yet be used in a production environment. The Coonti community is looking for people to help make the system better. If you are a designer, developer, tester, or content owner, consider <a href=\"/code\" title=\"Grab the code from GitHub\" id=\"5694133c116380b3131ed126\">joining us</a>.</p><p>Coonti is licensed under <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache 2.0</a> open source license. Coonti is a trademark of Janne Kalliola.</p>"
+			},
+			"contentType": "Front",
+			"path": "",
+			"mtime": 1462205889974
+		},
+		{
+			"_id": "55da1608d98f22be86f85b2c",
+			"contentType": "Page",
+			"path": "features",
+			"content": {
+				"title": "The features and beyond",
+				"body": "<h1>Full control of content and more<br/></h1><p>Coonti allows you to take full control of your content with blazing fast delivery based on Node.js.</p><p>The design criteria in Coonti is to empower content owners with easy to use features that are implemented with flexible, clean, and powerful technical engine.</p><p>As Coonti is extensible and modular in nature, the exact feature set depends on the modules you install. The following list contains the core features that are available in the default Coonti installation.<br/></p><h1>Content management features<br/></h1><ul><li><b>Easy management of content.</b> Coonti has an intuitive content administration interface with visual editor.</li><li><b>Flexible content model.</b> You can define numerous different content types for different kinds of content.</li><li><b>Built-in media management.</b> Coonti provides media management tools to handle images, videos, and attachments of any kind to be included on your site.</li><li><b>Themes.</b> Coonti supports several themes at once, allowing you to create subsites inside your main site and have a precise control over your site layouts.<br/></li><li><b>Menus.</b> Your site structure is defined with drag-and-drop menus. Of course, you can have several menus to offer different views to your content.</li><li><b>Users and access rights.</b> Coonti has a full-fledged user management with user groups and roles that can be used to allow and restrict access to certain parts of the system.<br/></li></ul><h1>Technical features<br/></h1><ul><li><b>Based on Koa and Node.js.</b> Coonti's foundation is the blazing fast Node.js platform.</li><li><b>Twig for templating.</b> Coonti uses Twig.js to render the pages and thus allows versatile and precise control of creating the pages for site visitors.</li><li>No cruft on templates. The system does not impose any JavaScript libraries or other boilerplate, but you can write your templates using any front-end tools you like.<br/></li><li><b>Extensible.</b> Coonti has a simple yet powerful module interface to expand Coonti's capabilities.<br/></li><li><b>Headless by nature.</b> The system provides - based on configuration - a ready-made headless interface to all content stored in Coonti.<br/></li></ul><p>Photo credits: <a href=\"https://www.flickr.com/photos/chefranden/13253828544\">Forest Scene</a> by <a href=\"https://www.flickr.com/photos/chefranden/\">Randen Pederson</a>, licensed under <a href=\"https://creativecommons.org/licenses/by/2.0/\">Creative Commons Attribution 2.0</a> license.</p>",
+				"image": "/media/uploads/forestscene.jpg",
+				"ingress": "What Coonti can do for you and how you can expand it."
+			},
+			"mtime": 1467923961033,
+			"pathEdited": true
+		},
+		{
+			"_id": "5694133c116380b3131ed126",
+			"content": {
+				"title": "Grab the code from GitHub",
+				"body": "<h1>Freedom of use<br/></h1><p>Coonti is an open source content management system, licensed under <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">Apache 2.0 license</a>.</p><p>You can access the whole code base in GitHub <a href=\"https://github.com/Coonti/Coonti\">https://github.com/Coonti/Coonti</a>. You may do whatever you want with the code, but of course it would be nice to see your ideas, changes, and extensions be available for all the users.<br/></p><h1>We are looking for contributors<br/></h1><p>The Coonti Project welcomes contributors - developers, designers, content writers - to make Coonti a vibrant and sustainable open source project. Should you be interested in participating in our community, please visit <a href=\"https://github.com/Coonti/Coonti\">https://github.com/Coonti/Coonti</a> to read more.<br/></p><p>Image credits: <a href=\"https://www.flickr.com/photos/takens/6249629482/\">Sunrays on a sundaymorning</a> by <a href=\"https://www.flickr.com/photos/takens/\">Maarten Takens</a>, licensed under <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">Creative Commons Attribution ShareAlike 2.0</a> license.<br/></p>",
+				"image": "/media/uploads/sunrays.jpg",
+				"ingress": "And join the community."
+			},
+			"contentType": "Page",
+			"path": "code",
+			"mtime": 1467922453799,
+			"pathEdited": true
+		},
+		{
+			"_id": "56ee0fb8b5cb7c8b569bccc6",
+			"content": {
+				"title": "Content management in Node.js",
+				"body": "<h1>Manage content with ease<br></h1><p>Coonti provides simple, flexible, and extensible content management features. Besides solid technical platform, Coonti offers a user friendly content management interface.</p><p>The major features are:</p><ul><li>Easy content editing with WYSIWYG support and multiple content types to organise your content.</li><li>Flexible content structuring.<br></li><li>Managing images, files, and other assets.</li><li>Fast delivery of pages, powered by Node.js and Koa.<br></li><li>Support of numerous themes that can be active simultaneously.</li><li>Extensibility through modules.<br></li></ul><p>Coonti is still under development and it is not intended for production use. It lacks multilingual support, integrated connectivity to social media to name a couple. The project is looking for <a href=\"/code\" title=\"Grab the code from GitHub\" id=\"5694133c116380b3131ed126\">more people to participate in developing Coonti further</a>.<br></p><p>Image credits: <a href=\"https://www.flickr.com/photos/51004283@N04/4898771353\">Field of gold</a> by <a href=\"https://www.flickr.com/photos/51004283@N04/\">3rd Eye Photographer</a>, licensed under <a href=\"https://creativecommons.org/licenses/by/2.0/\">Creative Commons Attribution 2.0</a>. The image has been flipped horizontally.<br></p>",
+				"image": "/media/uploads/field.jpg",
+				"ingress": "Intuitive, flexible, extensible & powerful."
+			},
+			"contentType": "Page",
+			"path": "content",
+			"mtime": 1467923914002,
+			"pathEdited": true
+		},
+		{
+			"_id": "577ebba7df7b61a94a4f6c2c",
+			"content": {
+				"title": "Coonti?",
+				"ingress": "",
+				"body": "<p>The name 'Coonti' is derived from Finnish word 'koonti' that means a) the act of aggregation, compilation, composition or collection, or b) the end result of such act. It fits very well to the very fundamental task of a content management system - collecting information together and showing it to the user in an understandable manner.<br/></p><p>It was later found out that the name resembles closely Coontie (or Koonti) plant, <a href=\"https://en.wikipedia.org/wiki/Zamia_integrifolia\">Zamia integrifolia</a>, a small, though, woody cycad native to the southeast United States and parts of Caribbean. This is why Coonti's logo is green and the themes shipped with Coonti are named using plant parts.</p>",
+				"image": ""
+			},
+			"contentType": "Page",
+			"path": "coonti",
+			"mtime": 1467923408702
+		},
+		{
+			"_id": "5781621d344d02816b3ea665",
+			"content": {
+				"title": "Admin",
+				"ingress": "",
+				"body": "<p>Coonti admin area can be accessed at <a href=\"/admin\">/admin</a>.</p><p>Depending on the rights of the logged in user, the admin area exposes a varying set of functionalities. The admin user created in Coonti installation has full access.</p><p>Create new users with required rights, add them to relevant user groups, or add roles to them. Consider separating site maintenance and content management to separate users.<br/></p>",
+				"image": ""
+			},
+			"contentType": "Page",
+			"path": "coonti-admin",
+			"pathEdited": true,
+			"mtime": 1468097053962
+		}
+	],
+	"menus":
+	[
+		{
+			"_id": "55fe351b0236a75ee75bb262",
+			"menuItems": [
+				{
+					"id": "56f514551e06ff5721825d48",
+					"title": "Coonti",
+					"url": "",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "56ee0fb8b5cb7c8b569bccc6",
+					"title": "Content management",
+					"url": "content",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "55da1608d98f22be86f85b2c",
+					"title": "The features and beyond",
+					"url": "features",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "5694133c116380b3131ed126",
+					"title": "Grab the code from GitHub",
+					"url": "code",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "577ebba7df7b61a94a4f6c2c",
+					"title": "The name Coonti",
+					"url": "coonti",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "5781621d344d02816b3ea665",
+					"title": "Administrate Coonti",
+					"url": "coonti-admin",
+					"external": false,
+					"menuItems": [
+						
+					]
+				}
+			],
+			"name": "Main menu"
+		},
+		{
+			"_id": "56eebc9959baee395c2726b9",
+			"menuItems": [
+				{
+					"id": "56ee0fb8b5cb7c8b569bccc6",
+					"title": "Content management in Node.js",
+					"url": "content",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "55da1608d98f22be86f85b2c",
+					"title": "The features and beyond",
+					"url": "features",
+					"external": false,
+					"menuItems": [
+						
+					]
+				},
+				{
+					"id": "5694133c116380b3131ed126",
+					"title": "Grab the code from GitHub",
+					"url": "code",
+					"external": false,
+					"menuItems": [
+						
+					]
+				}
+			],
+			"name": "Front page"
+		}
+	]
+}

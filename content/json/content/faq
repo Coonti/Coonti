@@ -1,0 +1,10 @@
+{
+        "contentType": "page",
+        "template": "page-faq",
+        "path": "project/faq",
+        "content": {
+                "title": "Coonti FAQ",
+                "body": "Lorem ipsum dolor sit amet.",
+                "image": false
+        }
+}

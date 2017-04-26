@@ -1,0 +1,81 @@
+{
+	"config": "coontiThumbnails",
+	"thumbnails": [
+		{
+			"types": ["application/pdf"],
+			"icon": "coonti/thumbnails/acrobat.png" 
+		},
+		{
+			"types": ["application/x-shockwave-flash"],
+			"icon": "coonti/thumbnails/flash.png" 
+		},
+		{
+			"types": ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+			"icon": "coonti/thumbnails/excel.png" 
+		},
+		{
+			"types": ["application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation"],
+			"icon": "coonti/thumbnails/powerpoint.png" 
+		},
+		{
+			"types": ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+			"icon": "coonti/thumbnails/word.png" 
+		},
+		{
+			"types": ["application/x-font-ttf", "application/x-font-otf", "application/font-woff"],
+			"icon": "coonti/thumbnails/ttf.png" 
+		},
+		{
+			"types": ["application/zip", "application/gzip"],
+			"icon": "coonti/thumbnails/archive.png" 
+		},
+		{
+			"types": ["audio/mp4", "audio/mpeg"],
+			"icon": "coonti/thumbnails/music.png" 
+		},
+		{
+			"types": ["audio/vnd.wave"],
+			"icon": "coonti/thumbnails/wav.png" 
+		},
+		{
+			"types": ["image/jpeg"],
+			"icon": "coonti/thumbnails/jpg.png" 
+		},
+		{
+			"types": ["image/png"],
+			"icon": "coonti/thumbnails/png.png" 
+		},
+		{
+			"types": ["image/gif"],
+			"icon": "coonti/thumbnails/gif.png" 
+		},
+		{
+			"types": ["image/svg+xml"],
+			"icon": "coonti/thumbnails/svg.png" 
+		},
+		{
+			"types": ["text/html"],
+			"icon": "coonti/thumbnails/html.png" 
+		},
+		{
+			"types": ["text/css"],
+			"icon": "coonti/thumbnails/css.png" 
+		},
+		{
+			"types": ["application/javascript", "application/json"],
+			"icon": "coonti/thumbnails/js.png" 
+		},
+		{
+			"types": ["text/plain"],
+			"icon": "coonti/thumbnails/txt.png" 
+		},
+		{
+			"types": ["video/avi", "video/mpeg", "video/mp4", "video/quicktime", "video/x-ms-wmv", "video/x-flv"],
+			"icon": "coonti/thumbnails/video.png" 
+		},
+		{
+			"types": ["application/octet-stream", "default"],
+			"icon": "coonti/thumbnails/unknown.png"
+		}
+	]
+}

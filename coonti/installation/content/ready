@@ -1,0 +1,11 @@
+{
+	"contentType": "installPage",
+	"template": "installPage",
+	"path": "ready",
+	"content": {
+		"title": "Coonti Installation - Ready",
+		"heading": "Coonti Installation Done",
+		"body": "<p>Congratulations! Coonti is now set up and running.</p>",
+		"afterForm": "<p>Please note that if you did not install demo content, the site will show an error message due to not having a front page.</p>"
+	}
+}

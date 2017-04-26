@@ -1,0 +1,63 @@
+{
+	"roles": [
+		{
+			"name": "Content Editor",
+			"description": "Allows managing content.",
+			"allowed": [
+				"admin.manageContent"
+			]
+		},
+		{
+			"name": "Registered User",
+			"description": "Users with an account in the system."
+		}
+	],
+	"groups": [
+		{
+			"name": "Sub Admin",
+			"description": "Administrators that can add and remove user accounts only.",
+			"allowed": [
+				"admin.manageAccounts"
+			],
+			"denied": [
+				"admin.manageGroups",
+				"admin.manageRoles"
+			]
+		}
+	],
+	"users": [
+		{
+			"account": "TestUser",
+			"password": "FooBar",
+			"userData": {
+			},
+			"allowed": [
+				"admin.manageContent"
+			],
+			"roles": [
+				"Registered User"
+			],
+			"groups": [
+				"Sub Admin"
+			]
+		},
+		{
+			"account": "TestUser2",
+			"password": "FooBar",
+			"userData": {
+			},
+			"allowed": [
+				"admin.manageContentTypes"
+			],
+			"denied": [
+				"admin.manageAccounts"
+			],
+			"roles": [
+				"Content Editor"
+			],
+			"groups": [
+				"Sub Admin"
+			]
+		}
+	]
+}

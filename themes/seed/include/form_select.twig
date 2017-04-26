@@ -1,0 +1,9 @@
+{% contentType ['forms/formElement/select'] %}
+<span class="coontiFormElement coontiFormElement-{{ coontiFormElement.get('type') }}" id="coontiFormElement-{{ coontiFormElement.get('id') }}">
+{% if coontiFormElement.has('label') %}<label for="{{ coontiFormElement.get('id') }}">{{ coontiFormElement.get('label') }}</label>{% endif %}
+<select id="{{ coontiFormElement.get('id') }}" name="{{ coontiFormElement.get('name') }}">
+{% for name,value in coontiFormElement.get('values') %}
+  <option value="{{ name }}"{% if name == coontiFormElement.get('value') %} selected="selected"{% endif %}>{{ value }}</option>
+{% endfor %}
+</select>
+</span>

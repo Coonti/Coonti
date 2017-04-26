@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>{{ content.title }}</title>
+<style type="text/css">
+#background, #backgroundBlurred {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#background {
+    background: url(/media/_/seed/img/pine.jpg) no-repeat center center;
+    background-size: cover;
+    z-index: -100;
+}
+
+body.initial #background {
+    display: block;
+}
+
+body.rest #background {
+    display: none;
+}
+
+#backgroundBlurred {
+    background: url(/media/_/seed/img/pine-blur.jpg) no-repeat center center;
+    background-size: cover;
+    z-index: -99;
+}
+
+body.initial #backgroundBlurred {
+    display: none;
+}
+
+body.rest #backgroundBlurred {
+    display: block;
+}
+</style>
+{% js %}
+    {% css %}
+  </head>
+
+  <body class="{% if routing.route == 'mongo' %}initial{% else %}rest{% endif %}">
+    <div id="background">
+    </div>
+    <div id="backgroundBlurred">
+    </div>
+	<section id="content">
+	  <div id="installWrapper">
+		<div id="installBorder">

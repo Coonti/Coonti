@@ -1,0 +1,10 @@
+{
+	"source": {
+		"include": ["coonti", "modules"],
+		"exclude": ["coonti/assets"]
+	},
+	"opts": {
+		"destination": "./jsdoc/",
+		"recurse": true
+	}
+}

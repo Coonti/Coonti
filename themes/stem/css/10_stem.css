@@ -1,0 +1,408 @@
+body {
+    padding-top: 75px;
+}
+
+a {
+    color: #6fa717;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #44660e;
+}
+
+table {
+    font-size: 14px;
+}
+
+.navbar-fixed-top {
+  border: 0;
+}
+
+.navbar-brand img {
+    padding: 0px 10px;
+}
+
+#navbar > ul {
+    background-color: #fff;
+    padding: 6px;
+}
+
+.sidebar {
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    padding-top: 75px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #fafafa;
+    border-right: 1px solid #eee;
+    border-top: none;
+    border-bottom: none;
+  }
+}
+
+.nav > li > a {
+    padding: 5px 10px;
+}
+
+.nav > li > a.coontiAdminMenuItem-1 {
+    padding-left: 20px;
+}
+
+.navbar-toggle span.icon-bar {
+    background-color: #6fa717;
+}
+
+#coontiAdminContent {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.main .page-header {
+    margin-top: 0;
+}
+
+.loggedOut {
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+#mobileLogin {
+    padding: 6px;
+}
+
+.coontiFormMessage {
+    border: 1px solid #f05c25;
+    background-color: #ffc7b2;
+    font-weight: bold;
+    padding: 0.5em;
+    margin-bottom: 1em;
+}
+
+.coontiFormElement .formElementError {
+    border: 1px solid #f05c25;
+    background-color: #ffc7b2;
+}
+
+.coontiFormElement .formError {
+    display: block;
+    clear: both;
+    color: #f05c25;
+    font-weight: bold;
+}
+
+#coontiForm-login {
+    margin: 0 auto;
+    max-width: 330px;
+}
+
+#coontiForm-login .coontiFormElement {
+    display: block;
+    padding-bottom: 10px;
+}
+
+#coontiForm-login label {
+    float: left;
+    width: 100px;
+    clear: both;
+    margin-bottom: 10px;
+}
+
+#coontiForm-login input {
+    float: right;
+    margin-bottom: 10px;
+}
+
+#coontiForm-login input.coontiFormElement-submit {
+    float: left;
+    margin-left: 110px;
+}
+
+.coontiNgFormElement {
+    padding-bottom: 10px;
+}
+    
+#coontiAdminFooter {
+    clear: both;
+    margin: 20px auto;
+    padding: 20px 40px;
+    border-top: 1px solid #eee;    
+}
+
+input.col-xs-1, input.col-xs-2, input.col-xs-3, input.col-xs-4, 
+input.col-xs-5, input.col-xs-6, input.col-xs-7, input.col-xs-8,
+input.col-xs-9, input.col-xs-10, input.col-xs-11, input.col-xs-12 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.inputNote {
+    clear: both;
+}
+
+label.formElementRequired:after {
+    content: "\a0*";
+}
+
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+.modal {
+    display: block;
+}
+
+.modal-body:before,
+.modal-body:after {
+    display: table;
+    content: " ";
+}
+
+.modal-header:before,
+.modal-header:after {
+    display: table;
+    content: " ";
+}
+
+.coontiFileUpload {
+    height: 90vh;
+}
+
+
+.btn {
+    margin-right: 8px;
+}
+
+.ta-toolbar .btn {
+    margin-right: 0px;
+    height: 34px;
+}
+
+.ta-toolbar {
+    background-color: #f0f0f0;
+    border: 1px solid #eee;
+    margin-left: 0;
+    padding: 10px 10px 5px;
+}
+
+.ta-toolbar .btn-group {
+    margin-bottom: 5px;
+}
+
+.angular-ui-tree-handle {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: #7c9eb2;
+    padding: 10px 10px;
+}
+
+.angular-ui-tree-handle:hover {
+    color: #438eb9;
+    background: #f4f6f7;
+    border-color: #dce2e8;
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+tr.angular-ui-tree-empty {
+    height:100px
+}
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+.btn-danger {
+    border-color: #cc4d1f;
+    background-color: #f05c25;
+}
+
+
+/* --- Tree --- */
+.tree-node {
+    border: 1px solid #dae2ea;
+    background: #f8faff;
+    color: #7c9eb2;
+}
+
+.nodrop {
+    background-color: #f2dede;
+}
+
+.tree-node-content {
+    margin: 10px;
+}
+.tree-handle {
+    padding: 10px;
+    background: #428bca;
+    color: #FFF;
+    margin-right: 10px;
+}
+
+.angular-ui-tree-handle:hover {
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.global-notification {
+    padding: 8px 20px !important;
+    position: fixed;
+    width: 100%;
+    z-index: 100000;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+.modal-content > h1:first-child {
+    margin-top: 0px;
+}
+
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url("/css/Stem/fonts/glyphicons-halflings-regular.eot");
+    src: url("/css/Stem/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/css/Stem/fonts/glyphicons-halflings-regular.woff") format("woff"), url("/css/Stem/fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("/css/Stem/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg");
+}
+
+.coontiSelectedSort_name .coontiSort_name:after,
+.coontiSelectedSort_type .coontiSort_type:after,
+.coontiSelectedSort_size .coontiSort_size:after,
+.coontiSelectedSort_mtime .coontiSort_mtime:after {
+    content: " v";
+}
+
+.coontiSelectedSort_-name .coontiSort_name:after,
+.coontiSelectedSort_-type .coontiSort_type:after,
+.coontiSelectedSort_-size .coontiSort_size:after,
+.coontiSelectedSort_-mtime .coontiSort_mtime:after {
+    content: " ^";
+}
+
+span.coontiPagerCurrent {
+    font-weight: bold;
+    color: #000;
+}
+
+.pagination > li > a {
+    color: #6fa717;
+}
+
+.pagination > li > span {
+    color: #333;
+}
+
+.formRow {
+    padding-bottom: 10px;
+}
+
+#wysiwygExternalLink {
+    padding: 20px 0px;
+}
+
+.coontiThumbnail {
+    max-width: 128px;
+    max-height: 128px;
+}
+
+.modal-dialog {
+    width: 80%;
+}
+
+.modal-dialog .coontiThumbnail {
+    max-width: 64px;
+    max-height: 64px;
+}
+
+ul[dnd-list],
+ul[dnd-list] > li {
+	position: relative;
+}
+
+ul[dnd-list], ul.likeDragDropList {
+    min-height: 42px;
+    padding-left: 0px;
+}
+
+ul.likeDragDropList {
+    margin-bottom: 0px;
+}
+
+ul[dnd-list] .dndDraggingSource {
+    display: none;
+}
+
+ul[dnd-list] .dndPlaceholder {
+    display: block;
+    background-color: #ddd;
+    min-height: 42px;
+}
+
+ul[dnd-list] li, ul.likeDragDropList li {
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+ul[dnd-list] li:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+ul[dnd-list] li div.handle {
+    cursor: move;
+}
+    
+ul[dnd-list] li div.handle i.fa-bars {
+    color: #6fa717;
+}
+
+ul[dnd-list] li.error {
+    background-color: #ff8080;
+}
+
+.floatRight {
+    float: right;
+}
+
+.coontiDependencyOk {
+    color: #0576ba;
+}
+
+.coontiDependencyNotOk {
+    color: #f05c25;
+}

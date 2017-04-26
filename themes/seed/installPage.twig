@@ -1,0 +1,20 @@
+{% contentType ['installPage'] %}
+{% include 'include/header.twig' %}
+
+<h1>{{ content.heading }}</h1>
+
+<section id="contentBody">
+  {{ content.body }}
+  {% if coontiSite is defined %}
+    <p id="coontiSite">You may now visit the site at <a target="_blank" href="{{ http.protocol }}://{{ http.host }}{{ coontiSite }}">{{ http.protocol }}://{{ http.host }}{{ coontiSite }}</a> or log in with your administrative credentials at <a target="_blank" href="{{ http.protocol }}://{{ http.host }}{{ coontiAdmin }}">{{ http.protocol }}://{{ http.host }}{{ coontiAdmin }}</a>.</p>
+  {% endif %}
+</section>
+
+<section id="installForm">
+  {% form content.form %}
+</section>
+
+<section id="contentAfterForm">
+  {{ content.afterForm }}
+</section>
+{% include 'include/footer.twig' %}

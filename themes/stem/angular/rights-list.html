@@ -1,0 +1,23 @@
+<h1 class="page-header">Available Access Rights</h1>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Name</th>
+	  <th>Description</th>
+	  <!--<th>Actions</th>-->
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in rights | orderObjectBy:'displayName'">
+	  <td>{{ item.displayName }}</td>
+	  <td>{{ item.description }}</td>
+	  <!--
+	  <td>
+		<a href="#/byright/user/{{ item.name }}">View Users</a> |
+		<a href="#/byright/role/{{ item.name }}">View Roles</a> |
+		<a href="#/byright/group/{{ item.name }}">View Groups</a>
+	  </td>
+	  -->
+	</tr>
+  </tbody>
+</table>

@@ -1,0 +1,60 @@
+<h1 class="page-header">Theme '{{ theme.name }}'</h1>
+<p>{{ theme.description }}<br/>
+Version {{ theme.version }} |
+Author <a n-if="theme.authorUrl" href="{{ theme.authorUrl }}" target="_blank">{{ theme.author }}</a>
+<span ng-if="!theme.authorUrl">{{ theme.author }}</span><span ng-if="theme.moduleUrl"> |
+<a href="{{ theme.ThemeUrl }}" target="_blank">View Theme Site</a></span></p>
+
+<section>
+<h4>Static Collections</h4>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Name</th>
+	  <th>Path</th>
+	  <th>Type</th>
+	  <th>Extra Directories</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="(key, item) in theme.staticCollections|orderBy">
+	  <td>{{ key }}</td>
+	  <td>{{ item.webPath }}</td>
+	  <td>{{ item.contentType }}</td>
+	  <td><span ng-repeat="dir in item.directories">{{ dir }}<br/></span></td>
+	</tr>
+	<tr ng-if="theme.staticCollections | isOfSize : 0">
+	  <td colspan="4">No static collections</td>
+	</tr>
+  </tbody>
+</table>
+</section>
+
+<section>
+<h4>Routes</h4>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Route</th>
+	  <th>Action
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in theme.routes track by $index">
+	  <td><span editable-text="theme.routes[$index]" e-name="routeName" e-form="routeForm">{{ item || "New Route" }}</span></td>
+	  <td>
+		<button ng-click="routeForm.$show()" ng-hide="routeForm.$visible">Edit</button>
+		<button ng-click="removeRoute(theme, $index)" ng-hide="routeForm.$visible">Remove</button>
+	  </td>
+	</tr>
+	<tr>
+	  <td colspan="2"><button ng-click="addRoute(theme)">Add Route</button></td>
+	</tr>
+  </tbody>
+</table>
+</section>
+
+<p>
+<button ng-click="save(theme)">Save</button>
+<button ng-click="cancel(theme)">Cancel</button>
+</p>
