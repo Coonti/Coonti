@@ -1,3 +1,2 @@
 config/coontiConfig.json
-content/cache/**
 node_modules/**
