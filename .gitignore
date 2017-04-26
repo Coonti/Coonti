@@ -1,3 +1,4 @@
+config/coontiConfig.json
 content/cache/**
 jsdoc/**
 logs/**
