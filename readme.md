@@ -4,6 +4,8 @@ Coonti is a powerful, flexible and easy to use content management system for [No
 
 **N.B.** Coonti is still in development and it is not recommended for production use.
 
+Coonti has also a Slack team [Coonti.slack.com](https://coonti.slack.com). To join, go to [https://coonti-slack.herokuapp.com](https://coonti-slack.herokuapp.com) to request an invitation by email.
+
 ## Installation
 
 Coonti requires Node.js 7.6 or higher and MongoDB 2.6.5 or higher - actually Coonti might work with earlier versions, but it has not been tested with them. Install Node and MongoDB first, and then start MongoDB - note down the port that MongoDB listens to. Then follow these instructions:
