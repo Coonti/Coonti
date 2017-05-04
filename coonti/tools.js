@@ -57,12 +57,14 @@ function CoontiTools() {
 		var intRead = function(dir, dp, cb) {
 			fs.readdir(baseDir + '/' + dir, function(err, list) {
 				if(err) {
-					return cb(err);
+					cb(err);
+					return;
 				}
 
 				var left = list.length;
 				if(!left) {
-					return cb(null, res);
+					cb(null, res);
+					return;
 				}
 				list.sort();
 

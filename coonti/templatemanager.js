@@ -235,6 +235,7 @@ function CoontiTemplateManager(cnti) {
 
 		var nm = theme.toLowerCase() + '_' + name;
 		self._removeStaticCollection(nm);
+		return true;
 	};
 
 	/**
@@ -255,6 +256,7 @@ function CoontiTemplateManager(cnti) {
 		var sc = staticCollections[name];
 		sc.remove();
 		delete staticCollections[name];
+		return true;
 	};
 
 	/**
@@ -644,6 +646,7 @@ function CoontiTemplateManager(cnti) {
 			if(type == 'tag') {
 				Twig.exports.extendTag(ext);
 			}
+			return true;
 		});
 		return true;
 	};
@@ -789,7 +792,6 @@ function CoontiTemplateManager(cnti) {
 						yield parseToken(tokens[i]);
 					}
 					return Twig.output.apply(this, [output]);
-					return output.join('');
 				} catch(ex) {
 					Twig.log.error('Error parsing twig template ' + this.id + ': ');
 					if(ex.stack) {

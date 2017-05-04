@@ -159,6 +159,7 @@ function CoontiContentManager(cnti) {
 
 		contentTypes[name] = { name: name, contentType: ct, contentHandler: ch };
 		this.saveContentTypeForm(name, ct);
+		return true;
 	};
 
 	/**
@@ -186,6 +187,7 @@ function CoontiContentManager(cnti) {
 		delete contentTypes[name];
 		contentTypes[ct['name']] = { name: ct['name'], contentType: ct, contentHandler: ch };
 		this.saveContentTypeForm(ct['name'], ct);
+		return true;
 	};
 
 	/**
@@ -394,6 +396,7 @@ function CoontiContentManager(cnti) {
 
 			form.addField('coontiSubmit', 'submit', { value: 'Ok' });
 		}
+		return true;
 	};
 }
 

@@ -476,7 +476,7 @@ function CoontiAdmin(cnti) {
 	 */
 	this.getTemplate = function*(name) {
 		if(!name) {
-			return false;
+			return;
 		}
 
 		var tmpl = yield angularTemplates.getFileContents(name);

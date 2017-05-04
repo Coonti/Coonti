@@ -584,7 +584,7 @@ function CoontiRouter(cnti) {
 		if(!ch) {
 			logger.warn('No Content Handler found in HandleContent');
 			// ##TODO## Show 500 page
-			return false;
+			return;
 		}
 
 		var content = yield ch.getContent(this);
