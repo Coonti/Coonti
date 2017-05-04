@@ -1590,14 +1590,14 @@ function CoontiTemplateManager(cnti) {
 
 						// Store defined language, if exists
 						if(token.match[4]) {
-							language = token.match[4];
+							language = token.match[4];  // TODO: should this assign to `token`?
 						}
 						delete token.match;
 						return token;
 					},
 					parse: function (token, context, chain) {
 						var innerContext = context;
-						if(localVars) {
+						if(localVars) {  // TODO: should this read from `token`?
 							innerContext = {};
 							if(!token.only) {
 								innerContext = Twig.ChildContext(context);
@@ -1612,7 +1612,7 @@ function CoontiTemplateManager(cnti) {
 								}
 							}
 
-							_.each(localVars, function(v, i) {
+							_.each(localVars, function(v, i) {  // TODO: should this read from `token`?
 								innerContext[i] = Twig.parse.apply(this, [v, innerContext]);
 							});
 						}
@@ -1685,7 +1685,7 @@ function CoontiTemplateManager(cnti) {
 
 						// Store defined language, if exists
 						if(token.match[5]) {
-							language = token.match[5];
+							language = token.match[5];  // TODO: should this assign to `token`?
 						}
 						delete token.match;
 						return token;
@@ -1700,7 +1700,7 @@ function CoontiTemplateManager(cnti) {
 						}
 
 						var innerContext = context;
-						if(localVars) {
+						if(localVars) {  // TODO: should this read from `token`?
 							innerContext = {};
 							if(!token.only) {
 								innerContext = Twig.ChildContext(context);
@@ -1715,7 +1715,7 @@ function CoontiTemplateManager(cnti) {
 								}
 							}
 
-							_.each(localVars, function(v, i) {
+							_.each(localVars, function(v, i) {  // TODO: should this read from `token`?
 								innerContext[i] = Twig.parse.apply(this, [v, innerContext]);
 							});
 						}
