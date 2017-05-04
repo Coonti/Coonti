@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2017 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -49,7 +49,7 @@ function Coonti(koaApp) {
 		release: 'Pine',
 		author: 'Coonti Project',
 		authorUrl: 'http://coonti.org'
-	}
+	};
 
 	var app = koaApp;
 	var initialised = false;
@@ -58,7 +58,7 @@ function Coonti(koaApp) {
 	var eventListeners = {};
 
 	var logger;
-	
+
 	var self = this;
 
 	/**
@@ -98,7 +98,7 @@ function Coonti(koaApp) {
 
 		managers['router'] = new CoontiRouter(self);
 		managers['router'].initialise();
-		
+
 		managers['module'] = new CoontiModuleManager(self);
 		managers['module'].initialise();
 
@@ -106,7 +106,7 @@ function Coonti(koaApp) {
 		managers['template'].initialise();
 
 		config.initialise(this._start);
-	}
+	};
 
 	/**
 	 * Initialises rest of Coonti when the configuration has been initialised.
@@ -114,8 +114,8 @@ function Coonti(koaApp) {
 	var configInitialised = function*() {
 		var depComp = managers['dependency'].createComponent('coonti', 'core', meta.version, '');
 		yield managers['dependency'].addComponent(depComp);
-	}		
-	
+	};
+
 	/**
 	 * Starts Coonti after initialisation, called by the configuration initialisation method after firing config-init event.
 	 *
@@ -125,7 +125,7 @@ function Coonti(koaApp) {
 	this._start = function(err) {
 		var welcome = self.getManager('log').getLogger('coonti-core-welcome');
 		logger = self.getManager('log').getLogger('coonti-core-core');
-		
+
 		var ports = [];
 		var httpPort = config.getConfigParam('httpPort');
 		var httpsPort = config.getConfigParam('httpsPort');
@@ -159,7 +159,7 @@ function Coonti(koaApp) {
 		welcome.info('Coonti ready and listening to port' + (ports.length > 1 ? 's' : '') + ' ' + _s.toSentence(ports, ', ', ' and ') + '.');
 
 		initialised = true;
-	}
+	};
 
 	/**
 	 * Fetches Coonti configuration object.
@@ -168,7 +168,7 @@ function Coonti(koaApp) {
 	 */
 	this.getConfig = function() {
 		return config;
-	}
+	};
 
 	/**
 	 * Gets a configuration parameter value.
@@ -178,7 +178,7 @@ function Coonti(koaApp) {
 	 */
 	this.getConfigParam = function(param) {
 		return config.getConfigParam(param);
-	}
+	};
 
 	/**
 	 * Sets a configuration parameter value. The new value is written to the database, unless Coonti is in installation mode.
@@ -190,7 +190,7 @@ function Coonti(koaApp) {
 	 */
 	this.setConfigParam = function*(param, value) {
 		return yield config.setConfigParam(param, value);
-	}
+	};
 
 	/**
 	 * Fetches a Coonti manager.
@@ -203,7 +203,7 @@ function Coonti(koaApp) {
 			return managers[name];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Adds a new Coonti manager.
@@ -218,8 +218,8 @@ function Coonti(koaApp) {
 			return true;
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Removes a Coonti manager.
 	 *
@@ -232,14 +232,14 @@ function Coonti(koaApp) {
 			return true;
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Returns Koa application object.
 	 */
 	this.getApplication = function() {
 		return app;
-	}
+	};
 
 	/**
 	 * Adds an event listener.
@@ -259,7 +259,7 @@ function Coonti(koaApp) {
 
 		eventListeners[eventName].push(eventHandler);
 		return true;
-	}
+	};
 
 	/**
 	 * Removes an event listener.
@@ -282,7 +282,7 @@ function Coonti(koaApp) {
 			eventListeners[eventName].splice(pos, 1);
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Fires an event.
@@ -296,7 +296,7 @@ function Coonti(koaApp) {
 				yield eventListeners[eventName][i](params);
 			}
 		}
-	}
+	};
 
 	/**
 	 * Fires an event with a callback.
@@ -306,7 +306,7 @@ function Coonti(koaApp) {
 	 * @param {Function} cb - The callback.
 	 */
 	this.fireEventCallback = function(eventName, params, cb) {
-		co(function *() {
+		co(function*() {
 			yield self.fireEvent(eventName, params);
 		}).then(function() {
 			cb();
@@ -320,7 +320,7 @@ function Coonti(koaApp) {
 				eventLogger.error('An event callback did not succeed.', err);
 			}
 		});
-	}
+	};
 
 	/**
 	 * Fetches the Coonti Core meta information.
@@ -329,8 +329,8 @@ function Coonti(koaApp) {
 	 */
 	this.getMeta = function() {
 		return meta;
-	}
-	
+	};
+
 	/**
 	 * Calculates web paths relative to the installation configuration.
 	 *
@@ -347,7 +347,7 @@ function Coonti(koaApp) {
 			path = '/' + coontiPath + path;
 		}
 		return path;
-	}
+	};
 
 	/**
 	 * Creates an error object. The error is actually a nameless object that can be amended as seen fit. This method must be used to ensure that the basic data is always available for the error.
@@ -363,8 +363,7 @@ function Coonti(koaApp) {
 			object: object,
 			string: string
 		};
-	}
-	
+	};
 }
 
 module.exports = Coonti;

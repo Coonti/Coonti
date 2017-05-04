@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -55,7 +55,7 @@ MiniRouter.prototype.addRoute = function(name, re, fn) {
 
 	this.routes.push(route);
 	return true;
-}
+};
 
 /**
  * Removes a route.
@@ -75,7 +75,7 @@ MiniRouter.prototype.removeRoute = function(name) {
 		}
 	}
 	return true;
-}
+};
 
 /**
  * Routes a request.
@@ -100,10 +100,10 @@ MiniRouter.prototype.route = function(request) {
 			var func = r.func;
 			return function*(ctx) {
 				return yield func.apply(ctx, callParams);
-			}
-		}	
+			};
+		}
 	}
-}
+};
 
 /**
  * Fetches a route by name.
@@ -119,13 +119,13 @@ MiniRouter.prototype.getRoute = function(name) {
 			}
 			return false;
 		});
-						   
+
 		if(!route) {
 			return false;
 		}
 		return route;
 	}
 	return false;
-}
+};
 
 module.exports = MiniRouter;

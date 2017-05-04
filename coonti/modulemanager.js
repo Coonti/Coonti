@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,12 +39,12 @@ function CoontiModuleManager(cnti) {
 	var coonti = cnti;
 	var app = coonti.getApplication();
 	var dependencies;
-	
+
 	var moduleConfig = {};
-	
+
 	var modulePath = false;
 	var webPath = false;
-	
+
 	var modules = {};
 	var systemModules = {};
 	var self = this;
@@ -54,7 +54,7 @@ function CoontiModuleManager(cnti) {
 	var readDirsThunk = thunkify(tools.readDirs);
 
 	var logger;
-	
+
 	/**
 	 * Initialises the module subsystem. The method adds a listener for configuration and logging init events.
 	 */
@@ -63,15 +63,15 @@ function CoontiModuleManager(cnti) {
 		coonti.addEventListener('Coonti-Logging-Init', loggingInitialised);
 		dependencies = coonti.getManager('dependency');
 		logger = coonti.getManager('log').getLogger('coonti-core-modulemanager');
-	}
+	};
 
 	/**
 	 * Initialises the logger.
 	 */
 	var loggingInitialised = function*() {
 		logger = coonti.getManager('log').getLogger('coonti-core-modulemanager');
-	}
-	
+	};
+
 	/**
 	 * Loads modules based on configuration.
 	 */
@@ -92,15 +92,14 @@ function CoontiModuleManager(cnti) {
 					logger.warn('Requested module file %s/%s/%s does not exist.', webPath, module, file);
 
 					// ##TODO## get 404 from template/config/etc.
-					this.status=(404);
-					this.body=('Not found');
+					this.status = (404);
+					this.body = ('Not found');
 				}
-				return;
 			});
 		}
 
 		yield loadModules();
-	}
+	};
 
 	/**
 	 * Loads modules and sets them to proper state based on the configuration.
@@ -123,7 +122,7 @@ function CoontiModuleManager(cnti) {
 
 		for(var j = 0; j < modulePaths.length; j++) {
 			var mPath = modulePaths[j];
-			
+
 			var list = yield readDirsThunk(mPath);
 			for(var i in list) {
 				if(singleRegexp.test(list[i])) {
@@ -132,12 +131,12 @@ function CoontiModuleManager(cnti) {
 				else if(dirRegexp.test(list[i])) {
 					mdls.push(mPath + '/' + path.dirname(list[i]));
 				}
-			}			
+			}
 		}
 		if(mdls.length == 0) {
 			return;
 		}
-		
+
 		for(var i in mdls) {
 			yield self.loadModule(mdls[i]);
 		}
@@ -160,13 +159,11 @@ function CoontiModuleManager(cnti) {
 				yield self._removeModule(mn);
 				moduleNames.splice(i, 1);
 			}
-			else {
-				if(!moduleConfigConfig[mn]['start']) {
-					yield self._stopModule(mn);
-					if(!moduleConfigConfig[mn]['initialise']) {
-						yield self._removeModule(mn);
-						moduleNames.splice(i, 1);
-					}
+			else if(!moduleConfigConfig[mn]['start']) {
+				yield self._stopModule(mn);
+				if(!moduleConfigConfig[mn]['initialise']) {
+					yield self._removeModule(mn);
+					moduleNames.splice(i, 1);
 				}
 			}
 		}
@@ -186,7 +183,7 @@ function CoontiModuleManager(cnti) {
 					moduleNames.splice(i, 1);
 					continue;
 				}
-				
+
 				if(!module['initialised'] && cf['initialise']) {
 					var ret = yield self._initialiseModule(mn);
 					if(ret && !cf['start']) {
@@ -194,7 +191,7 @@ function CoontiModuleManager(cnti) {
 						continue;
 					}
 				}
-				
+
 				if(module['initialised'] && !module['started'] && cf['start']) {
 					var ret = yield self._startModule(mn);
 					if(ret) {
@@ -207,7 +204,7 @@ function CoontiModuleManager(cnti) {
 				break;
 			}
 		}
-	}
+	};
 
 	/**
 	 * Loads a module from the given path.
@@ -277,7 +274,7 @@ function CoontiModuleManager(cnti) {
 				}
 
 				var moduleLogger = coonti.getManager('log').getLogger('module-' + name.toLowerCase());
-				
+
 				var mdData = {
 					name: name,
 					info: info,
@@ -289,9 +286,9 @@ function CoontiModuleManager(cnti) {
 					initialised: false,
 					started: false,
 					dependency: depComp
-				}
+				};
 				modules[mdData.name] = mdData;
-				
+
 				yield dependencies.addComponent(depComp);
 
 				return true;
@@ -302,7 +299,7 @@ function CoontiModuleManager(cnti) {
 			logger.error("ModuleManager - Loading module '%s' failed due to an exception.", file, e);
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Sets configuration for a module.
@@ -321,7 +318,7 @@ function CoontiModuleManager(cnti) {
 			logger.warn("ModuleManager - Failed to set configuration for module '%s'.", name);
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Internally sets configuration for a module without saving the configuration to the database.
@@ -347,7 +344,7 @@ function CoontiModuleManager(cnti) {
 		}
 		module.config = config;
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches module configuration.
@@ -364,8 +361,8 @@ function CoontiModuleManager(cnti) {
 			return false;
 		}
 		return module.config;
-	}
-		
+	};
+
 	/**
 	 * Initialises a loaded module and stores the state into the configuration.
 	 *
@@ -380,7 +377,7 @@ function CoontiModuleManager(cnti) {
 			yield coonti.setConfigParam('modules.moduleConfig.' + name + '.initialise', true);
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Initialises a loaded module without storing the state into the configuration.
@@ -416,7 +413,7 @@ function CoontiModuleManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Starts a module and stores the state into the configuration.
@@ -432,7 +429,7 @@ function CoontiModuleManager(cnti) {
 			yield coonti.setConfigParam('modules.moduleConfig.' + name + '.start', true);
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Starts a module without storing the state into the configuration.
@@ -471,13 +468,13 @@ function CoontiModuleManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Stops a module and stores the state into the configuration.
 	 *
 	 * @param {String} name - The name of the module.
-	 * @return {boolean} True on success, false on failure.	
+	 * @return {boolean} True on success, false on failure.
 	 * @fires Coonti-Module-Stop-{name}
 	 * @fires Coonti-Module-Stop with name as param.
 	 */
@@ -487,14 +484,14 @@ function CoontiModuleManager(cnti) {
 			yield coonti.setConfigParam('modules.moduleConfig.' + name + '.start', false);
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Stops a module without storing the state into the configuration.
 	 *
 	 * @private
 	 * @param {String} name - The name of the module.
-	 * @return {boolean} True on success, false on failure.	
+	 * @return {boolean} True on success, false on failure.
 	 * @fires Coonti-Module-Stop-{name}
 	 * @fires Coonti-Module-Stop with name as param.
 	 */
@@ -518,7 +515,7 @@ function CoontiModuleManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes a module and stores the state into the configuration. The module disappears on the list of available modules.
@@ -534,7 +531,7 @@ function CoontiModuleManager(cnti) {
 			yield coonti.setConfigParam('modules.moduleConfig.' + name + '.remove', true);
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Removes a module without storing the state into the configuration.
@@ -567,7 +564,7 @@ function CoontiModuleManager(cnti) {
 			}
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Lists modules.
@@ -576,8 +573,8 @@ function CoontiModuleManager(cnti) {
 	 */
 	this.listModules = function() {
 		return modules;
-	}
-	
+	};
+
 	/**
 	 * Fetches a module by the name.
 	 *
@@ -590,7 +587,7 @@ function CoontiModuleManager(cnti) {
 		}
 
 		return modules[name];
-	}
+	};
 
 	/**
 	 * Adds a module asset file available for the clients. Only modules that use package.json convention (and have directory) can add asset files.
@@ -610,7 +607,7 @@ function CoontiModuleManager(cnti) {
 		}
 
 		// ##TODO## Check that path does not have .. in the path
-		
+
 		var md = modules[name];
 		if(!md.dir) {
 			return false;
@@ -623,7 +620,7 @@ function CoontiModuleManager(cnti) {
 		moduleFiles[name][file] = md.dir + '/' + path;
 		logger.debug("ModuleManager - Added asset '%s' to module '%s'.", file, name);
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a module asset file.
@@ -644,7 +641,7 @@ function CoontiModuleManager(cnti) {
 		delete moduleFiles[name][file];
 		logger.debug("ModuleManager - Removed asset '%s' from module '%s'.", file, name);
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all module's assets.
@@ -660,7 +657,7 @@ function CoontiModuleManager(cnti) {
 		delete !moduleFiles[name];
 		logger.debug("ModuleManager - Removed all assets from module '%s'.", name);
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches module asset path for web browsers.
@@ -672,8 +669,8 @@ function CoontiModuleManager(cnti) {
 			return false;
 		}
 		return '/' + webPath;
-	}
-	
+	};
+
 	/**
 	 * Fetches assets of a module.
 	 *
@@ -685,7 +682,7 @@ function CoontiModuleManager(cnti) {
 			return {};
 		}
 		return moduleFiles[name];
-	}
+	};
 
 	/**
 	 * Fetches assets of all modules.
@@ -694,7 +691,7 @@ function CoontiModuleManager(cnti) {
 	 */
 	this.getAllModuleAssets = function() {
 		return moduleFiles;
-	}
+	};
 }
 
 module.exports = CoontiModuleManager;

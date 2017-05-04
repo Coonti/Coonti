@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,37 +37,37 @@ function CoontiAdmin(cnti) {
 	var coonti = cnti;
 
 	var adminPath = [
-		{ name: "session", priority: 700 },
-		{ name: "route", priority: 600 },
-		{ name: "access", 
-		  priority: 500, 
+		{ name: 'session', priority: 700 },
+		{ name: 'route', priority: 600 },
+		{ name: 'access',
+		  priority: 500,
 		  config: {
 			  requireLogin: true,
 			  requireAccess: 'admin.accessAdmin',
 			  loginRoute: '/login',
 			  logoutRoute: '/logout'
-		  } 
+		  }
 		},
-		{ name: "form", priority: 400 },
-		{ name: "adminData", priority: 300 },
-		{ name: "adminTemplateOrJson", priority: 200 },
-		{ name: "end", priority: 100 }
+		{ name: 'form', priority: 400 },
+		{ name: 'adminData', priority: 300 },
+		{ name: 'adminTemplateOrJson', priority: 200 },
+		{ name: 'end', priority: 100 }
 	];
 
 	var adminJsonPath = [
-		{ name: "session", priority: 700 },
-		{ name: "route", priority: 600 },
-		{ name: "accessJson", 
-		  priority: 500, 
+		{ name: 'session', priority: 700 },
+		{ name: 'route', priority: 600 },
+		{ name: 'accessJson',
+		  priority: 500,
 		  config: {
 			  requireLogin: true,
 			  requireAccess: 'admin.accessAdmin'
-		  } 
+		  }
 		},
-		{ name: "form", priority: 400 },
-		{ name: "adminApi", priority: 300 },
-		{ name: "adminTemplateOrJson", priority: 200 },
-		{ name: "end", priority: 100 }
+		{ name: 'form', priority: 400 },
+		{ name: 'adminApi', priority: 300 },
+		{ name: 'adminTemplateOrJson', priority: 200 },
+		{ name: 'end', priority: 100 }
 	];
 
 	var defaultQueryValues = {
@@ -80,7 +80,7 @@ function CoontiAdmin(cnti) {
 
 	var menu = false;
 	var routes = false;
-	
+
 	var initialised = false;
 
 	var formManager = false;
@@ -89,7 +89,7 @@ function CoontiAdmin(cnti) {
 	var userManager = false;
 	var moduleManager = false;
 	var templateManager = false;
-	
+
 	var minirouter = new MiniRouter(this);
 
 	var angularTemplates = false;
@@ -113,7 +113,7 @@ function CoontiAdmin(cnti) {
 			version: '0.1.0',
 			moduleUrl: 'http://coonti.org'
 		};
-	}
+	};
 
 	/**
 	 * Initialises the module.
@@ -128,10 +128,10 @@ function CoontiAdmin(cnti) {
 		userManager = coonti.getManager('user');
 		templateManager = coonti.getManager('template');
 		moduleManager = coonti.getManager('module');
-		
+
 		contentManager = coonti.getManager('content');
 		mediaManager = coonti.getManager('media');
-		
+
 		// Create required forms
 		formManager = coonti.getManager('form');
 
@@ -187,7 +187,7 @@ function CoontiAdmin(cnti) {
 		fm.addField('submit', 'submit', {
 			value: 'Save'
 		});
-		
+
 		minirouter.addRoute('menu', '/menu', this.getCoontiMenu);
 		minirouter.addRoute('routes', '/routes', this.getCoontiRoutes);
 		minirouter.addRoute('assets', '/assets', this.getCoontiAssets);
@@ -195,101 +195,101 @@ function CoontiAdmin(cnti) {
 		minirouter.addRoute('templates', '/templates/(.+)', this.getTemplate);
 
 		var rah = new RestApiHelper(coonti,
-									{ allow: ['admin.addContent', 'admin.manageContentTypes'],
+			{ allow: ['admin.addContent', 'admin.manageContentTypes'],
 									  handler: this.getContentType },
-									{ allow: 'admin.manageContentTypes',
+			{ allow: 'admin.manageContentTypes',
 									  handler: this.updateContentType },
-									{ allow: 'admin.manageContentTypes',
+			{ allow: 'admin.manageContentTypes',
 									  handler: this.addContentType },
-									{ allow: 'admin.manageContentTypes',
+			{ allow: 'admin.manageContentTypes',
 									 handler: this.removeContentType });
 		minirouter.addRoute('contentType', '\/contentType(?:\/(.+))?', rah.serve);
 
 		rah = new RestApiHelper(coonti,
-								{ allow: 'admin.manageContent',
+			{ allow: 'admin.manageContent',
 								  handler: this.getContent },
-								{ allow: 'admin.manageContent',
+			{ allow: 'admin.manageContent',
 								  handler: this.updateContent },
-								{ allow: 'admin.manageContent',
+			{ allow: 'admin.manageContent',
 								  handler: this.addContent },
-								{ allow: 'admin.manageContent',
+			{ allow: 'admin.manageContent',
 								  handler: this.removeContent });
 		minirouter.addRoute('content', '\/content(?:\/([a-zA-Z0-9_-]+))?(?:\/([0-9]*))?(?:\/([0-9]*))?(?:\/([a-zA-Z0-9_-]*))?', rah.serve);
 
 		rah = new RestApiHelper(coonti,
-								{ allow: 'admin.manageMedia',
+			{ allow: 'admin.manageMedia',
 								  handler: this.getMedia },
-								{ allow: 'admin.manageMedia',
+			{ allow: 'admin.manageMedia',
 								  handler: this.updateMedia },
-								{ allow: 'admin.manageMedia',
+			{ allow: 'admin.manageMedia',
 								  handler: this.addMedia },
-								{ allow: 'admin.manageMedia',
+			{ allow: 'admin.manageMedia',
 								  handler: this.removeMedia });
 		minirouter.addRoute('media', '\/media(?:\/([^\/]+))?(?:\/(.+))?', rah.serve);
 
 		rah = new RestApiHelper(coonti, false, { loggedIn: true, handler: this.changePassword }, false, false);
 		minirouter.addRoute('password', '/users/user/password(?:\/(.+))?', rah.serve);
-		
+
 		rah = new RestApiHelper(coonti,
-								{ loggedIn: true,
+			{ loggedIn: true,
 								  handler: this.getUser },
-								{ allow: 'admin.manageUsers',
+			{ allow: 'admin.manageUsers',
 								  handler: this.updateUser },
-								{ allow: 'admin.manageUsers',
+			{ allow: 'admin.manageUsers',
 								  handler: this.addUser },
-								{ allow: 'admin.manageUsers',
+			{ allow: 'admin.manageUsers',
 								  handler: this.removeUser });
 		minirouter.addRoute('user', '\/users\/user(?:\/(.+))?', rah.serve);
 
 		rah = new RestApiHelper(coonti,
-								{ allow: 'admin.manageGroups',
+			{ allow: 'admin.manageGroups',
 								  handler: this.getGroup },
-								{ allow: 'admin.manageGroups',
+			{ allow: 'admin.manageGroups',
 								  handler: this.updateGroup },
-								{ allow: 'admin.manageGroups',
+			{ allow: 'admin.manageGroups',
 								  handler: this.addGroup },
-								{ allow: 'admin.manageGroups',
+			{ allow: 'admin.manageGroups',
 								  handler: this.removeGroup });
 		minirouter.addRoute('group', '\/users\/group(?:\/(.+))?', rah.serve);
 
 		rah = new RestApiHelper(coonti,
-								{ allow: 'admin.manageRoles',
+			{ allow: 'admin.manageRoles',
 								  handler: this.getRole },
-								{ allow: 'admin.manageRoles',
+			{ allow: 'admin.manageRoles',
 								  handler: this.updateRole },
-								{ allow: 'admin.manageRoles',
+			{ allow: 'admin.manageRoles',
 								  handler: this.addRole },
-								{ allow: 'admin.manageRoles',
+			{ allow: 'admin.manageRoles',
 								  handler: this.removeRole });
 		minirouter.addRoute('role', '\/users\/role(?:\/(.+))?', rah.serve);
 
 		minirouter.addRoute('right', '/users/right', this.getRights);
 
 		rah = new RestApiHelper(coonti,
-								{ allow: 'admin.manageModules',
+			{ allow: 'admin.manageModules',
 								  handler: this.listModule },
-								{ allow: 'admin.manageModules',
+			{ allow: 'admin.manageModules',
 								  handler: this.manageModule },
 								false, false);
 		minirouter.addRoute('module', '\/modules(?:\/(.+))?', rah.serve);
 
 		rah = new RestApiHelper(coonti,
-								{ allow: 'admin.manageThemes',
+			{ allow: 'admin.manageThemes',
 								  handler: this.getTheme },
-								{ allow: 'admin.manageThemes',
+			{ allow: 'admin.manageThemes',
 								  handler: this.manageTheme },
 								false, false);
 		minirouter.addRoute('theme', '\/themes(?:\/(.+))?', rah.serve);
 
 		self._setDefaults();
-		
+
 		initialised = true;
 
 		yield coonti.fireEvent('Coonti-Admin-Init');
 		logger.info('CoontiAdmin - Initialised.');
 
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -298,7 +298,7 @@ function CoontiAdmin(cnti) {
 	 */
 	this.remove = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers file based content handler.
@@ -313,7 +313,7 @@ function CoontiAdmin(cnti) {
 		}
 
 		yield coonti.fireEvent('Coonti-Admin-Starting');
-		
+
 		var router = coonti.getManager('router');
 		if(!router.addStateHandler('adminData', this.handleAdmin)) {
 			throw new CoontiException(CoontiException.FATAL, 4101, 'Cannot add admin data state handler.');
@@ -338,12 +338,12 @@ function CoontiAdmin(cnti) {
 			logger.error('CoontiAdmin - Could not add itself as a manager.');
 			return false;
 		}
-		
+
 		yield coonti.fireEvent('Coonti-Admin-Start');
-		logger.info('CoontiAdmin - Started.');	
-	
+		logger.info('CoontiAdmin - Started.');
+
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module.
@@ -362,11 +362,11 @@ function CoontiAdmin(cnti) {
 		router.removeStateHandler('adminTemplateOrJson');
 
 		coonti.removeManager('admin');
-		
+
 		yield coonti.fireEvent('Coonti-Admin-Stop');
-		logger.info('CoontiAdmin - Stopped.');	
+		logger.info('CoontiAdmin - Stopped.');
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -375,7 +375,7 @@ function CoontiAdmin(cnti) {
 	 */
 	this.remove = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Provides Coonti administration menu.
@@ -385,27 +385,27 @@ function CoontiAdmin(cnti) {
 	this.getCoontiMenu = function*() {
 		var user = yield userManager.getCurrentUser(this);
 		if(!user) {
-			this.status=(401);
+			this.status = (401);
 			return;
 		}
 
-		var mn = yield self.stripArrayWithAccessRights(user, self.menu)
+		var mn = yield self.stripArrayWithAccessRights(user, self.menu);
 		this.coonti.setItem('response', mn);
-	}
-	
+	};
+
 	/**
 	 * Provides Coonti administration routes for Angular.
 	 */
 	this.getCoontiRoutes = function*() {
 		var user = yield userManager.getCurrentUser(this);
 		if(!user) {
-			this.status=(401);
+			this.status = (401);
 			return;
 		}
-		
-		var routes = yield self.stripArrayWithAccessRights(user, self.routes)
+
+		var routes = yield self.stripArrayWithAccessRights(user, self.routes);
 		this.coonti.setItem('response', routes);
-	}
+	};
 
 	/**
 	 * Provides Coonti administration assets for Angular.
@@ -423,18 +423,18 @@ function CoontiAdmin(cnti) {
 				}
 			}
 		}
-		
+
 		this.coonti.setItem('response', ret);
-	}
+	};
 
 	/**
 	 * Provides Coonti form elements for Angular.
 	 */
 	this.getCoontiFormElements = function*() {
 		var ret = formManager.getFormElements();
-		
+
 		this.coonti.setItem('response', ret);
-	}
+	};
 
 	/**
 	 * Removes all items of the given array that have 'allow' key set and the user does not have required credentials.
@@ -453,7 +453,7 @@ function CoontiAdmin(cnti) {
 			var add = true;
 			if(arr[i]['allow']) {
 				add = false;
-				if(typeof(arr[i]['allow']) == 'string') {
+				if(typeof (arr[i]['allow']) == 'string') {
 					add = yield user.isAllowed(arr[i]['allow']);
 				}
 				else {
@@ -473,8 +473,8 @@ function CoontiAdmin(cnti) {
 			// ##TODO## Add deny
 		}
 		return arr;
-	}
-	
+	};
+
 	/**
 	 * Provides Angular templates to the admin user interface.
 	 *
@@ -490,7 +490,7 @@ function CoontiAdmin(cnti) {
 			this.coonti.setItem('response', tmpl);
 			this.coonti.setItem('responseType', 'text/html');
 		}
-	}
+	};
 
 	/**
 	 * Handles content. Besides parameters in URL, handles the following query string parameters: sort - The field used in sorting, start - The starting point of the listing, len - The length of the listing, type - The ContentType that should be shown. All are optional.
@@ -508,13 +508,13 @@ function CoontiAdmin(cnti) {
 		}
 
 		var ret = getQueryParams(this.query);
-		
+
 		var ch = contentManager.getContentHandler();
-		var cnt = yield ch.listContent({}, { fields: { contentType: 1, path: 1, 'content.title': 1, mtime: 1 }}, ret.pagination);
+		var cnt = yield ch.listContent({}, { fields: { contentType: 1, path: 1, 'content.title': 1, mtime: 1 } }, ret.pagination);
 		ret.items = cnt;
-		
+
 		this.coonti.setItem('response', ret);
-	}
+	};
 
 	/**
 	 * Updates content from Angular.
@@ -533,7 +533,7 @@ function CoontiAdmin(cnti) {
 
 		// ##TODO## Send an error code instead
 		this.coonti.setItem('response', {});
-	}
+	};
 
 	/**
 	 * Adds content from Angular.
@@ -547,7 +547,7 @@ function CoontiAdmin(cnti) {
 			yield contentManager.addContent(ct, content);
 		}
 		this.coonti.setItem('response', {});
-	}
+	};
 
 	/**
 	 * Removes the specified content item.
@@ -559,13 +559,13 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield contentManager.removeContent(id);
 			if(!res) {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Lists content types or shows one content type.
 	 *
@@ -583,30 +583,29 @@ function CoontiAdmin(cnti) {
 		if(res === false) {
 			var tmp = contentManager.listContentTypes();
 			tmp = _.pluck(tmp, 'contentType');
-			var res = { contentTypes: [] }
+			var res = { contentTypes: [] };
 			_.each(tmp, function(t) {
 				res.contentTypes.push(_.pick(t, 'name', 'displayName', 'description'));
 			});
 		}
 
 		this.coonti.setItem('response', res);
-	}
-	
+	};
+
 	/**
 	 * Updates a content type.
 	 *
 	 * @param {String} name - The content type name.
 	 */
 	this.updateContentType = function*(name) {
-
 		if(this.request['fields'] && this.request['fields']['contentType']) {
 			var ct = this.request.fields.contentType;
 			var nm = ct['name'];
 			yield contentManager.updateContentType(nm, ct);
 		}
 		this.coonti.setItem('response', {});
-	}
-	
+	};
+
 	/**
 	 * Adds a new content type.
 	 */
@@ -617,8 +616,8 @@ function CoontiAdmin(cnti) {
 			yield contentManager.addContentType(nm, ct);
 		}
 		this.coonti.setItem('response', {});
-	}
-	
+	};
+
 	/**
 	 * Removes a content type.
 	 *
@@ -629,13 +628,13 @@ function CoontiAdmin(cnti) {
 		if(!!name) {
 			var res = yield contentManager.removeContentType(name);
 			if(!res) {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Fetches media files. Besides parameters in URL, handles the following query string parameters: sort - The field used in sorting, start - The starting point of the listing, and len - The length of the listing. All are optional.
 	 *
@@ -649,14 +648,14 @@ function CoontiAdmin(cnti) {
 		var ret = getQueryParams(this.query);
 		ret.path = mediaManager.getWebPath();
 		ret.dir = dir;
-		
+
 		var dirs = mediaManager.getMediaDirectoriesByType('content');
 		ret.directories = dirs;
 
 		var files = yield mediaManager.getMediaFiles(dir, ret.pagination);
 		ret.items = files;
 		this.coonti.setItem('response', ret);
-	}
+	};
 
 	/**
 	 * Updates a media file from Angular.
@@ -683,9 +682,9 @@ function CoontiAdmin(cnti) {
 				}
 			}
 		}
-		this.status=(400);
+		this.status = (400);
 		this.coonti.setItem('response', {});
-	}
+	};
 
 	/**
 	 * Adds a media file from Angular.
@@ -705,9 +704,9 @@ function CoontiAdmin(cnti) {
 				return;
 			}
 		}
-		this.status=(400);
+		this.status = (400);
 		this.coonti.setItem('response', {});
-	}
+	};
 
 	/**
 	 * Removes the specified media file.
@@ -720,13 +719,13 @@ function CoontiAdmin(cnti) {
 		if(!!dir && !!name) {
 			var res = yield mediaManager.removeFile(dir, name);
 			if(!res) {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Lists users or shows one user.
 	 *
@@ -739,11 +738,11 @@ function CoontiAdmin(cnti) {
 				var userJson = currentUser.exportData();
 				delete userJson['password'];
 				this.coonti.setItem('response', userJson);
-				return
+				return;
 			}
 
 			if(!currentUser.isAllowed('admin.manageUsers')) {
-				this.status=(403);
+				this.status = (403);
 				return;
 			}
 
@@ -754,23 +753,23 @@ function CoontiAdmin(cnti) {
 				this.coonti.setItem('response', userJson);
 			}
 			else {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
 
 		if(!currentUser.isAllowed('admin.manageUsers')) {
-			this.status=(403);
+			this.status = (403);
 			return;
 		}
-		
+
 		var ret = getQueryParams(this.query);
-		var users = yield userManager.getUsers({}, { fields: { account: 1, 'userData.email': 1, 'userData.name': 1 }});
+		var users = yield userManager.getUsers({}, { fields: { account: 1, 'userData.email': 1, 'userData.name': 1 } });
 
 		ret.users = users;
 		this.coonti.setItem('response', ret);
-	}
-	
+	};
+
 	/**
 	 * Updates an user.
 	 */
@@ -778,21 +777,21 @@ function CoontiAdmin(cnti) {
 		if(this.request.fields['_id']) {
 			var fields = this.request.fields;
 			if(!fields['_id']) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 
 			var ret = yield userManager.updateUser(fields['_id'], fields['userData'], fields['allowed'], fields['denied'], fields['roles'], fields['groups']);
 			if(!ret) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Adds a new user.
 	 */
@@ -800,22 +799,22 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['account']) {
-				this.status=(404); // ##TODO## Change error to something better
+				this.status = (404); // ##TODO## Change error to something better
 				return;
 			}
 
 			// ##TODO## Handle initial password somehow
 			var ret = yield userManager.addUser(fields['account'], false, fields['userData'], fields['allowed'], fields['denied'], fields['roles'], fields['groups']);
 			if(!ret) {
-				this.status=(404); // ##TODO## Change error to something better
+				this.status = (404); // ##TODO## Change error to something better
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Removes an user.
 	 *
@@ -826,12 +825,12 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield userManager.removeUserById(id);
 			if(!res) {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
-		this.status=(404);
-	}
+		this.status = (404);
+	};
 
 	/**
 	 * Changes user password.
@@ -840,28 +839,28 @@ function CoontiAdmin(cnti) {
 	 */
 	this.changePassword = function*(id) {
 		if(!this.request['fields']) {
-			this.status=(404);
+			this.status = (404);
 			return;
 		}
 		var password = this.request.fields['password'];
 		if(!password) {
 			password = false;
 		}
-		
+
 		this.coonti.setItem('response', {});
 
 		var user = yield userManager.getCurrentUser(this);
 		if(!!id || id != user.getId()) {
 			// Let's change someone else's password
 			if(!user.isAllowed('admin.manageUsers')) {
-				this.status=(403);
+				this.status = (403);
 				return;
 			}
 
 			targetUser = yield userManager.getUserById(id);
 
 			if(!targetUser) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 
@@ -873,7 +872,7 @@ function CoontiAdmin(cnti) {
 
 		var currentPassword = this.request.fields['currentPassword'];
 		if(!currentPassword) {
-			this.status=(401);
+			this.status = (401);
 			return;
 		}
 
@@ -883,11 +882,10 @@ function CoontiAdmin(cnti) {
 			this.coonti.setItem('response', { success: 1 });
 		}
 		else {
-			this.status=(401);
-			return;
+			this.status = (401);
 		}
-	}
-	
+	};
+
 	/**
 	 * Lists groups or shows one group.
 	 *
@@ -900,18 +898,18 @@ function CoontiAdmin(cnti) {
 				this.coonti.setItem('response', group.exportData());
 			}
 			else {
-				this.status=(404);
+				this.status = (404);
 			}
-			return;			
+			return;
 		}
 
 		var ret = getQueryParams(this.query);
-		var groups = yield userManager.getGroups({}, { fields: { name: 1, description: 1 }});
+		var groups = yield userManager.getGroups({}, { fields: { name: 1, description: 1 } });
 
 		ret.groups = groups;
 		this.coonti.setItem('response', ret);
-	}
-	
+	};
+
 	/**
 	 * Updates a group.
 	 */
@@ -919,21 +917,21 @@ function CoontiAdmin(cnti) {
 		if(this.request.fields['_id']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 
 			var ret = yield userManager.updateGroup(fields['_id'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Adds a new group.
 	 */
@@ -941,21 +939,21 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status=(404); // ##TODO## Change error to something better
+				this.status = (404); // ##TODO## Change error to something better
 				return;
 			}
 
 			var ret = yield userManager.addGroup(fields['name'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status=(404); // ##TODO## Change error to something better
+				this.status = (404); // ##TODO## Change error to something better
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Removes a group.
 	 *
@@ -966,12 +964,12 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield userManager.removeGroupById(id);
 			if(!res) {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
-		this.status=(404);
-	}
+		this.status = (404);
+	};
 
 	/**
 	 * Lists roles or shows one roles.
@@ -985,18 +983,18 @@ function CoontiAdmin(cnti) {
 				this.coonti.setItem('response', role.exportData());
 			}
 			else {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
 
 		var ret = getQueryParams(this.query);
-		var roles = yield userManager.getRoles({}, { fields: { name: 1, description: 1 }});
+		var roles = yield userManager.getRoles({}, { fields: { name: 1, description: 1 } });
 
 		ret.roles = roles;
 		this.coonti.setItem('response', ret);
-	}
-	
+	};
+
 	/**
 	 * Updates a role.
 	 *
@@ -1006,21 +1004,21 @@ function CoontiAdmin(cnti) {
 		if(this.request.fields['_id']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 
 			var ret = yield userManager.updateRole(fields['_id'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Adds a new role.
 	 */
@@ -1028,21 +1026,21 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status=(404); // ##TODO## Change error to something better
+				this.status = (404); // ##TODO## Change error to something better
 				return;
 			}
 
 			var ret = yield userManager.addRole(fields['name'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status=(404); // ##TODO## Change error to something better
+				this.status = (404); // ##TODO## Change error to something better
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status=(404);
-	}
-	
+		this.status = (404);
+	};
+
 	/**
 	 * Removes a role.
 	 *
@@ -1053,19 +1051,19 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield userManager.removeRoleById(id);
 			if(!res) {
-				this.status=(404);
+				this.status = (404);
 			}
 			return;
 		}
-		this.status=(404);
-	}
+		this.status = (404);
+	};
 
 	/**
 	 * Lists the available rights.
 	 */
 	this.getRights = function*() {
 		this.coonti.setItem('response', userManager.getRights());
-	}
+	};
 
 	/**
 	 * Lists the modules in the system.
@@ -1073,8 +1071,8 @@ function CoontiAdmin(cnti) {
 	this.listModule = function*() {
 		ret = moduleManager.listModules();
 		this.coonti.setItem('response', ret);
-	}
-	
+	};
+
 	/**
 	 * Manages the modules in the system. The action is given as a query parameter (init, start, stop).
 	 *
@@ -1083,17 +1081,17 @@ function CoontiAdmin(cnti) {
 	this.manageModule = function*(name) {
 		this.coonti.setItem('response', {});
 		if(!name || !this.request['query']) {
-			this.status=(404);
+			this.status = (404);
 			return;
 		}
 
 		var md = moduleManager.getModule(name);
 		if(!md) {
-			this.status=(404);
+			this.status = (404);
 			return;
 		}
 
-		var query = this.request.query
+		var query = this.request.query;
 		var res = false;
 		if(query['init']) {
 			res = yield moduleManager.initialiseModule(name);
@@ -1106,9 +1104,9 @@ function CoontiAdmin(cnti) {
 		}
 
 		if(!res) {
-			this.status=(500);
+			this.status = (500);
 		}
-	}
+	};
 
 	/**
 	 * Fetches all or single theme.
@@ -1119,8 +1117,8 @@ function CoontiAdmin(cnti) {
 		if(!!name) {
 			ret = templateManager.getTheme(name);
 			if(!ret) {
-				this.status=(404);
-				return;	
+				this.status = (404);
+				return;
 			}
 			this.coonti.setItem('response', ret);
 			return;
@@ -1128,7 +1126,7 @@ function CoontiAdmin(cnti) {
 
 		ret = templateManager.getThemes();
 		this.coonti.setItem('response', tools.stringifyExclude(ret, ['staticCollections', 'routes', 'routesRegexp']));
-	}
+	};
 
 	/**
 	 * Activates or deactivates a given theme, based on query parameter (activate, deactivate).
@@ -1138,17 +1136,17 @@ function CoontiAdmin(cnti) {
 	this.manageTheme = function*(name) {
 		this.coonti.setItem('response', {});
 		if(!name || !this.request['query']) {
-			this.status=(404);
+			this.status = (404);
 			return;
 		}
 
 		var th = templateManager.getTheme(name);
 		if(!th) {
-			this.status=(404);
+			this.status = (404);
 			return;
 		}
 
-		var query = this.request.query
+		var query = this.request.query;
 		var res = false;
 		if(query['activate']) {
 			res = yield templateManager.activateTheme(name);
@@ -1158,10 +1156,10 @@ function CoontiAdmin(cnti) {
 		}
 
 		if(!res) {
-			this.status=(500);
+			this.status = (500);
 		}
-	}
-	
+	};
+
 	/**
 	 * Handles Coonti administration
 	 *
@@ -1199,9 +1197,8 @@ function CoontiAdmin(cnti) {
 					this.redirect('/admin');
 					return;
 				}
-				else {
-					formSubmitted.addMessage('Invalid user account or password. Please try again.');
-				}
+
+				formSubmitted.addMessage('Invalid user account or password. Please try again.');
 			}
 
 			this.coonti.setItem('content', {
@@ -1228,7 +1225,7 @@ function CoontiAdmin(cnti) {
 		}
 
 		yield next;
-	}
+	};
 
 	/**
 	 * Handles Coonti administration API.
@@ -1248,12 +1245,12 @@ function CoontiAdmin(cnti) {
 			yield func(this);
 		}
 		else {
-			this.status=(404);
+			this.status = (404);
 			return;
 		}
-		
+
 		yield next;
-	}
+	};
 
 	/**
 	 * Shows the admin data either through a template or as JSON. If there is item 'content', it will be rendered. Otherwise, item 'response' will be send out as JSON.
@@ -1287,7 +1284,7 @@ function CoontiAdmin(cnti) {
 
 		logger.warn('CoontiAdmin - No content or response for a request.');
 		yield next;
-	}
+	};
 
 	/**
 	 * Fetches the typical query parameters into a hashmap and uses default values for missing and/or invalid values.
@@ -1309,7 +1306,7 @@ function CoontiAdmin(cnti) {
 		else {
 			ret.pagination.start = defaultQueryValues['start'];
 		}
-		
+
 		if(query['len']) {
 			ret.pagination.len = parseInt(query['len'], 10);
 			if(isNaN(ret.pagination.len) || ret.pagination.len < 0) {
@@ -1319,7 +1316,7 @@ function CoontiAdmin(cnti) {
 		else {
 			ret.pagination.len = defaultQueryValues['len'];
 		}
-			
+
 		if(query['sort']) {
 			ret.pagination.sort = query['sort'];
 			if(!ret.pagination.sort) {
@@ -1329,7 +1326,7 @@ function CoontiAdmin(cnti) {
 		else {
 			ret.pagination.sort = defaultQueryValues['sort'];
 		}
-		
+
 		if(query['filter']) {
 			ret.pagination.filter = query['filter'];
 			if(!ret.pagination.filter) {
@@ -1350,7 +1347,7 @@ function CoontiAdmin(cnti) {
 			ret.pagination.search = defaultQueryValues['search'];
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * @class
@@ -1468,7 +1465,7 @@ function CoontiAdmin(cnti) {
 			else if(!route.startsWith('/')) {
 				route = '/' + route;
 			}
-			
+
 			var route = '/module/' + module + route;
 			for(var i = 0; i < self.routes.length; i++) {
 				if(self.routes[i].route == route) {
@@ -1496,7 +1493,7 @@ function CoontiAdmin(cnti) {
 			var route = '\/module\/' + module + '\/' + re;
 			return minirouter.addRoute(nm, route, fn);
 		},
-		
+
 		/**
 		 * Removes an admin route.
 		 *
@@ -1520,21 +1517,21 @@ function CoontiAdmin(cnti) {
 	 */
 	this._setDefaults = function() {
 		self.menu = [
-			{ 
+			{
 				allow: 'admin.manageContent',
 				name: 'content',
 				title: 'Content',
 				url: '#/content',
 				depth: 0
 			},
-			{ 
+			{
 				allow: ['admin.manageContent', 'admin.addContent'],
 				name: 'content-add',
 				title: 'Add Content',
 				url: '#/content/add',
 				depth: 1
 			},
-			{ 
+			{
 				allow: 'admin.manageContentTypes',
 				name: 'content-manage-types',
 				title: 'Manage Content Types',
@@ -1782,12 +1779,12 @@ function CoontiAdmin(cnti) {
 				route: '/error',
 				template: '/angular/stem/error.html',
 				controller: 'ErrorCtrl'
-			}				
+			}
 
 		];
 
 		self.assets = [];
-	}
+	};
 }
 
 module.exports = CoontiAdmin;

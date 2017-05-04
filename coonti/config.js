@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,11 +46,11 @@ function CoontiConfig(cnti) {
 		basePath: basePath,
 		extensionPath: basePath + 'extensions/',
 		themePath: basePath + 'themes/',
-	}
+	};
 
 	var config = false;
 	var dbUrl = false;
-	
+
 	var defaultConfig = {
 		httpPort: '8080',
 		adminPath: 'admin',
@@ -64,72 +64,72 @@ function CoontiConfig(cnti) {
 			defaultLanguage: 'en'
 		},
 		media: {
-			"path": "media"
+			path: 'media'
 		},
 		logging: {
 			coonti: {
 				transports: {
 					console: {
-						level: "warn",
+						level: 'warn',
 						timestamp: true,
 						colorize: true
 					},
 					file: {
-						name: "coonti.log",
-						level: "debug",
-						filename: "logs/coonti.log"
+						name: 'coonti.log',
+						level: 'debug',
+						filename: 'logs/coonti.log'
 					}
 				}
 			},
-			"coonti-core-welcome": {
+			'coonti-core-welcome': {
 				transports: {
 					console: {
-						level: "info"
+						level: 'info'
 					}
 				}
 			}
 		},
 		themes: [
-			{ 
+			{
 				name: 'Seed',
 				active: true,
-				routes: "/",
+				routes: '/',
 			}
 		],
 		modules: {
 			modulePath: 'coonti/modules',
 			moduleConfig: {
 				CoontiInstall:
-				{ 
+				{
 					name: 'CoontiInstall',
 					initialise: true,
 					start: true
 				},
 				FileConnect:
-				{ 
+				{
 					name: 'FileConnect',
 					initialise: true,
 					start: true
 				},
 				FileContent:
-				{ 
+				{
 					name: 'FileContent',
-					config: { 
-						handlerName: 'installContent', 
-						database: 'install', 
+					config: {
+						handlerName: 'installContent',
+						database: 'install',
 						contentCollection: 'content',
 						contentTypeCollection: 'contentType',
-						default: true 
+						default: true
 					},
 					initialise: true,
 					start: true
 				},
 				MongoConnect:
-				{ 
+				{
 					name: 'MongoConnect'
 				},
 				MongoContent:
-				{ 
+				{
 					name: 'MongoContent'
 				}
 			}
@@ -141,8 +141,8 @@ function CoontiConfig(cnti) {
 				dir: 'coonti/installation',
 				encoding: 'utf-8'
 			}
-		]		
-	}
+		]
+	};
 
 	/**
 	 * Initialises configuration. If this method is called, the current configuration is flushed, so use proper care.
@@ -161,7 +161,7 @@ function CoontiConfig(cnti) {
 		}
 		catch(e) {
 		}
-		
+
 		if(fc) {
 			fc = fc.toString();
 			if(fc.charAt(0) === '\uFEFF') {
@@ -185,7 +185,7 @@ function CoontiConfig(cnti) {
 		if(db && db.length > 0) {
 			for(var i in db) {
 				if(db[i]['name'] && db[i]['name'] == 'mongo') {
-					dbUrl = db[i]['url']
+					dbUrl = db[i]['url'];
 					self._readCoontiConfigFromDb(function(err) {
 						if(err) {
 							console.log('ERROR: Coonti could not connect to the database "' + db[i]['name'] + '". Exiting.');
@@ -198,7 +198,7 @@ function CoontiConfig(cnti) {
 			}
 		}
 		coonti.fireEventCallback('Coonti-Config-Init', false, cb);
-	}
+	};
 
 	/**
 	 * Gets a configuration parameter value.
@@ -208,7 +208,7 @@ function CoontiConfig(cnti) {
 	 */
 	this.getConfigParam = function(param) {
 		return objectPath.get(config, param, false);
-	}
+	};
 
 	/**
 	 * Sets a configuration parameter value. The new value is written to the database, unless Coonti is in installation mode.
@@ -226,7 +226,7 @@ function CoontiConfig(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes a configuration parameter. The change is written to the database, unless Coonti is in installation mode.
@@ -243,7 +243,7 @@ function CoontiConfig(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Reads configuration from MongoDB, from collection 'config'.
@@ -252,7 +252,7 @@ function CoontiConfig(cnti) {
 	 * @param {Function} cb - The callback function to be called when everything is ready.
 	 */
 	this._readCoontiConfigFromDb = function(cb) {
-		co(function *() {
+		co(function*() {
 			var cf = yield self.readConfigFromDb('coontiConfiguration');
 			if(cf) {
 				_.each(cf, function(v, k) {
@@ -266,7 +266,7 @@ function CoontiConfig(cnti) {
 		}, function() {
 			cb(true);
 		});
-	}
+	};
 
 	/**
 	 * Reads and parses a configuration set from database. This set is not added as part of Coonti configuration, but used only by the requester. The set is to be located in the config collection in MongoDB. If Coonti is in installation mode, this function always succeeds and returns an empty object.
@@ -286,7 +286,7 @@ function CoontiConfig(cnti) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Saves a configuration set from database. This set is not added as part of Coonti configuration, but to be used only by the requester. The set is to be located in the config collection in MongoDB. If Coonti is in installation mode, this function always fails and returns an empty object.
@@ -298,7 +298,7 @@ function CoontiConfig(cnti) {
 	this.writeConfigToDb = function*(name, cfg) {
 		if(!!name) {
 			if(config['coontiMode'] == 'install') {
-				return false
+				return false;
 			}
 			if(!!dbUrl) {
 				cfg.config = name;
@@ -309,7 +309,7 @@ function CoontiConfig(cnti) {
 			}
 		}
 		return false;
-	}
+	};
 }
 
 module.exports = CoontiConfig;

@@ -1,5 +1,4 @@
 if(coonti && coonti['user']) {
-
 	// Name all Angular assets with ModuleName + Object description, using CamelCase notation.
 
 	// Angular REST factories can be used in a very straightforward manner in most cases
@@ -49,12 +48,12 @@ if(coonti && coonti['user']) {
 			var quote = new Quote();
 			quote.quote = q;
 			quote.$create({}, function() {
-				notifications.success('', "Quote added.");
+				notifications.success('', 'Quote added.');
 				$location.path('/module/quote');
 			}, function() {
-				notifications.error('', "Quote could not be added.");
+				notifications.error('', 'Quote could not be added.');
 			});
-		}
+		};
 
 		$scope.remove = function(key, item) {
 			ngDialog.openConfirm({
@@ -69,9 +68,9 @@ if(coonti && coonti['user']) {
 					notifications.success('', "Removed quote '" + item + "'.");
 					$scope.quotes = Quote.get($routeParams);
 				}, function() {
-					notifications.error('', "Could not remove quote.");
+					notifications.error('', 'Could not remove quote.');
 				});
 			});
-		}
+		};
 	}]);
 }

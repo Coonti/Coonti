@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,10 +34,10 @@ var logManager;
 function CoontiLogManager(cnti) {
 	coonti = cnti;
 	logManager = this;
-	
+
 	var defaultLogger = 'coonti';
 	var defaultConfig = {};
-	
+
 	/**
 	 * Initialises the LogManager instance. This method is called by Coonti core.
 	 */
@@ -50,7 +50,7 @@ function CoontiLogManager(cnti) {
 		});
 
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
-	}
+	};
 
 	/**
 	 * Initialises the logging subsystem after the configuration has been loaded.
@@ -80,8 +80,8 @@ function CoontiLogManager(cnti) {
 			winston.loggers.add(key, val);
 		});
 		yield coonti.fireEvent('Coonti-Logging-Init', false);
-	}
-	
+	};
+
 	/**
 	 * Fetches a logger instance. Each module should have their own instance to allow debugging only limited parts of the system.
 	 *
@@ -96,14 +96,14 @@ function CoontiLogManager(cnti) {
 		if(winston.loggers.has(name)) {
 			return winston.loggers.get(name);
 		}
-		
+
 		var dash = name.lastIndexOf('-');
 		if(dash > 0) {
 			return this.getLogger(name.substring(0, dash));
 		}
-		
+
 		return winston.loggers.get(defaultLogger);
-	}
+	};
 
 	/**
 	 * Adds a logger instance. If the logger exists, the existing one is returned untouched.
@@ -121,7 +121,7 @@ function CoontiLogManager(cnti) {
 		winston.loggers.add(name, conf);
 		yield coonti.fireEvent('Coonti-Logging-Logger-Added', name);
 		return this.getLogger(name);
-	}
+	};
 }
 
 module.exports = CoontiLogManager;

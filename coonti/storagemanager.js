@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,7 +39,7 @@ function CoontiStorageManager(cnti) {
 	 */
 	this.initialise = function() {
 		return true;
-	}
+	};
 
 	/**
 	 * Adds a new StorageHandler instance.
@@ -54,7 +54,7 @@ function CoontiStorageManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes a StorageHandler instance.
@@ -64,11 +64,11 @@ function CoontiStorageManager(cnti) {
 	 */
 	this.removeStorageHandler = function(name) {
 		if(!!name) {
-			delete storages[name]
+			delete storages[name];
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches a StorageHandler instance.
@@ -81,7 +81,7 @@ function CoontiStorageManager(cnti) {
 			return storages[name];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Lists all available StorageHandlers.
@@ -90,8 +90,7 @@ function CoontiStorageManager(cnti) {
 	 */
 	this.listStorageHandlers = function() {
 		return _.keys(storages);
-	}
-
+	};
 }
 
 /**
@@ -103,7 +102,6 @@ function CoontiStorageManager(cnti) {
  * @return {CachingStorageHandler} A new instance.
  */
 function CachingStorageHandler(sh) {
-
 	// ##TODO## Needs to be replanned, as currently does not work as should
 
 	/**
@@ -114,7 +112,7 @@ function CachingStorageHandler(sh) {
 	/**
 	 * The cached collections.
 	 */
-	this.caches = {}
+	this.caches = {};
 
 	/**
 	 * Fetches one item from the database.
@@ -137,7 +135,7 @@ function CachingStorageHandler(sh) {
 		var obj = yield sh.getData(collection, key);
 		yield ch.set(key, obj);
 		return obj;
-	}
+	};
 
 	/**
 	 * Fetches all matching data from a collection.
@@ -153,7 +151,7 @@ function CachingStorageHandler(sh) {
 		}
 
 		yield sh.getAllData(collection, key);
-	}
+	};
 
 	/**
 	 * Writes data to the database.
@@ -162,7 +160,7 @@ function CachingStorageHandler(sh) {
 	 * @param {Object} data - The data to be written.
 	 */
 	this.setData = function*(collection, data) {
-	}
+	};
 
 	/**
 	 * Removes data fromt the database.
@@ -171,7 +169,7 @@ function CachingStorageHandler(sh) {
 	 * @param {String} id - The id of the data.
 	 */
 	this.removeData = function*(collection, id) {
-	}
+	};
 
 	/**
 	 * Fetches a cache for the given collection. If the cache does not exist, it is created.
@@ -193,7 +191,7 @@ function CachingStorageHandler(sh) {
 
 		this.caches[collection] = cache;
 		return csh;
-	}
+	};
 }
 
 module.exports = CoontiStorageManager;

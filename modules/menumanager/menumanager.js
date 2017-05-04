@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,14 +41,14 @@ function MenuManager(cnti) {
 	var started = false;
 
 	var storage = false;
-	
+
 	var menuCache = cacheManager.caching({ store: 'memory', max: 100 });
 	var _getMenuFromCache = thunkify(menuCache.get);
 	var _setMenuToCache = thunkify(menuCache.set);
 	var _delMenuFromCache = thunkify(menuCache.del);
 
 	var logger;
-	
+
 	/**
 	 * Initialises the module.
 	 *
@@ -57,80 +57,80 @@ function MenuManager(cnti) {
 	 */
 	this.initialise = function*(params) {
 		logger = params.logger;
-		
+
 		config.menuCollection = 'menu';
 
 		contentManager = coonti.getManager('content');
 		var templates = coonti.getManager('template');
-		if(templates) {	
+		if(templates) {
 			templates.extendTwig(function(Twig) {
 				var ret =
-				{
-					extension: 'tag',
-					type: 'menu',
-					regex: /^menu\s+([a-zA-Z0-9_]+)\s+from\s+(.*?)(\s+with\s+(.*?))?$/,
-					next: [],
-					open: true,
-					compile: function(token) {
-						var key = token.match[1].trim();
-						var expression = token.match[2];
-						
-						var expressionStack = Twig.expression.compile.apply(this, [{
-							type: Twig.expression.type.expression,
-							value: expression
-						}]).stack;
-						
-						token.key = key;
-						token.expression = expressionStack;
-						token.items = false;
-						
-						if(typeof token.match[4] != 'undefined') {
-							items = token.match[4];
-							var itemStack = Twig.expression.compile.apply(this, [{
+					{
+						extension: 'tag',
+						type: 'menu',
+						regex: /^menu\s+([a-zA-Z0-9_]+)\s+from\s+(.*?)(\s+with\s+(.*?))?$/,
+						next: [],
+						open: true,
+						compile: function(token) {
+							var key = token.match[1].trim();
+							var expression = token.match[2];
+
+							var expressionStack = Twig.expression.compile.apply(this, [{
 								type: Twig.expression.type.expression,
-								value: items
+								value: expression
 							}]).stack;
-							token.items = itemStack;
-						}
-						
-						delete token.match;
-						return token;
-					},
-					parseGenerator: function*(token, context, chain) {
-						var value = Twig.expression.parse.apply(this, [token.expression, context]);
-						var items = false;
-						if(token.items) {
-							var tmp = Twig.expression.parse.apply(this, [token.items, context]);
-							var items = tmp.split(',');
-							if(items.length == 0) {
-								items = false;
-							}
-						}
 
-						var key = token.key;
-						var mn = false;
+							token.key = key;
+							token.expression = expressionStack;
+							token.items = false;
 
-						if(started) {
-							mn = yield self.getMenu(value);
-							if(items) {
-								mn = yield self.enrichMenu(mn, items);
+							if(typeof token.match[4] != 'undefined') {
+								items = token.match[4];
+								var itemStack = Twig.expression.compile.apply(this, [{
+									type: Twig.expression.type.expression,
+									value: items
+								}]).stack;
+								token.items = itemStack;
 							}
+
+							delete token.match;
+							return token;
+						},
+						parseGenerator: function*(token, context, chain) {
+							var value = Twig.expression.parse.apply(this, [token.expression, context]);
+							var items = false;
+							if(token.items) {
+								var tmp = Twig.expression.parse.apply(this, [token.items, context]);
+								var items = tmp.split(',');
+								if(items.length == 0) {
+									items = false;
+								}
+							}
+
+							var key = token.key;
+							var mn = false;
+
+							if(started) {
+								mn = yield self.getMenu(value);
+								if(items) {
+									mn = yield self.enrichMenu(mn, items);
+								}
+							}
+							context[key] = mn;
+
+							return {
+								chain: chain,
+								content: context
+							};
 						}
-						context[key] = mn;
-						
-						return {
-							chain: chain,
-							content: context
-						};
-					}
-				};
+					};
 				return ret;
 			});
 		}
 
 		logger.debug('MenuManager - Initialised.');
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -140,7 +140,7 @@ function MenuManager(cnti) {
 	this.remove = function*() {
 		logger.debug('MenuManager - Removed.');
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module.
@@ -159,7 +159,7 @@ function MenuManager(cnti) {
 			logger.warn('MenuManager - Could not find MongoDB storage.');
 			return false;
 		}
-		
+
 		if(!coonti.addManager('menu', menuManager)) {
 			logger.warn('MenuManager - Could not add a manager instance.');
 			return false;
@@ -178,7 +178,7 @@ function MenuManager(cnti) {
 			modules.addModuleAsset('MenuManager', 'js/menumanager.js');
 			modules.addModuleAsset('MenuManager', 'css/menumanager.css');
 		}
-		
+
 		var admin = coonti.getManager('admin');
 		if(admin) {
 			admin.addRoute('menu', '', modulePath + '/MenuManager/angular/menu-list.html', 'MenuManagerMenuCtrl', 'admin.manageContent');
@@ -187,13 +187,13 @@ function MenuManager(cnti) {
 			admin.addMenuItem('content-menu', 'Manage Menus', '#/module/menu', 'admin.manageContent', 1, 'content-add');
 
 			var rah = new RestApiHelper(coonti,
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: menuManagerAdmin.getMenu },
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: menuManagerAdmin.updateMenu },
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: menuManagerAdmin.addMenu },
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: menuManagerAdmin.removeMenu });
 			admin.addAdminRoute('MenuManager', 'menu', 'menu(?:\/(.+))?', rah.serve);
 		}
@@ -201,7 +201,7 @@ function MenuManager(cnti) {
 		started = true;
 		logger.debug('MenuManager - Started.');
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters file based content handler.
@@ -221,16 +221,16 @@ function MenuManager(cnti) {
 			admin.removeRoute('/menu/add');
 			admin.removeRoute('/menu/edit/:name');
 		}
-		
+
 		var modules = coonti.getManager('module');
 		if(modules) {
 			modules.removeAllModuleAssets('MenuManager');
 		}
-		
+
 		started = false;
 		logger.debug('MenuManager - Stopped.');
 		return true;
-	}
+	};
 
 	/**
 	 * Lists available menus.
@@ -238,9 +238,9 @@ function MenuManager(cnti) {
 	 * @return {Array} Menu names.
 	 */
 	this.listMenus = function*() {
-		var res = yield storage.getAllData(config.menuCollection, {}, { fields: { name: 1, _id: 1 }});
+		var res = yield storage.getAllData(config.menuCollection, {}, { fields: { name: 1, _id: 1 } });
 		return res;
-	}
+	};
 
 	/**
 	 * Fetches the given menu.
@@ -275,7 +275,7 @@ function MenuManager(cnti) {
 			return res;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Adds external information from referred content to the menu, used by getMenu().
@@ -290,7 +290,7 @@ function MenuManager(cnti) {
 		}
 
 		var newMenu = clone(menu);
-		
+
 		if(!keys || keys.length == 0) {
 			return newMenu;
 		}
@@ -305,7 +305,7 @@ function MenuManager(cnti) {
 					idPicker(el);
 				}
 			});
-		}
+		};
 		idPicker(newMenu);
 
 		if(contentIds.length == 0) {
@@ -322,7 +322,7 @@ function MenuManager(cnti) {
 		if(cnt.length == 0) {
 			return newMenu;
 		}
-		
+
 		var cntObject = {};
 		for(var i in cnt) {
 			if(!!cnt[i]['_id']) {
@@ -331,7 +331,7 @@ function MenuManager(cnti) {
 				delete cnt[i]['menuItems'];
 			}
 		}
-		
+
 		var idInjector = function(mn) {
 			_.each(mn.menuItems, function(el) {
 				if(el['id'] && cntObject[el['id']]) {
@@ -341,11 +341,11 @@ function MenuManager(cnti) {
 					idInjector(el);
 				}
 			});
-		}
+		};
 		idInjector(newMenu);
 
 		return newMenu;
-	}
+	};
 
 	/**
 	 * Adds a new menu.
@@ -365,15 +365,15 @@ function MenuManager(cnti) {
 		}
 
 		menu.name = name;
-		delete(menu._id);
+		delete (menu._id);
 
 		// ##TODO## Return value
 		yield storage.insertData(config.menuCollection, menu);
 
 		yield _setMenuToCache(name, menu);
 		return true;
-	}
-		
+	};
+
 	/**
 	 * Removes a menu.
 	 *
@@ -393,7 +393,7 @@ function MenuManager(cnti) {
 		yield storage.removeData(config.menuCollection, { name: name });
 		yield _delMenuFromCache(name);
 		return true;
-	}
+	};
 
 	/**
 	 * Updates an existing menu.
@@ -411,13 +411,13 @@ function MenuManager(cnti) {
 			return false;
 		}
 		menu.name = name;
-		
+
 		yield storage.updateData(config.menuCollection, menu);
 		yield _setMenuToCache(name, menu);
 
 		return true;
-	}
-	
+	};
+
 	/**
 	 * Menu Manager object that is registered as a manager to Coonti, so that it can be used by other modules.
 	 *
@@ -459,7 +459,7 @@ function MenuManager(cnti) {
 		addMenu: function*(name, menu) {
 			return yield self.addMenu(name, menu);
 		},
-		
+
 		/**
 		 * Removes a menu.
 		 *
@@ -485,7 +485,7 @@ function MenuManager(cnti) {
 	};
 
 	/**
-	 * Object containing methods used by Admin module. 
+	 * Object containing methods used by Admin module.
 	 *
 	 * @ignore
 	 */
@@ -505,11 +505,10 @@ function MenuManager(cnti) {
 			}
 			var ret = yield self.getMenu(name);
 			if(!ret) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 			this.coonti.setItem('response', ret);
-			return;
 		},
 
 		/**
@@ -520,12 +519,12 @@ function MenuManager(cnti) {
 		 */
 		updateMenu: function*(name) {
 			if(!name) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 			if(!this.request.body.fields ||
 			   !this.request.body.fields['_id']) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 			var id = this.request.body.fields['_id'];
@@ -539,12 +538,12 @@ function MenuManager(cnti) {
 				var ret = yield self.getMenu(name);
 			}
 			if(!ret) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 
 			if(ret._id != id) {
-				this.status=(404);
+				this.status = (404);
 				return;
 			}
 
@@ -556,13 +555,13 @@ function MenuManager(cnti) {
 				_id: id,
 				menuItems: menuItems
 			};
-			
+
 			var res = yield self.updateMenu(name, menu);
 			if(res) {
 				this.coonti.setItem('response', {});
 			}
 			else {
-				this.status=(500);
+				this.status = (500);
 			}
 		},
 
@@ -578,7 +577,7 @@ function MenuManager(cnti) {
 				this.coonti.setItem('response', true);
 			}
 			else {
-				this.status=(406);
+				this.status = (406);
 				this.coonti.setItem('response', false);
 			}
 		},
@@ -595,7 +594,7 @@ function MenuManager(cnti) {
 				this.coonti.setItem('response', true);
 			}
 			else {
-				this.status=(406);
+				this.status = (406);
 				this.coonti.setItem('response', false);
 			}
 		}

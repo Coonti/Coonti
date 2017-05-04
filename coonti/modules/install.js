@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,14 +37,14 @@ function CoontiInstall(cnti) {
 	var coonti = cnti;
 
 	var installPath = [
-		{ "name": "session", "priority": 700 },
-		{ "name": "form", "priority": 600 },
-		{ "name": "install", "priority": 500 },
-		{ "name": "content", "priority": 400 },
-		{ "name": "template", "priority": 300 },
-		{ "name": "end", "priority": 100 }
+		{ name: 'session', priority: 700 },
+		{ name: 'form', priority: 600 },
+		{ name: 'install', priority: 500 },
+		{ name: 'content', priority: 400 },
+		{ name: 'template', priority: 300 },
+		{ name: 'end', priority: 100 }
 	];
-	
+
 	var initialised = false;
 	var locked = false;
 
@@ -80,7 +80,7 @@ function CoontiInstall(cnti) {
 				states: 'started'
 			}]
 		};
-	}
+	};
 
 	/**
 	 * Initialises the module.
@@ -199,7 +199,7 @@ function CoontiInstall(cnti) {
 		initialised = true;
 		logger.info('CoontiInstall - Initialised.');
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -208,7 +208,7 @@ function CoontiInstall(cnti) {
 	 */
 	this.remove = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers file based content handler.
@@ -222,7 +222,7 @@ function CoontiInstall(cnti) {
 
 		logger.info('CoontiInstall - Started.');
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module.
@@ -232,7 +232,7 @@ function CoontiInstall(cnti) {
 	this.stop = function*() {
 		logger.info('CoontiInstall - Stopped.');
 		return true;
-	}
+	};
 
 	/**
 	 * Handles Coonti installation
@@ -242,12 +242,11 @@ function CoontiInstall(cnti) {
 	 * @param {Function} next - The next Koa handler.
 	 */
 	this.handleInstall = function*(csm, config, next) {
-
 		// Remove any logins from client-side sessions
 		if(this.coonti.hasSession()) {
 			this.coonti.removeFromSession('coontiUser');
 		}
-		
+
 		// Check whether installation is already in progress by a browser
 		if(locked) {
 			if(this.coonti.getFromSession('installLock') != locked) {
@@ -287,7 +286,7 @@ function CoontiInstall(cnti) {
 				var mongoUrl = formSubmitted.getValue('mongoUrl');
 
 				var mongoConfig = {
-					name: 'mongo', 
+					name: 'mongo',
 					type: 'mongodb',
 					url: mongoUrl
 				};
@@ -297,7 +296,7 @@ function CoontiInstall(cnti) {
 					database: 'mongo',
 					contentCollection: 'content',
 					contentTypeCollection: 'contentType',
-					'default': false
+					default: false
 				};
 
 				var config = coonti.getConfig();
@@ -334,18 +333,18 @@ function CoontiInstall(cnti) {
 					var fch = cm.getContentHandler('installContent');
 					var defaultConfig = yield fch.getDirectContent('defaultConfig.json');
 					var contentTypeConfig = yield fch.getDirectContent('defaultThumbnails.json');
-					
+
 					if(!defaultConfig || !contentTypeConfig) {
 						formSubmitted.addError('mongoUrl', 'Could not read default configuration files.');
 						mongoOk = false;
 					}
 					else {
 						defaultConfig.databases = newDatabaseConfig;
-						
+
 						try {
 							yield mongodb.insertData('config', defaultConfig);
 							yield mongodb.insertData('config', contentTypeConfig);
-							
+
 							yield modules.setModuleConfig('MongoContent', mongoContentConfig);
 							yield modules.initialiseModule('MongoContent');
 							yield modules.startModule('MongoContent');
@@ -355,7 +354,7 @@ function CoontiInstall(cnti) {
 							mongoOk = false;
 						}
 					}
-					
+
 					if(mongoOk) {
 						mongoConnected = true;
 						cm.setDefaultContentHandler('mongo');
@@ -370,17 +369,16 @@ function CoontiInstall(cnti) {
 			this.coonti.setItem('route', 'account');
 			var formSubmitted = this.coonti.getForm('installation/userAccount');
 			if(formSubmitted && formSubmitted.isOk()) {
-
 				var pw1 = formSubmitted.getValue('password');
 				var pw2 = formSubmitted.getValue('password2');
 
 				if(pw1 != pw2) {
-					formSubmitted.addError('password2', 'Passwords do not match.');					
+					formSubmitted.addError('password2', 'Passwords do not match.');
 				}
 				else {
 					var account = formSubmitted.getValue('account');
 					var email = formSubmitted.getValue('email');
-					
+
 					userManager = coonti.getManager('user');
 					userCreated = true;
 					try {
@@ -392,7 +390,7 @@ function CoontiInstall(cnti) {
 						formSubmitted.addError('account', 'Could not write to MongoDB. Please check that it is available and try again.');
 						userCreated = false;
 					}
-					
+
 					if(userCreated) {
 						this.redirect('/examples');
 						return;
@@ -546,7 +544,7 @@ function CoontiInstall(cnti) {
 									if(!mn['name']) {
 										continue;
 									}
-									yield mongodb.insertData('menu', mn)
+									yield mongodb.insertData('menu', mn);
 								}
 							}
 						}
@@ -598,7 +596,6 @@ function CoontiInstall(cnti) {
 				coontiSite: coontiPath,
 				coontiAdmin: coontiPath + 'admin/'
 			});
-
 		}
 		else if(phase == '/drop' && allDone) {
 			this.coonti.setItem('route', 'drop');
@@ -613,7 +610,7 @@ function CoontiInstall(cnti) {
 		this.coonti.setItem('contentHandler', 'installContent');
 
 		yield next;
-	}
+	};
 
 	/**
 	 * After state callback that is used to remove installation after everything is done.
@@ -631,11 +628,11 @@ function CoontiInstall(cnti) {
 
 			var tm = coonti.getManager('template');
 			yield tm.deactivateTheme('Seed');
-			
+
 			var init = thunkify(config.initialise);
 			yield init();
 		}
-	}
+	};
 }
 
 module.exports = CoontiInstall;

@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,7 @@ function FileConnect(cnti) {
 			version: '0.1.0',
 			moduleUrl: 'http://coonti.org'
 		};
-	}
+	};
 
 	/**
 	 * Initialises the module.
@@ -92,7 +92,7 @@ function FileConnect(cnti) {
 
 		logger.info('FileConnect - Initialised.');
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -101,7 +101,7 @@ function FileConnect(cnti) {
 	 */
 	this.remove = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers file based content handler.
@@ -116,7 +116,7 @@ function FileConnect(cnti) {
 		}
 		logger.info('FileConnect - Started.');
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters file based content handler.
@@ -129,7 +129,7 @@ function FileConnect(cnti) {
 		}
 		logger.info('FileConnect - Stopped.');
 		return true;
-	}
+	};
 }
 
 /**
@@ -175,7 +175,7 @@ function FileHandler(fileCnnct, dr, enc) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches all matching data from a collection.
@@ -208,13 +208,13 @@ function FileHandler(fileCnnct, dr, enc) {
 			return false;
 		}
 		return ret;
-	}
+	};
 
 	this.setData = function(collection, path, data) {
-	}
+	};
 
 	this.removeData = function(collection, path) {
-	}
+	};
 }
 
 module.exports = FileConnect;

@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,7 @@ function FileContent(cnti) {
 				states: 'started'
 			}]
 		};
-	}
+	};
 
 	/**
 	 * Receives a new configuration for the module.
@@ -63,8 +63,8 @@ function FileContent(cnti) {
 	this.setConfig = function*(cf) {
 		config = cf;
 		return true;
-	}
-	
+	};
+
 	/**
 	 * Initialises the module and reads in the configuration
 	 *
@@ -105,7 +105,7 @@ function FileContent(cnti) {
 			coonti.getManager('content').addContentType(nm, r, self);
 		});
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -114,7 +114,7 @@ function FileContent(cnti) {
 	 */
 	this.remove = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers file based content handler.
@@ -123,7 +123,7 @@ function FileContent(cnti) {
 	 */
 	this.start = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters file based content handler.
@@ -132,7 +132,7 @@ function FileContent(cnti) {
 	 */
 	this.stop = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches content.
@@ -143,7 +143,7 @@ function FileContent(cnti) {
 	this.getContent = function*(ctx) {
 		var cnt = yield storage.getData(config.contentCollection, { path: ctx.coonti.getItem('route') });
 		return cnt;
-	}
+	};
 
 	/**
 	 * Fetches content with direct access.
@@ -154,7 +154,7 @@ function FileContent(cnti) {
 	this.getDirectContent = function*(path) {
 		var cnt = yield storage.getData(config.contentCollection, { path: path });
 		return cnt;
-	}
+	};
 
 	/**
 	 * Fetches content type object.
@@ -172,7 +172,7 @@ function FileContent(cnti) {
 		}
 
 		return contentTypes[name];
-	}
+	};
 
 	/**
 	 * Adds a new content type.
@@ -191,9 +191,9 @@ function FileContent(cnti) {
 		}
 
 		contentTypes[name] = ct;
-		
+
 		// ##TODO## Save to the database
-	}
+	};
 }
 
 module.exports = FileContent;
