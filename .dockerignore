@@ -1,0 +1,4 @@
+.git
+logs/*.log
+node_modules
+visual assets
