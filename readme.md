@@ -17,6 +17,8 @@ Coonti requires Node.js 7.6 or higher and MongoDB 2.6.5 or higher - actually Coo
 
 **N.B.** Coonti will wipe the MongoDB database you connect to. Please make backups if needed.
 
+To enable image resizing, install `gm`. If `gm` is not available, all image related functionality will not work and there will be missing images in installation and admin interface.
+
 ### Reinstallation
 
 To reinstall Coonti: stop Coonti, remove `config/coontiConfig.json` and then restart Coonti. It will automatically start in installation mode. Remember that all your data will be gone in the installation process.
