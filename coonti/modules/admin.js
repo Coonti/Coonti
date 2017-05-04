@@ -851,7 +851,7 @@ function CoontiAdmin(cnti) {
 				return;
 			}
 
-			targetUser = yield userManager.getUserById(id);
+			var targetUser = yield userManager.getUserById(id);
 
 			if(!targetUser) {
 				this.status = (404);
@@ -1063,7 +1063,7 @@ function CoontiAdmin(cnti) {
 	 * Lists the modules in the system.
 	 */
 	this.listModule = function*() {
-		ret = moduleManager.listModules();
+		var ret = moduleManager.listModules();
 		this.coonti.setItem('response', ret);
 	};
 
@@ -1109,7 +1109,7 @@ function CoontiAdmin(cnti) {
 	 */
 	this.getTheme = function*(name) {
 		if(!!name) {
-			ret = templateManager.getTheme(name);
+			var ret = templateManager.getTheme(name);
 			if(!ret) {
 				this.status = (404);
 				return;

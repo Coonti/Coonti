@@ -244,9 +244,9 @@ function CoontiModuleManager(cnti) {
 				}
 			}
 
-			var moduleClass = require('../' + codePath);
-			if(moduleClass) {
-				var module = new moduleClass(coonti);
+			var ModuleClass = require('../' + codePath);  // eslint-disable-line global-require
+			if(ModuleClass) {
+				var module = new ModuleClass(coonti);
 				if(!info || !name) {
 					if(module.getInfo) {
 						info = module.getInfo();

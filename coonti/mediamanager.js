@@ -161,7 +161,7 @@ function CoontiMediaManager(cnti) {
 					else {
 						dir = dir[0];
 					}
-					file = origFile.substring(dir.length + 1);
+					var file = origFile.substring(dir.length + 1);
 					if(dirs[dir]) {
 						var realFile = dirs[dir].path + '/' + file;
 						try {

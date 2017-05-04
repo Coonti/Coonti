@@ -139,7 +139,7 @@ function CoontiTools() {
 
 		try {
 			var tmp = fs.readFileSync(file, 'utf8');
-			data = JSON.parse(stripJsonComments(tmp));
+			var data = JSON.parse(stripJsonComments(tmp));
 			return data;
 		}
 		catch(e) {

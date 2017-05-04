@@ -73,7 +73,7 @@ function CoontiLogManager(cnti) {
 				});
 			}
 			if(key == defaultLogger) {
-				logger = logManager.getLogger(key);
+				var logger = logManager.getLogger(key);
 				logger.configure(val);
 				return;
 			}

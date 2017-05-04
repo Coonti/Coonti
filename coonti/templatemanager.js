@@ -991,7 +991,7 @@ function CoontiTemplateManager(cnti) {
 						var key = token.match[1].trim();
 						var expression = token.match[2];
 
-						expression_stack = Twig.expression.compile.apply(this, [{
+						var expression_stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: expression
 						}]).stack;
@@ -1050,7 +1050,7 @@ function CoontiTemplateManager(cnti) {
 						var key = token.match[1].trim();
 						var expression = token.match[2];
 
-						expression_stack = Twig.expression.compile.apply(this, [{
+						var expression_stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: expression
 						}]).stack;
@@ -1095,7 +1095,7 @@ function CoontiTemplateManager(cnti) {
 					compile: function(token) {
 						var expression = token.match[1];
 
-						expression_stack = Twig.expression.compile.apply(this, [{
+						var expression_stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: expression
 						}]).stack;
@@ -1153,7 +1153,7 @@ function CoontiTemplateManager(cnti) {
 					compile: function(token) {
 						var expression = token.match[1];
 
-						expression_stack = Twig.expression.compile.apply(this, [{
+						var expression_stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: expression
 						}]).stack;
@@ -1247,7 +1247,7 @@ function CoontiTemplateManager(cnti) {
 						else {
 							expression = token.match[1];
 						}
-						expression_stack = Twig.expression.compile.apply(this, [{
+						var expression_stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: expression
 						}]).stack;
@@ -1581,7 +1581,7 @@ function CoontiTemplateManager(cnti) {
 							var tmp = token.match[2].replace(/'%([^%]+)%'/g, '"$1"');
 							tmp = tmp.replace(/"%([^%]+)%"/g, '"$1"');
 							tmp = tmp.replace(/":\s*'(.*)'/g, '": "$1"');
-							localVars = JSON.parse('{ ' + tmp + ' }');
+							var localVars = JSON.parse('{ ' + tmp + ' }');
 
 							_.each(localVars, function(l, i) {
 								localVars[i] = Twig.prepare(l);
@@ -1603,9 +1603,9 @@ function CoontiTemplateManager(cnti) {
 								innerContext = Twig.ChildContext(context);
 							}
 							if(token.withStack !== undefined) {
-								withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
+								var withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-								for(i in withContext) {
+								for(var i in withContext) {
 									if(withContext.hasOwnProperty(i)) {
 										innerContext[i] = withContext[i];
 									}
@@ -1665,7 +1665,7 @@ function CoontiTemplateManager(cnti) {
 					compile: function(token) {
 						var expression = token.match[1];
 
-						expression_stack = Twig.expression.compile.apply(this, [{
+						var expression_stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: expression
 						}]).stack;
@@ -1676,7 +1676,7 @@ function CoontiTemplateManager(cnti) {
 							var tmp = token.match[3].replace(/'%([^%]+)%'/g, '"$1"');
 							tmp = tmp.replace(/"%([^%]+)%"/g, '"$1"');
 							tmp = tmp.replace(/":\s*'(.*)'/g, '": "$1"');
-							localVars = JSON.parse('{ ' + tmp + ' }');
+							var localVars = JSON.parse('{ ' + tmp + ' }');
 
 							_.each(localVars, function(l, i) {
 								localVars[i] = Twig.prepare(l);
@@ -1706,9 +1706,9 @@ function CoontiTemplateManager(cnti) {
 								innerContext = Twig.ChildContext(context);
 							}
 							if(token.withStack !== undefined) {
-								withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
+								var withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-								for(i in withContext) {
+								for(var i in withContext) {
 									if(withContext.hasOwnProperty(i)) {
 										innerContext[i] = withContext[i];
 									}

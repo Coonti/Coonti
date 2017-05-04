@@ -293,7 +293,7 @@ function MongoHandler(mongoCnnct, db) {
 	this.dropDatabase = function*() {
 		var items = yield mongoDb._db.listCollections().toArray();
 		if(items.length > 0) {
-			for(i in items) {
+			for(var i in items) {
 				var col = items[i]['name'];
 				if(col.indexOf('system.') == 0) {
 					continue;

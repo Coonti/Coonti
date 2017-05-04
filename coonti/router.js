@@ -878,7 +878,7 @@ function CoontiStateMachine(rtr, nm) {
 		var self = this;
 
 		if(beforeStates[st.name]) {
-			for(s in beforeStates[st.name]) {
+			for(var s in beforeStates[st.name]) {
 				var cb = beforeStates[st.name][s];
 				try {
 					yield cb.callback(ctx, st);

@@ -84,7 +84,7 @@ function MenuManager(cnti) {
 							token.items = false;
 
 							if(typeof token.match[4] != 'undefined') {
-								items = token.match[4];
+								var items = token.match[4];
 								var itemStack = Twig.expression.compile.apply(this, [{
 									type: Twig.expression.type.expression,
 									value: items
@@ -384,7 +384,7 @@ function MenuManager(cnti) {
 			return false;
 		}
 
-		res = yield this.getMenu(name);
+		var res = yield this.getMenu(name);
 		if(!res) {
 			return true;
 		}

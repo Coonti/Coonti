@@ -189,7 +189,7 @@ function FileHandler(fileCnnct, dr, enc) {
 		var ret = [];
 		try {
 			var files = yield fs.readdir(dir + collection);
-			for(f in files) {
+			for(var f in files) {
 				try {
 					var fc = yield fs.readFile(dir + collection + '/' + files[f], enc);
 					ret.push(JSON.parse(fc));

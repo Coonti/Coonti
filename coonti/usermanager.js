@@ -624,7 +624,7 @@ function CoontiUserManager(cnti) {
 	/**
 	 * Adds the basic rights used by the system.
 	 */
-	addSystemRights = function() {
+	var addSystemRights = function() {
 		userManager.addRight({ name: '*',
 							   displayName: '*',
 							   description: 'Allows access to all functionality.' });
@@ -1338,15 +1338,15 @@ function User(account, userData) {
 				return true;
 			}
 
-			for(r in roles) {
-				var role = yield userManager.getRoleById(r);
+			for(var roleId in roles) {
+				var role = yield userManager.getRoleById(roleId);
 				var res = yield role.isAllowed(access);
 				if(res) {
 					return true;
 				}
 			}
-			for(g in groups) {
-				var group = yield userManager.getGroupById(g);
+			for(var groupId in groups) {
+				var group = yield userManager.getGroupById(groupId);
 				var res = yield group.isAllowed(access);
 				if(res) {
 					return true;
@@ -1368,15 +1368,15 @@ function User(account, userData) {
 				return true;
 			}
 
-			for(r in roles) {
-				var role = yield userManager.getRoleById(r);
+			for(var roleId in roles) {
+				var role = yield userManager.getRoleById(roleId);
 				var res = yield role.isDenied(access);
 				if(res) {
 					return true;
 				}
 			}
-			for(g in groups) {
-				var group = yield userManager.getGroupById(g);
+			for(var groupId in groups) {
+				var group = yield userManager.getGroupById(groupId);
 				var res = yield group.isDenied(access);
 				if(res) {
 					return true;
