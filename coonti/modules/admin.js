@@ -577,7 +577,7 @@ function CoontiAdmin(cnti) {
 		if(res === false) {
 			var tmp = contentManager.listContentTypes();
 			tmp = _.pluck(tmp, 'contentType');
-			var res = { contentTypes: [] };
+			res = { contentTypes: [] };
 			_.each(tmp, function(t) {
 				res.contentTypes.push(_.pick(t, 'name', 'displayName', 'description'));
 			});
