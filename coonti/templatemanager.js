@@ -30,7 +30,6 @@ var tools = require('./tools');
 var CoontiException = require('./coontiexception.js');
 
 var coonti;
-var app;
 
 var readFileThunk = thunkify(fs.readFile);
 var readDirsThunk = thunkify(tools.readDirs);
@@ -45,7 +44,6 @@ var readDirsThunk = thunkify(tools.readDirs);
  */
 function CoontiTemplateManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 
 	var contents = coonti.getManager('content');
 
@@ -617,7 +615,6 @@ function CoontiTemplateManager(cnti) {
 		// ##TODO## Fix the method to work with Koa
 
 		// ##TODO## Check existence of the template
-		var tmpl = code;
 	};
 
 	/**
@@ -1020,7 +1017,6 @@ function CoontiTemplateManager(cnti) {
 						}
 
 						var ch = contents.getContentHandler(handler);
-						var cnt = false;
 						if(ch) {
 							var self = this;
 							var fetcher = function*() {

@@ -37,16 +37,13 @@ var thunkify = require('thunkify');
  */
 function CoontiModuleManager(cnti) {
 	var coonti = cnti;
-	var app = coonti.getApplication();
 	var dependencies;
 
 	var moduleConfig = {};
 
-	var modulePath = false;
 	var webPath = false;
 
 	var modules = {};
-	var systemModules = {};
 	var self = this;
 
 	var moduleFiles = {};

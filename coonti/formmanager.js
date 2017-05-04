@@ -18,13 +18,10 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
 var validator = require('validator');
-var tools = require('./tools');
 var SortedArray = require('./libraries/sortedarray');
 
 var coonti;
-var app;
 var formElements = {};
 var formManager;
 
@@ -38,11 +35,9 @@ var formManager;
  */
 function CoontiFormManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 	formManager = this;
 
 	var formCollections = {};
-	var templates = {};
 	var validators = {};
 	var sanitisers = {};
 	var self = this;

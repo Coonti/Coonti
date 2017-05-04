@@ -29,9 +29,6 @@ var thunkify = require('thunkify');
  * @return {CoontiStorageManager} The new instance.
  */
 function CoontiStorageManager(cnti) {
-	var coonti = cnti;
-	var app = coonti.getApplication();
-
 	var storages = {};
 
 	/**

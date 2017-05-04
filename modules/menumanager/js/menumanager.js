@@ -8,7 +8,6 @@ if(coonti && coonti['user']) {
 	]);
 
 	angular.module('coontiAdmin').controller('MenuManagerMenuCtrl', ['$scope', '$location', '$routeParams', 'MenuManagerMenu', 'Content', 'ngDialog', 'notifications', function($scope, $location, $routeParams, Menu, Content, ngDialog, notifications) {
-		var self = this;
 
 		$scope.add = false;
 		$scope.coonti = coonti;

@@ -18,7 +18,6 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
 var shortid = require('shortid');
 var RestApiHelper = require('../../coonti/libraries/restapihelper.js');
 

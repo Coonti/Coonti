@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-var _ = require('underscore');
-
 /**
  * Creates a new RestApiHelper object that handles GET/POST/PUT/DELETE requests and check user access rights, if needed.
  *

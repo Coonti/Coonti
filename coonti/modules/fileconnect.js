@@ -67,7 +67,6 @@ function FileConnect(cnti) {
 		storageManager = coonti.getManager('storage');
 
 		var dbs = coonti.getConfigParam('databases');
-		var self = this;
 		_.each(dbs, function(db) {
 			if(db.type == 'file') {
 				if(!db.name && !db.dir) {
@@ -110,7 +109,6 @@ function FileConnect(cnti) {
 	 */
 	this.start = function*() {
 		for(var i in connections) {
-			var db = connections[i];
 			var fh = new FileHandler(this, connections[i].dir, connections[i].encoding);
 			storageManager.addStorageHandler(i, fh);
 		}
@@ -137,14 +135,12 @@ function FileConnect(cnti) {
  *
  * @class
  * @classdesc Class for reading and writing to the file system.
- * @param {fileConnect} fileCnnct - FileConnect The owner of the handler.
+ * @param {FileConnect} fileCnnct - FileConnect The owner of the handler.
  * @param {String} dr - The directory that contains the content.
  * @param {String} enc - The encoding that is used.
  */
 function FileHandler(fileCnnct, dr, enc) {
-	var fileConnect = fileCnnct;
 	var dir = dr;
-	var encoding = enc;
 
 	/**
 	 * Fetches one item from the database.

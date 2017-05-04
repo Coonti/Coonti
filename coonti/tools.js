@@ -29,7 +29,6 @@ var stripJsonComments = require('strip-json-comments');
  * @classdesc Utility class holding numerous tools.
  */
 function CoontiTools() {
-	var self = this;
 
 	/**
 	 * Gets the Coonti directory.

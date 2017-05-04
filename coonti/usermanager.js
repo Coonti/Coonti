@@ -18,15 +18,11 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
-var acl = require('acl');
 var cacheManager = require('cache-manager');
 var thunkify = require('thunkify');
 var bcrypt = require('bcryptjs');
-var Reflect = require('harmony-reflect');
 
 var coonti;
-var app;
 var userManager;
 var storage;
 
@@ -42,7 +38,6 @@ var SESSION_USER = 'coontiUser';
  */
 function CoontiUserManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 	userManager = this;
 
 	var usersCollection = 'users'; // ##TODO## Read from config

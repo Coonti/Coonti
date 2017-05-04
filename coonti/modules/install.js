@@ -18,7 +18,6 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
 var fs = require('co-fs-extra');
 var thunkify = require('thunkify');
 var CoontiException = require('../coontiexception.js');
@@ -50,7 +49,6 @@ function CoontiInstall(cnti) {
 
 	var formManager = false;
 
-	var language = false;
 	var language = 'en'; // ##TODO## Remove when MongoDB testing is done
 	var mongoConnected = false;
 	var userCreated = false;

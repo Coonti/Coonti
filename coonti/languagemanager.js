@@ -26,7 +26,6 @@ var tools = require('./tools');
 var gt = new Gettext();
 
 var coonti;
-var app;
 
 /**
  * CoontiLanguageManager handles Coonti language support. This manager is under heavy construction.
@@ -38,7 +37,6 @@ var app;
  */
 function CoontiLanguageManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 
 	var languages = {};
 	var defaultLanguage = false;

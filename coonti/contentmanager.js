@@ -30,7 +30,6 @@ var slug = require('slug');
  */
 function CoontiContentManager(cnti) {
 	var coonti = cnti;
-	var app = coonti.getApplication();
 	var formManager;
 
 	var contents = {};

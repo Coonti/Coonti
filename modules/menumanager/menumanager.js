@@ -18,7 +18,6 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
 var clone = require('clone');
 var cacheManager = require('cache-manager');
 var thunkify = require('thunkify');

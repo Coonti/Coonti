@@ -39,8 +39,7 @@ function CoontiRouter(cnti) {
 	var router;
 	var users;
 
-	var redirects = new SortedArray();
-	var self = this;
+	var redirects = new SortedArray();  // eslint-disable-line no-unused-vars
 	var firstInit = true;
 
 	var stateMachines = {};
@@ -414,7 +413,7 @@ function CoontiRouter(cnti) {
 	 */
 	this.handleSession = function*(csm, config, next) {
 		logger.debug('HandleSession');
-		var session = this.session;
+		var session = this.session;  // eslint-disable-line no-unused-vars
 
 		yield next;
 	};
@@ -697,8 +696,6 @@ function CoontiRouter(cnti) {
  */
 function CoontiStateMachine(rtr, nm) {
 	var router = rtr;
-	var coonti = router.coonti;
-	var name = nm;
 	var states = {};
 	var errorHandler = false;
 	var statesOrder = [];
@@ -706,8 +703,6 @@ function CoontiStateMachine(rtr, nm) {
 	var beforeStates = {};
 	var afterStates = {};
 	var disabled = false;
-
-	var self = this;
 
 	/**
 	 * Adds a new state to the state machine.

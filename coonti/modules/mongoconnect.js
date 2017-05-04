@@ -17,11 +17,9 @@
  * limitations under the License.
  */
 
-var _ = require('underscore');
 var _s = require('underscore.string');
 var mongo = require('monk');
 var coMonk = require('co-monk');
-var thunkify = require('thunkify');
 
 var CoontiException = require('../coontiexception.js');
 
@@ -64,7 +62,6 @@ function MongoConnect(cnti) {
 	this.initialise = function*() {
 		storageManager = coonti.getManager('storage');
 		var dbs = coonti.getConfigParam('databases');
-		var self = this;
 		for(var i in dbs) {
 			var db = dbs[i];
 			if(db.type == 'mongodb') {
@@ -137,7 +134,6 @@ function MongoConnect(cnti) {
 }
 
 function MongoHandler(mongoCnnct, db) {
-	var mongoConnect = mongoCnnct;
 	var mongoDb = db;
 
 	var collections = {};

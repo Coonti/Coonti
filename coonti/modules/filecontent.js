@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-var co = require('co');
 var _ = require('underscore');
 
 /**

@@ -14,7 +14,6 @@ if(coonti && coonti['user']) {
 
 	// Angular controller that contains the UI logic for the module admin interface. The routes to launch the controller are set in the main module code
 	angular.module('coontiAdmin').controller('ExampleModuleQuoteCtrl', ['$scope', '$location', '$routeParams', 'ExampleModuleQuote', 'ngDialog', 'notifications', function($scope, $location, $routeParams, Quote, ngDialog, notifications) {
-		var self = this;
 
 		// Transform the returned object into a sorted array
 		$scope.$watch('quotes.items', function(newVal, oldVal) {

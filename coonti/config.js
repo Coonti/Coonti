@@ -36,10 +36,9 @@ var stripJsonComments = require('strip-json-comments');
  */
 function CoontiConfig(cnti) {
 	var coonti = cnti;
-	var app = coonti.getApplication();
 	var self = this;
 
-	var initListeners = [];
+	var initListeners = [];  // eslint-disable-line no-unused-vars
 
 	var basePath = path.join(__dirname, '..') + '/';
 	var baseConfig = {

@@ -18,9 +18,6 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
-var fs = require('co-fs');
-var thunkify = require('thunkify');
 var CoontiException = require('../coontiexception.js');
 var tools = require('../tools.js');
 var MiniRouter = require('../libraries/minirouter.js');
@@ -77,9 +74,6 @@ function CoontiAdmin(cnti) {
 		filter: '',
 		search: ''
 	};
-
-	var menu = false;
-	var routes = false;
 
 	var initialised = false;
 

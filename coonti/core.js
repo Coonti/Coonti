@@ -18,7 +18,6 @@
  */
 
 var co = require('co');
-var _ = require('underscore');
 var _s = require('underscore.string');
 
 var CoontiDependencyManager = require('./dependencymanager');
