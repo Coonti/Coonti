@@ -23,7 +23,7 @@ var mongo = require('monk');
 var coMonk = require('co-monk');
 var thunkify = require('thunkify');
 
-var CoontiException = require('../CoontiException.js');
+var CoontiException = require('../coontiexception.js');
 
 /**
  * MongoDB connector.

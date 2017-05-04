@@ -21,7 +21,7 @@ var _ = require('underscore');
 var _s = require('underscore.string');
 var fs = require('co-fs-extra');
 var thunkify = require('thunkify');
-var CoontiException = require('../CoontiException.js');
+var CoontiException = require('../coontiexception.js');
 var tools = require('../tools.js');
 
 var userManager = false;
