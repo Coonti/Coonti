@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @module CoontiCore/Core
  * @author Janne Kalliola
@@ -130,7 +131,7 @@ function Coonti(koaApp) {
 		var httpsPort = config.getConfigParam('httpsPort');
 		try {
 			if(httpPort > 0) {
-				var http = require('http');
+				var http = require('http');  // eslint-disable-line global-require
 				http.createServer(app.callback()).listen(httpPort);
 				ports.push(httpPort);
 			}
@@ -141,7 +142,7 @@ function Coonti(koaApp) {
 		}
 		try {
 			if(httpsPort > 0) {
-				var https = require('https');
+				var https = require('https');  // eslint-disable-line global-require
 				https.createServer(app.callback()).listen(httpsPort);
 				ports.push(httpsPort);
 			}

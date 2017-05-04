@@ -98,7 +98,7 @@ function CoontiStorageManager(cnti) {
  * @param {StorageHandler} sh - The StorageHandler object that needs to be wrapped.
  * @return {CachingStorageHandler} A new instance.
  */
-function CachingStorageHandler(sh) {
+function CachingStorageHandler(sh) {  // eslint-disable-line no-unused-vars
 	// ##TODO## Needs to be replanned, as currently does not work as should
 
 	/**

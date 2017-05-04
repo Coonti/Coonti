@@ -1,3 +1,4 @@
+/* globals coonti,angular */
 if(coonti && coonti['user']) {
 	// Name all Angular assets with ModuleName + Object description, using CamelCase notation.
 

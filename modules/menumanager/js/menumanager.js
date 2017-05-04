@@ -1,3 +1,4 @@
+/* globals coonti,angular */
 if(coonti && coonti['user']) {
 	angular.module('coontiAdmin').factory('MenuManagerMenu', ['$resource',
 		function($resource) {
