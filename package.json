@@ -3,6 +3,9 @@
   "description": "Coonti CMS",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+	"lint": "eslint coonti modules"
+  },
   "dependencies": {
     "acl": "0.4.x",
     "bcryptjs": "2.4.x",
