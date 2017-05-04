@@ -59,11 +59,14 @@ function CoontiMediaManager(cnti) {
 	var _setToCache;
 	var _delFromCache;
 
+	var logger;
+
 	/**
 	 * Initialises the media manager.
 	 */
 	this.initialise = function() {
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
+		logger = coonti.getManager('log').getLogger('coonti-core-mediamanager');
 	}
 	
 	/**
@@ -95,6 +98,9 @@ function CoontiMediaManager(cnti) {
 		exec("gm version", function (error, stdout, stderr) {
 			if(!error) {
 				gmInstalled = true;
+			}
+			else {
+				logger.warn("'gm' not available, image resizing will not work.");
 			}
 		});
 
