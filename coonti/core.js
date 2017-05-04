@@ -311,7 +311,14 @@ function Coonti(koaApp) {
 		}).then(function() {
 			cb();
 		}, function(err) {
-			// ##TODO## What to do now?
+			var eventLogger = self.getManager('log').getLogger('coonti-core-events');
+			if(!eventLogger) {
+				console.log('An event callback did not succeed and logging is not available.');
+				console.log(err);
+			}
+			else {
+				eventLogger.error('An event callback did not succeed.', err);
+			}
 		});
 	}
 
