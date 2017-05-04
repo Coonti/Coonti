@@ -1878,7 +1878,11 @@ function CoontiTemplateManager(cnti) {
 			return false;
 		}
 
-		var themeLoc = themeDir + theme;
+		var themeData = themes[theme];
+		if(!themeData) {
+			return false;
+		}
+		var themeLoc = themeData.directory; //Dir + theme;
 		var tmp = [];
 		if(_.size(themes[theme].clientDenyList) > 0) {
 			_.each(themes[theme].clientDenyList, function(cd) {
@@ -1940,8 +1944,7 @@ function CoontiTemplateManager(cnti) {
 			logger.warn("TemplateManager - JS files set, but static collection 'js' not found.");
 		}
 
-		var reader = thunkify(tools.readDirs);
-		var files = yield reader(themeLoc);
+		var files = yield readDirsThunk(themeLoc);
 		
 		for(var k in files) {
 			var f = files[k];
