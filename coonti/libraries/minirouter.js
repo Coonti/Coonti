@@ -69,8 +69,8 @@ MiniRouter.prototype.removeRoute = function(name) {
 	}
 
 	for(var i = 0; i < this.routes.length; i++) {
-		if(routes[i].name == name) {
-			routes.splice(i, 1);
+		if(this.routes[i].name == name) {
+			this.routes.splice(i, 1);
 			return true;
 		}
 	}

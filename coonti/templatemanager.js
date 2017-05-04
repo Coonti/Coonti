@@ -296,7 +296,7 @@ function CoontiTemplateManager(cnti) {
 	 */
 	this.addContentTypeTheme = function(ct, theme) {
 		if(!!ct && !!theme) {
-			contentTypeThemes[ct] = tmpl;
+			contentTypeThemes[ct] = theme;
 			return true;
 		}
 		return false;
