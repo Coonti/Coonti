@@ -388,7 +388,7 @@ function CoontiTemplateManager(cnti) {
 		t.active = false;
 		// ##TODO## Write configuration
 		if(t['staticCollections']) {
-			_.each(t['staticCollections'], function(static, key) {
+			_.each(t['staticCollections'], function(s, key) {
 				self.removeStaticCollection(t.name, key);
 			});
 		}
@@ -429,8 +429,8 @@ function CoontiTemplateManager(cnti) {
 
 		t.active = true;
 		if(t['staticCollections']) {
-			_.each(t['staticCollections'], function(static, key) {
-				if(!self.addStaticCollection(t.name, key, static)) {
+			_.each(t['staticCollections'], function(s, key) {
+				if(!self.addStaticCollection(t.name, key, s)) {
 					logger.error("TemplateManager - Invalid static collection '%s' in theme '%s'.", key, t.name);
 					throw new CoontiException(CoontiException.FATAL, 4004, 'Invalid static collection "' + key + '" in theme "' + t.name + '".');
 				}
