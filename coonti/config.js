@@ -70,7 +70,7 @@ function CoontiConfig(cnti) {
 			coonti: {
 				transports: {
 					console: {
-						level: "error",
+						level: "warn",
 						timestamp: true,
 						colorize: true
 					},
