@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,11 +17,9 @@
  * limitations under the License.
  */
 
-var _ = require('underscore');
 var _s = require('underscore.string');
 var mongo = require('monk');
 var coMonk = require('co-monk');
-var thunkify = require('thunkify');
 
 var CoontiException = require('../coontiexception.js');
 
@@ -39,7 +37,7 @@ function MongoConnect(cnti) {
 	var connections = {};
 
 	var storageManager = false;
-	
+
 	/**
 	 * Fetches the module information for admin users.
 	 *
@@ -54,7 +52,7 @@ function MongoConnect(cnti) {
 			version: '0.1.0',
 			moduleUrl: 'http://coonti.org'
 		};
-	}
+	};
 
 	/**
 	 * Initialises the module and connects to the MongoDB databases as specified in Coonti configuration.
@@ -64,7 +62,6 @@ function MongoConnect(cnti) {
 	this.initialise = function*() {
 		storageManager = coonti.getManager('storage');
 		var dbs = coonti.getConfigParam('databases');
-		var self = this;
 		for(var i in dbs) {
 			var db = dbs[i];
 			if(db.type == 'mongodb') {
@@ -96,7 +93,7 @@ function MongoConnect(cnti) {
 			}
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -107,7 +104,7 @@ function MongoConnect(cnti) {
 		// ##TODO## Close connections
 
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers MongoDB based content handler.
@@ -121,7 +118,7 @@ function MongoConnect(cnti) {
 			storageManager.addStorageHandler(i, mh);
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters MongoDB based content handler.
@@ -133,11 +130,10 @@ function MongoConnect(cnti) {
 			storageManager.removeStorageHandler(i);
 		}
 		return true;
-	}
+	};
 }
 
 function MongoHandler(mongoCnnct, db) {
-	var mongoConnect = mongoCnnct;
 	var mongoDb = db;
 
 	var collections = {};
@@ -149,7 +145,7 @@ function MongoHandler(mongoCnnct, db) {
 	 */
 	this.getMongo = function() {
 		return mongoDb;
-	}
+	};
 
 	/**
 	 * Fetches a unique id for the given collection.
@@ -165,7 +161,7 @@ function MongoHandler(mongoCnnct, db) {
 		}
 
 		return col.id();*/
-	}
+	};
 
 	/**
 	 * Fetches one item from the database.
@@ -182,7 +178,7 @@ function MongoHandler(mongoCnnct, db) {
 		}
 		var col = this.getCollection(collection);
 		return yield col.findOne(key, params);
-	}
+	};
 
 	/**
 	 * Fetches all matching data from a collection.
@@ -226,10 +222,10 @@ function MongoHandler(mongoCnnct, db) {
 			}
 			params.sort = mst;
 		}
-		
+
 		var col = this.getCollection(collection);
 		return yield col.find(key, params);
-	}	
+	};
 
 	/**
 	 * Writes new data to the database. ##TODO## Check success and return true/false.
@@ -244,7 +240,7 @@ function MongoHandler(mongoCnnct, db) {
 
 		var col = this.getCollection(collection);
 		yield col.insert(data);
-	}
+	};
 
 	/**
 	 * Updates data to the database. The update is done based on _id field. ##TODO## Check success and return true/false.
@@ -259,7 +255,7 @@ function MongoHandler(mongoCnnct, db) {
 
 		var col = this.getCollection(collection);
 		yield col.updateById(data['_id'], data);
-	}
+	};
 
 	/**
 	 * Removes data from the database using id.
@@ -273,7 +269,7 @@ function MongoHandler(mongoCnnct, db) {
 			return yield this.removeData(collection, { _id: id });
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes data from the database.
@@ -289,7 +285,7 @@ function MongoHandler(mongoCnnct, db) {
 
 		var col = this.getCollection(collection);
 		return yield col.remove(query); // ##TODO## Check what this actually returns
-	}
+	};
 
 	/**
 	 * Drops the collections in the database.
@@ -297,19 +293,19 @@ function MongoHandler(mongoCnnct, db) {
 	this.dropDatabase = function*() {
 		var items = yield mongoDb._db.listCollections().toArray();
 		if(items.length > 0) {
-			for(i in items) {
+			for(var i in items) {
 				var col = items[i]['name'];
 				if(col.indexOf('system.') == 0) {
 					continue;
 				}
-				
+
 				var mongoCol = this.getCollection(col);
 				yield mongoCol.drop();
 			}
 		}
 
 		collections = {};
-	}
+	};
 
 	/**
 	 * Fetches a collection, either from collection cache or by connecting. The collection is wrapped by CoMonk.
@@ -328,7 +324,7 @@ function MongoHandler(mongoCnnct, db) {
 			return col;
 		}
 		return false;
-	}
+	};
 }
 
 module.exports = MongoConnect;

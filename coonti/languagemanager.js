@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,7 +26,6 @@ var tools = require('./tools');
 var gt = new Gettext();
 
 var coonti;
-var app;
 
 /**
  * CoontiLanguageManager handles Coonti language support. This manager is under heavy construction.
@@ -38,7 +37,6 @@ var app;
  */
 function CoontiLanguageManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 
 	var languages = {};
 	var defaultLanguage = false;
@@ -50,7 +48,7 @@ function CoontiLanguageManager(cnti) {
 	 */
 	this.initialise = function() {
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
-	}
+	};
 
 	/**
 	 * Loads the languages based on configuration
@@ -94,7 +92,7 @@ function CoontiLanguageManager(cnti) {
 		else {
 			self.setDefaultLanguage('en_GB');
 		}
-	}
+	};
 
 	/**
 	 * Returns the current default language.
@@ -103,7 +101,7 @@ function CoontiLanguageManager(cnti) {
 	 */
 	this.getDefaultLanguage = function() {
 		return gt.textdomain();
-	}
+	};
 
 	/**
 	 * Sets the current default language. The language must be added to the system.
@@ -118,7 +116,7 @@ function CoontiLanguageManager(cnti) {
 		defaultLanguage = lang;
 		gt.textdomain(lang);
 		return true;
-	}
+	};
 
 	/**
 	 * Adds a new language.
@@ -138,7 +136,7 @@ function CoontiLanguageManager(cnti) {
 
 		languages[lang] = def;
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches currently available languages.
@@ -147,7 +145,7 @@ function CoontiLanguageManager(cnti) {
 	 */
 	this.getLanguages = function() {
 		return languages;
-	}
+	};
 
 	/**
 	 * Adds a new translation file to the given language.
@@ -168,7 +166,7 @@ function CoontiLanguageManager(cnti) {
 		var fileContents = fs.readFileSync(file);
 		gt.addTextdomain(lang, fileContents);
 		return true;
-	}
+	};
 
 	/**
 	 * Translates a given string.
@@ -185,7 +183,7 @@ function CoontiLanguageManager(cnti) {
 			return gt.gettext(msg);
 		}
 		return '';
-	}
+	};
 
 	/**
 	 * Translates a given string taking plural into account.
@@ -204,8 +202,7 @@ function CoontiLanguageManager(cnti) {
 			return gt.ngettext(msg, msg, count);
 		}
 		return '';
-	}
-
+	};
 }
 
 module.exports = CoontiLanguageManager;

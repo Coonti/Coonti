@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,6 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
 var shortid = require('shortid');
 var RestApiHelper = require('../../coonti/libraries/restapihelper.js');
 
@@ -47,16 +46,15 @@ function ExampleModule(cnti) {
 	/*
 	 * First, the methods that are used to initialise, start, stop, and remove the module within Coonti.
 	 */
-	
+
 	/**
 	 * Initialises the module. Use this method to prepare for the start of the module.
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.initialise = function*() {
-
 		// If needed, check here whether the module has been initialised earlier in the lifecycle and skip parts that can be done only once.
-		
+
 		// Get the required Coonti Managers
 		configManager = coonti.getConfig();
 		var templates = coonti.getManager('template');
@@ -65,40 +63,40 @@ function ExampleModule(cnti) {
 		if(templates) {
 			templates.extendTwig(function(Twig) {
 				var ret =
-				{
-					extension: 'tag',
-					type: 'quote',
-					regex: /^quote\s+([a-zA-Z0-9_]+)$/,
-					next: [],
-					open: true,
-					compile: function(token) {
-						var key = token.match[1].trim();
-						token.key = key;
-						delete token.match;
-						return token;
-					},
+					{
+						extension: 'tag',
+						type: 'quote',
+						regex: /^quote\s+([a-zA-Z0-9_]+)$/,
+						next: [],
+						open: true,
+						compile: function(token) {
+							var key = token.match[1].trim();
+							token.key = key;
+							delete token.match;
+							return token;
+						},
 
 					// We could also use parseGenerator function* should we need a yieldable function. For an example, study MenuManager module
-					parse: function(token, context, chain) {
-						var key = token.key;
-						var mn = '';
+						parse: function(token, context, chain) {
+							var key = token.key;
+							var mn = '';
 
 						// If the module is stopped, it needs to return an empty string.
-						if(started) {
-							mn = self.getQuote();
+							if(started) {
+								mn = self.getQuote();
+							}
+							context[key] = mn;
+							return {
+								chain: chain,
+								context: context
+							};
 						}
-						context[key] = mn;
-						return {
-							chain: chain,
-							context: context
-						};
-					}
-				};
+					};
 				return ret;
 			});
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -106,11 +104,10 @@ function ExampleModule(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.remove = function*() {
-
 		// The Twig extension we added in initiate() cannot be removed, as some templates might break.
 		// We are already stopped here, so the extension returns empty strings.
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers file based content handler.
@@ -118,7 +115,6 @@ function ExampleModule(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.start = function*() {
-
 		// If we are already running, let's skip everything.
 		if(started) {
 			return true;
@@ -134,7 +130,7 @@ function ExampleModule(cnti) {
 		if(!quoteStorage['quotes']) {
 			quoteStorage['quotes'] = {};
 		}
-		
+
 		// Add a manager object for other modules use.
 		if(!coonti.addManager('quote', quoteManager)) {
 			return false;
@@ -156,7 +152,7 @@ function ExampleModule(cnti) {
 			// Angular JS code
 			modules.addModuleAsset('ExampleModule', 'js/quotemanager.js');
 		}
-		
+
 		// Add relevant routes and other items to the admin interface
 		var admin = coonti.getManager('admin');
 		if(admin) {
@@ -164,24 +160,24 @@ function ExampleModule(cnti) {
 			admin.addRoute('quote', '', modulePath + '/ExampleModule/angular/quote-list.html', 'ExampleModuleQuoteCtrl', 'admin.manageContent');
 			admin.addRoute('quote', '/add', modulePath + '/ExampleModule/angular/quote-add.html', 'ExampleModuleQuoteCtrl', 'admin.manageContent');
 
-			// Add an admin menu item 
+			// Add an admin menu item
 			admin.addMenuItem('content-quote', 'Manage Quotes', '#/module/quote', 'admin.manageContent', 1, 'content-manage-types');
 
 			// Register a REST interface that can be used if the user has 'admin.manageContent' rights.
 			var rah = new RestApiHelper(coonti,
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: exampleModuleAdmin.listQuotes },
 										{},
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: exampleModuleAdmin.addQuote },
-										{ allow: 'admin.manageContent',
+				{ allow: 'admin.manageContent',
 										  handler: exampleModuleAdmin.removeQuote });
 			admin.addAdminRoute('ExampleModule', 'quote', 'quote(?:\/(.+))?', rah.serve);
 		}
 
 		started = true;
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters file based content handler.
@@ -189,7 +185,6 @@ function ExampleModule(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.stop = function*() {
-
 		// If the module is not running, there is no need to stop it.
 		if(!started) {
 			return true;
@@ -209,16 +204,16 @@ function ExampleModule(cnti) {
 			admin.removeRoute('/quote/add');
 			admin.removeRoute('/quote/edit/:id');
 		}
-		
+
 		// Remove module assets to be pushed to the admin interface. Already loaded interfaces are not affected.
 		var modules = coonti.getManager('module');
 		if(modules) {
 			modules.removeAllModuleAssets('ExampleModule');
 		}
-		
+
 		started = false;
 		return true;
-	}
+	};
 
 	/*
 	 * The functions that form the internal functionality of the module.
@@ -233,10 +228,10 @@ function ExampleModule(cnti) {
 		if(!started) {
 			return {};
 		}
-		
+
 		// Note that this leaks the internal state outside of the module. Fixing is left as an exercise for the reader.
 		return quoteStorage.quotes;
-	}
+	};
 
 	/**
 	 * Fetches a random quote.
@@ -250,7 +245,7 @@ function ExampleModule(cnti) {
 
 		var keys = _.keys(quoteStorage.quotes);
 		return quoteStorage.quotes[keys[Math.floor(Math.random() * keys.length)]];
-	}
+	};
 
 	/**
 	 * Adds a new quote.
@@ -264,11 +259,11 @@ function ExampleModule(cnti) {
 		}
 
 		var sid = shortid.generate();
-		
+
 		quoteStorage.quotes[sid] = quote;
 		var tmp = yield this._saveQuotes();
 		return tmp;
-	}
+	};
 
 	/**
 	 * Removes a quote.
@@ -283,7 +278,7 @@ function ExampleModule(cnti) {
 			return tmp;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Saves the quotes.
@@ -294,8 +289,8 @@ function ExampleModule(cnti) {
 	this._saveQuotes = function*() {
 		var tmp = yield configManager.writeConfigToDb(config.configurationName, quoteStorage);
 		return tmp;
-	}
-	
+	};
+
 	/**
 	 * Quote Manager object that is registered as a manager to Coonti, so that it can be used by other modules.
 	 *
@@ -335,7 +330,7 @@ function ExampleModule(cnti) {
 		addQuote: function*(quote) {
 			return yield self.addQuote(quote);
 		},
-		
+
 		/**
 		 * Removes a quote.
 		 *
@@ -349,7 +344,7 @@ function ExampleModule(cnti) {
 	};
 
 	/**
-	 * Object containing methods used by Admin module to control the module from the admin user interface. 
+	 * Object containing methods used by Admin module to control the module from the admin user interface.
 	 *
 	 * @ignore
 	 */
@@ -382,10 +377,10 @@ function ExampleModule(cnti) {
 					return;
 				}
 			}
-			this.status=(404);
+			this.status = (404);
 			this.coonti.setItem('response', false);
 		},
-		
+
 		/**
 		 * Removes a quote.
 		 *
@@ -398,11 +393,10 @@ function ExampleModule(cnti) {
 				this.coonti.setItem('response', true);
 				return;
 			}
-			this.status=(404);
+			this.status = (404);
 			this.coonti.setItem('response', false);
 		}
 	};
-
 }
 
 module.exports = ExampleModule;

@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,22 +30,21 @@ var slug = require('slug');
  */
 function CoontiContentManager(cnti) {
 	var coonti = cnti;
-	var app = coonti.getApplication();
 	var formManager;
-	
+
 	var contents = {};
 	var defContent = false;
 
 	var contentTypes = {};
 
 	var formCollection = 'contentType';
-	
+
 	/**
 	 * Initialises the content subsystem.
 	 */
 	this.initialise = function() {
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
-	}
+	};
 
 	/**
 	 * Finalises content manager initialisation.
@@ -53,7 +52,7 @@ function CoontiContentManager(cnti) {
 	var configInitialised = function*() {
 		formManager = coonti.getManager('form');
 		formManager.addCollection(formCollection);
-	}
+	};
 
 	/**
 	 * Adds a new ContentHandler instance.
@@ -67,7 +66,7 @@ function CoontiContentManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Sets the default ContentHandler.
@@ -81,7 +80,7 @@ function CoontiContentManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches a ContentHandler instance.
@@ -96,10 +95,9 @@ function CoontiContentManager(cnti) {
 			}
 			return false;
 		}
-		else {
-			return defContent;
-		}
-	}
+
+		return defContent;
+	};
 
 	/**
 	 * Lists available ContentHandlers.
@@ -108,7 +106,7 @@ function CoontiContentManager(cnti) {
 	 */
 	this.listContentHandlers = function() {
 		return _.keys(contents);
-	}
+	};
 
 	/**
 	 * Adds a new content type.
@@ -140,7 +138,7 @@ function CoontiContentManager(cnti) {
 
 		contentTypes[name] = { name: name, contentType: ct, contentHandler: ch };
 		this.saveContentTypeForm(name, ct);
-	}
+	};
 
 	/**
 	 * Registers a new content type. The procedure is the same, but the function does not try to add the content type to content handler. This function is supposed to be called by content handlers themselves during initialisation.
@@ -161,7 +159,8 @@ function CoontiContentManager(cnti) {
 
 		contentTypes[name] = { name: name, contentType: ct, contentHandler: ch };
 		this.saveContentTypeForm(name, ct);
-	}
+		return true;
+	};
 
 	/**
 	 * Updates a content type.
@@ -188,8 +187,9 @@ function CoontiContentManager(cnti) {
 		delete contentTypes[name];
 		contentTypes[ct['name']] = { name: ct['name'], contentType: ct, contentHandler: ch };
 		this.saveContentTypeForm(ct['name'], ct);
-	}
-	
+		return true;
+	};
+
 	/**
 	 * Removes a content type.
 	 *
@@ -202,10 +202,10 @@ function CoontiContentManager(cnti) {
 		}
 
 		var ch = contentTypes[name].contentHandler;
-		delete(contentTypes[name]);
+		delete (contentTypes[name]);
 		formManager.removeForm(formCollection, name);
 		return yield ch.removeContentType(name);
-	}
+	};
 
 	/**
 	 * Fetches a content type.
@@ -219,7 +219,7 @@ function CoontiContentManager(cnti) {
 		}
 
 		return contentTypes[name];
-	}
+	};
 
 	/**
 	 * Checks whether a content type exists.
@@ -233,7 +233,7 @@ function CoontiContentManager(cnti) {
 		}
 
 		return true;
-	}
+	};
 
 	/**
 	 * Lists content types.
@@ -242,7 +242,7 @@ function CoontiContentManager(cnti) {
 	 */
 	this.listContentTypes = function() {
 		return contentTypes;
-	}
+	};
 
 	/**
 	 * Adds content. The content will be stored using the content handler stored with the content type.
@@ -265,16 +265,16 @@ function CoontiContentManager(cnti) {
 		if(!ch) {
 			return false;
 		}
-		
+
 		var tmp = yield updatePath(ch, content);
 		if(tmp != content.path) {
 			content.path = tmp;
 			content.pathEdited = true;
 		}
-		
+
 		content['contentType'] = ct;
 		return yield ch.addContent(content);
-	}
+	};
 
 	/**
 	 * Updates content. The content will be stored using the content handler stored with the content type.
@@ -298,9 +298,9 @@ function CoontiContentManager(cnti) {
 			content.path = tmp;
 			content.pathEdited = true;
 		}
-		
+
 		return yield ch.updateContent(content);
-	}
+	};
 
 	/**
 	 * Provides a new path for the content item.
@@ -337,7 +337,7 @@ function CoontiContentManager(cnti) {
 			if(!!split[2]) {
 				count = parseInt(split[2], 10);
 			}
-			
+
 			// ##TODO## This code does not lock the content for writing, so two content might end with the same path
 			for(;;) {
 				var tmp = yield ch.getDirectContent(path);
@@ -350,8 +350,8 @@ function CoontiContentManager(cnti) {
 		}
 
 		return path;
-	}
-	
+	};
+
 	/**
 	 * Removes content.
 	 *
@@ -365,7 +365,7 @@ function CoontiContentManager(cnti) {
 
 		// ##TODO## go through all content handlers or give content type in function parameters?
 		return yield defContent.removeContent(id);
-	}
+	};
 
 	/**
 	 * Creates a form representation of the content type and saves it into FormManager.
@@ -380,7 +380,7 @@ function CoontiContentManager(cnti) {
 		if(!form) {
 			return false;
 		}
-	
+
 		if(ct['fields']) {
 			_.each(ct.fields, function(c, n) {
 				if(c['type']) {
@@ -388,7 +388,7 @@ function CoontiContentManager(cnti) {
 					var localDef = _.clone(c);
 					delete localDef['type'];
 					delete localDef['json'];
- 					form.addField(c['id'], field, localDef);
+					form.addField(c['id'], field, localDef);
 				}
 
 				// ##TODO## Add some intelligence in the process
@@ -396,7 +396,8 @@ function CoontiContentManager(cnti) {
 
 			form.addField('coontiSubmit', 'submit', { value: 'Ok' });
 		}
-	}
+		return true;
+	};
 }
 
 module.exports = CoontiContentManager;

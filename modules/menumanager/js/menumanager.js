@@ -1,3 +1,4 @@
+/* globals coonti,angular */
 if(coonti && coonti['user']) {
 	angular.module('coontiAdmin').factory('MenuManagerMenu', ['$resource',
 		function($resource) {
@@ -8,7 +9,6 @@ if(coonti && coonti['user']) {
 	]);
 
 	angular.module('coontiAdmin').controller('MenuManagerMenuCtrl', ['$scope', '$location', '$routeParams', 'MenuManagerMenu', 'Content', 'ngDialog', 'notifications', function($scope, $location, $routeParams, Menu, Content, ngDialog, notifications) {
-		var self = this;
 
 		$scope.add = false;
 		$scope.coonti = coonti;
@@ -24,8 +24,8 @@ if(coonti && coonti['user']) {
 				external: false,
 				menuItems: []
 			});
-		}
-				
+		};
+
 		if($location.path() == '/module/menu/add') {
 			$scope.add = true;
 			$scope.menu = new Menu();
@@ -62,7 +62,7 @@ if(coonti && coonti['user']) {
 			});
 			$scope.menuNewItemTitle = '';
 			$scope.menuNewItemURL = '';
-		}
+		};
 
 		$scope.save = function(menu) {
 			if($scope.add) {
@@ -70,7 +70,7 @@ if(coonti && coonti['user']) {
 					$location.path('/module/menu');
 					notifications.success('', 'Menu added.');
 				}, function() {
-					notifications.error('', "Menu could not be added. Please verify that the name is not already in use.");
+					notifications.error('', 'Menu could not be added. Please verify that the name is not already in use.');
 				});
 			}
 			else {
@@ -79,10 +79,10 @@ if(coonti && coonti['user']) {
 					$location.path('/module/menu');
 					notifications.success('', 'Menu saved.');
 				}, function() {
-					notifications.error('', "Menu could not be saved. Please verify that the name is not already in use.");
+					notifications.error('', 'Menu could not be saved. Please verify that the name is not already in use.');
 				});
 			}
-		}
+		};
 
 		$scope.remove = function(item) {
 			ngDialog.openConfirm({
@@ -97,7 +97,7 @@ if(coonti && coonti['user']) {
 					notifications.success('', "Removed menu '" + item.name + "'.");
 					$scope.menu = Menu.get($routeParams);
 				}, function() {
-					notifications.error('', "Could not remove menu.");
+					notifications.error('', 'Could not remove menu.');
 				});
 			});
 		};

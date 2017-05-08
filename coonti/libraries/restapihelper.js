@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,8 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-var _ = require('underscore');
 
 /**
  * Creates a new RestApiHelper object that handles GET/POST/PUT/DELETE requests and check user access rights, if needed.
@@ -40,7 +38,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 	var self = this;
 	var coonti = cnti;
 	var userManager = coonti.getManager('user');
-	
+
 	this.handlers = [];
 	this.handlers['GET'] = get;
 	this.handlers['POST'] = post;
@@ -50,21 +48,21 @@ function RestApiHelper(cnti, get, post, put, del) {
 	/**
 	 * Serves a Koa request. If the request is denied due to user missing login, the function return HTTP error code 401; rights related reasons, error code 403; and if the request type is not supported, error code 405.
 	 */
-	this.serve = function*() {	
+	this.serve = function*() {
 		var method = this.request.method;
 		var handler = self.handlers[method];
 		if(!handler || !handler['handler']) {
 			// ##TODO## Add Allow header
-			this.status=(405);
+			this.status = (405);
 			return;
 		}
-		
+
 		if(handler['loggedIn'] || handler['allow'] || handler['deny']) {
 			var user = yield userManager.getCurrentUser(this);
 
 			// If not logged in
 			if(!user) {
-				this.status=(401);
+				this.status = (401);
 				return;
 			}
 
@@ -84,7 +82,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 			}
 
 			if(!pass) {
-				this.status=(403);
+				this.status = (403);
 				return;
 			}
 
@@ -102,13 +100,13 @@ function RestApiHelper(cnti, get, post, put, del) {
 			}
 
 			if(!pass) {
-				this.status=(403);
+				this.status = (403);
 				return;
 			}
 		}
-		
+
 		yield handler.handler.apply(this, arguments);
-	}
+	};
 }
 
 module.exports = RestApiHelper;

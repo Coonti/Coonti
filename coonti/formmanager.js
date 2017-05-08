@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,13 +18,10 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
 var validator = require('validator');
-var tools = require('./tools');
 var SortedArray = require('./libraries/sortedarray');
 
 var coonti;
-var app;
 var formElements = {};
 var formManager;
 
@@ -38,13 +35,11 @@ var formManager;
  */
 function CoontiFormManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 	formManager = this;
 
 	var formCollections = {};
-	var templates = {};
 	var validators = {};
-	var sanitisers = {}
+	var sanitisers = {};
 	var self = this;
 
 	/**
@@ -56,7 +51,7 @@ function CoontiFormManager(cnti) {
 		addBasicElements();
 
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
-	}
+	};
 
 	/**
 	 * Finalises the manager initialisation.
@@ -69,7 +64,7 @@ function CoontiFormManager(cnti) {
 
 		var path = formConfig['path'];
 		var tmplPath = formConfig['jsTemplates'];
-		
+
 		var router = coonti.getManager('router');
 		// ##TODO## Support CoontiPath config
 		if(!!path) {
@@ -83,16 +78,16 @@ function CoontiFormManager(cnti) {
 						var ret = {
 							name: col + '/' + fm,
 							fields: fields
-						}
-						
+						};
+
 						// ##TODO## check whether form can be sent over JSON and whether some information should be stripped.
 						this.body = ret;
-						this.type=('application/json');
+						this.type = ('application/json');
 						return;
 					}
 				}
-				this.status=(404);
-				this.body=('Not found');
+				this.status = (404);
+				this.body = ('Not found');
 			});
 		}
 
@@ -104,15 +99,15 @@ function CoontiFormManager(cnti) {
 					var ret = self.getTemplate(lang, tmpl);
 					if(ret) {
 						this.body = ret;
-						this.type=('text/html');
+						this.type = ('text/html');
 						return;
 					}
 				}
-				this.status=(404);
-				this.body=('Not found');
+				this.status = (404);
+				this.body = ('Not found');
 			});
 		}
-	}
+	};
 
 	/**
 	 * Creates a new form collection.
@@ -131,7 +126,7 @@ function CoontiFormManager(cnti) {
 
 		formCollections[name] = {};
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a form collection.
@@ -146,7 +141,7 @@ function CoontiFormManager(cnti) {
 
 		delete formCollections[name];
 		return true;
-	}
+	};
 
 	/**
 	 * List form collections.
@@ -155,7 +150,7 @@ function CoontiFormManager(cnti) {
 	 */
 	this.listCollections = function() {
 		return _.keys(formCollections);
-	}
+	};
 
 	/**
 	 * Creates a new form.
@@ -181,7 +176,7 @@ function CoontiFormManager(cnti) {
 		var form = new CoontiForm(col, nm, hd);
 		formCollections[col][nm] = form;
 		return form;
-	}
+	};
 
 	/**
 	 * Removes a form.
@@ -201,7 +196,7 @@ function CoontiFormManager(cnti) {
 		var col = formCollections[col];
 		delete col[nm];
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches a form.
@@ -218,7 +213,7 @@ function CoontiFormManager(cnti) {
 		}
 
 		return formCollections[col][nm];
-	}
+	};
 
 	/**
 	 * Adds a new form element.
@@ -245,7 +240,7 @@ function CoontiFormManager(cnti) {
 		attr.name = name;
 		formElements[name] = attr;
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a form element.
@@ -260,7 +255,7 @@ function CoontiFormManager(cnti) {
 
 		delete formElements[name];
 		return true;
-	}
+	};
 
 	/**
 	 * Lists form elements.
@@ -269,7 +264,7 @@ function CoontiFormManager(cnti) {
 	 */
 	this.getFormElements = function() {
 		return _.values(formElements);
-	}
+	};
 
 	/**
 	 * Handles form submission by finding suitable form based on the input data and creating a form submission object to encapsulate the data.
@@ -291,7 +286,7 @@ function CoontiFormManager(cnti) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Creates an empty form submission for forms that are not yet submitted.
@@ -304,7 +299,7 @@ function CoontiFormManager(cnti) {
 			var submission = form.createSubmission({}, false);
 			return submission;
 		}
-	}
+	};
 
 	/**
 	 * Adds a new validator for form elements to use.
@@ -319,7 +314,7 @@ function CoontiFormManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches list of available validators.
@@ -328,7 +323,7 @@ function CoontiFormManager(cnti) {
 	 */
 	this.getValidators = function() {
 		return _.keys(validators);
-	}	
+	};
 
 	/**
 	 * Fetches a single validator.
@@ -341,7 +336,7 @@ function CoontiFormManager(cnti) {
 			return validators[name];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Adds a new sanitiser for form elements to use.
@@ -356,7 +351,7 @@ function CoontiFormManager(cnti) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches list of available sanitisers.
@@ -365,7 +360,7 @@ function CoontiFormManager(cnti) {
 	 */
 	this.getSanitisers = function() {
 		return _.keys(sanitisers);
-	}	
+	};
 
 	/**
 	 * Fetches a single sanitiser.
@@ -378,7 +373,7 @@ function CoontiFormManager(cnti) {
 			return sanitisers[name];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches a template for rendering a form in a JS templating language in the client.
@@ -389,151 +384,150 @@ function CoontiFormManager(cnti) {
 	 */
 	this.getTemplate = function(lang, name) {
 		if(lang == 'angular' && !!name) {
-
 			// ##TODO## This needs to be refactored later, as it should be read from a file or so.
 			if(name == 'form') {
-				var tmpl = "<div id=\"{{ form.name }}-wrapper\">\n<form id=\"{{ form.name }}\">\n";
+				var tmpl = '<div id="{{ form.name }}-wrapper">\n<form id="{{ form.name }}">\n';
 				tmpl += "<div class=\"coontiNgFormElement\" ng-repeat=\"field in form.fields |filter:{skip:'!yes'}\">\n";
 
 				_.each(formElements, function(el, nm) {
 					tmpl += "<div ng-if=\"field.formElement.type=='" + nm + "'\">\n";
 					tmpl += el.templates.angular;
-					tmpl += "\n</div>\n";
+					tmpl += '\n</div>\n';
 				});
-				tmpl += "\n</div>\n</form>\n</div>\n";
+				tmpl += '\n</div>\n</form>\n</div>\n';
 				return tmpl;
 			}
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Adds basic form elements that are provided by Coonti.
 	 */
 	var addBasicElements = function() {
 		// ##TODO## Should these be in a configuration file?
 
-		self.addFormElement('text', 
-							{
-								type: 'text',
-								defaultValue: '',
-								templates: {
-									twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
-									angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><input id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" type="text" ng-model="field.value"/>'
-								}
-							});
-		self.addFormElement('password', 
-							{
-								type: 'password',
-								defaultValue: '',
-								templates: {
-									twig: '<input name="{{ field.name }}" type="password" value="{{ field.value }}"/>',
-									angular: '<input name="{{ field.name }}" type="password" ng-model="field.value""/>'
-								}
-							});
-		self.addFormElement('display', 
-							{
-								type: 'display',
-								defaultValue: '',
-								templates: {
-									twig: '<div>{{ field.value }}</div>',
-									angular: '<div>{{ field.value }}</div>'
-								}
-							});
+		self.addFormElement('text',
+			{
+				type: 'text',
+				defaultValue: '',
+				templates: {
+					twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
+					angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><input id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" type="text" ng-model="field.value"/>'
+				}
+			});
+		self.addFormElement('password',
+			{
+				type: 'password',
+				defaultValue: '',
+				templates: {
+					twig: '<input name="{{ field.name }}" type="password" value="{{ field.value }}"/>',
+					angular: '<input name="{{ field.name }}" type="password" ng-model="field.value""/>'
+				}
+			});
+		self.addFormElement('display',
+			{
+				type: 'display',
+				defaultValue: '',
+				templates: {
+					twig: '<div>{{ field.value }}</div>',
+					angular: '<div>{{ field.value }}</div>'
+				}
+			});
 
-		self.addFormElement('integer', 
-							{
-								type: 'integer',
-								defaultValue: '',
-								validators: [
-									{
-										priority: 1000,
-										validator: 'isInteger'
-									}
-								],
-								sanitiser: 'toInteger',
-								templates: {
-									twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
-									angular: '<input name="{{ field.name }}" type="text" ng-model="field.value"/>'
-								}
-							});
+		self.addFormElement('integer',
+			{
+				type: 'integer',
+				defaultValue: '',
+				validators: [
+					{
+						priority: 1000,
+						validator: 'isInteger'
+					}
+				],
+				sanitiser: 'toInteger',
+				templates: {
+					twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
+					angular: '<input name="{{ field.name }}" type="text" ng-model="field.value"/>'
+				}
+			});
 
-		self.addFormElement('email', 
-							{
-								type: 'email',
-								defaultValue: '',
-								validators: [
-									{
-										priority: 1000,
-										validator: 'isEmail'
-									}
-								],
-								templates: {
-									twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
-									angular: '<input name="{{ field.name }}" type="text"  ng-model="field.value"/>'
-								}
-							});
+		self.addFormElement('email',
+			{
+				type: 'email',
+				defaultValue: '',
+				validators: [
+					{
+						priority: 1000,
+						validator: 'isEmail'
+					}
+				],
+				templates: {
+					twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
+					angular: '<input name="{{ field.name }}" type="text"  ng-model="field.value"/>'
+				}
+			});
 
-		self.addFormElement('textarea', 
-							{
-								type: 'textarea',
-								defaultValue: '',
-								templates: {
-									twig: '<textarea name="{{ field.name }}">{{ field.value }}</textarea>',
-									angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><textarea id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" ng-model="field.value"></textarea>'
-								}
-							});
+		self.addFormElement('textarea',
+			{
+				type: 'textarea',
+				defaultValue: '',
+				templates: {
+					twig: '<textarea name="{{ field.name }}">{{ field.value }}</textarea>',
+					angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><textarea id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" ng-model="field.value"></textarea>'
+				}
+			});
 
-		self.addFormElement('wysiwyg', //##TODO## Fix twig to support actual wysiwyg
-							{
-								type: 'wysiwyg',
-								defaultValue: '',
-								templates: {
-									twig: '<textarea name="{{ field.name }}">{{ field.value }}</textarea>',
-									angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><div text-angular ng-model="field.value"></div>'
-								}
-							});
+		self.addFormElement('wysiwyg', // ##TODO## Fix twig to support actual wysiwyg
+			{
+				type: 'wysiwyg',
+				defaultValue: '',
+				templates: {
+					twig: '<textarea name="{{ field.name }}">{{ field.value }}</textarea>',
+					angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><div text-angular ng-model="field.value"></div>'
+				}
+			});
 
 		self.addFormElement('image', // ##TODO## Fix to use some decent image uploading / gallery system
-							{
-								type: 'image',
-								defaultValue: '',
-								templates: {
-									twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
-									angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><input id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" type="text" ng-model="field.value"/>'
-								}
-							});
+			{
+				type: 'image',
+				defaultValue: '',
+				templates: {
+					twig: '<input name="{{ field.name }}" type="text" value="{{ field.value }}"/>',
+					angular: '<label for="{{ form.id }}{{ field.id }}">{{ field.localDef.name }}</label><input id="{{ form.id }}{{ field.id }}" name="{{ field.name }}" type="text" ng-model="field.value"/>'
+				}
+			});
 
 		self.addFormElement('checkbox',
-							{
-								type: 'checkbox',
-								defaultValue: false,
-								sanitiser: 'handleCheckboxValue',
-								templates: { // ##TODO## Fix value
-									twig: '<input name="{{ field.name }}" type="checkbox"/>',
-									angular: '<input name="{{ field.name }}" type="checbox"/>'
-								}
-							});
+			{
+				type: 'checkbox',
+				defaultValue: false,
+				sanitiser: 'handleCheckboxValue',
+				templates: { // ##TODO## Fix value
+					twig: '<input name="{{ field.name }}" type="checkbox"/>',
+					angular: '<input name="{{ field.name }}" type="checbox"/>'
+				}
+			});
 
 		self.addFormElement('select',
-							{
-								type: 'select',
-								templates: { 
-									twig: '##TODO##',
-									angular: '##TODO##'
-								}
-							});
+			{
+				type: 'select',
+				templates: {
+					twig: '##TODO##',
+					angular: '##TODO##'
+				}
+			});
 
 		self.addFormElement('submit',
-							{
-								type: 'submit',
-								defaultValue: 'Submit',
-								templates: {
-									twig: '<input name="{{ field.name }}" type="submit" value="{{ field.value }}"/>',
-									angular: '<input name="{{ field.name }}" type="submit" value="{{ field.value }}"/>'
-								}
-							});
-	}
+			{
+				type: 'submit',
+				defaultValue: 'Submit',
+				templates: {
+					twig: '<input name="{{ field.name }}" type="submit" value="{{ field.value }}"/>',
+					angular: '<input name="{{ field.name }}" type="submit" value="{{ field.value }}"/>'
+				}
+			});
+	};
 
 	var addBasicValidators = function() {
 		self.addValidator('isEmail',
@@ -565,7 +559,7 @@ function CoontiFormManager(cnti) {
 							  },
 							  message: 'Please input a whole number.'
 						  });
-	}
+	};
 
 	/**
 	 * Adds the default sanitiser functions.
@@ -586,8 +580,7 @@ function CoontiFormManager(cnti) {
 								  return false;
 							  }
 						  });
-	}
-
+	};
 }
 
 /**
@@ -653,7 +646,7 @@ function CoontiForm(col, nm, hd) {
 		}
 		fieldsByName[name] = formField;
 		return true;
-	}
+	};
 
 	// ##TODO## Add field removal functions (by pos + by name)
 
@@ -664,7 +657,7 @@ function CoontiForm(col, nm, hd) {
 	 */
 	this.getNumberOfFields = function() {
 		return fields.length;
-	}
+	};
 
 	/**
 	 * Gets fields of the form.
@@ -673,7 +666,7 @@ function CoontiForm(col, nm, hd) {
 	 */
 	this.getFields = function() {
 		return fields;
-	}
+	};
 
 	/**
 	 * Gets field at given position.
@@ -692,7 +685,7 @@ function CoontiForm(col, nm, hd) {
 		}
 
 		return fields[pos];
-	}
+	};
 
 	/**
 	 * Gets field by name.
@@ -705,7 +698,7 @@ function CoontiForm(col, nm, hd) {
 			return fieldsByName[nm];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Returns the id of the form, used in hidden input fields to find the relevant form for validation etc.
@@ -714,7 +707,7 @@ function CoontiForm(col, nm, hd) {
 	 */
 	this.getId = function() {
 		return formCollection + '-_-' + formName;
-	}
+	};
 
 	/**
 	 * Returns the collection of the form.
@@ -723,7 +716,7 @@ function CoontiForm(col, nm, hd) {
 	 */
 	this.getCollection = function() {
 		return formCollection;
-	}
+	};
 
 	/**
 	 * Returns the name of the form.
@@ -732,7 +725,7 @@ function CoontiForm(col, nm, hd) {
 	 */
 	this.getName = function() {
 		return formName;
-	}
+	};
 
 	/**
 	 * Returns the handler of the form.
@@ -741,7 +734,7 @@ function CoontiForm(col, nm, hd) {
 	 */
 	this.getHandler = function() {
 		return formHandler;
-	}
+	};
 
 	/**
 	 * Creates a CoontiFormSubmission object from the given data.
@@ -760,7 +753,7 @@ function CoontiForm(col, nm, hd) {
 			sub.addValue(i, d);
 		});
 		return sub;
-	}
+	};
 }
 
 /**
@@ -773,14 +766,13 @@ function CoontiForm(col, nm, hd) {
  * @return {CoontiFormSubmission} The new instnace.
  */
 function CoontiFormSubmission(frm, sbm) {
-
 	var form = frm;
 	var fields = [];
 	var fieldsByName = {};
 	var errors = false;
 
 	var message = false;
-	
+
 	_.each(form.getFields(), function(f, i) {
 		var fsf = {
 			field: f,
@@ -830,7 +822,7 @@ function CoontiFormSubmission(frm, sbm) {
 					this.errors.push(errorMessage);
 				}
 			}
-		}
+		};
 		fields[i] = fsf;
 		fieldsByName[fsf.field.name] = fsf;
 	});
@@ -847,7 +839,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getForm = function() {
 		return form;
-	}
+	};
 
 	/**
 	 * Checks whether the submission is due to actual form submission.
@@ -856,7 +848,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.isSubmitted = function() {
 		return submitted;
-	}
+	};
 
 	/**
 	 * Adds a new value to the submission.
@@ -868,7 +860,7 @@ function CoontiFormSubmission(frm, sbm) {
 		if(!!key && fieldsByName[key]) {
 			fieldsByName[key].value = val;
 		}
-	}
+	};
 
 	/**
 	 * Gets a value from the submission.
@@ -880,7 +872,7 @@ function CoontiFormSubmission(frm, sbm) {
 		if(!!key && fieldsByName[key]) {
 			return fieldsByName[key].value;
 		}
-	}
+	};
 
 	/**
 	 * Gets all values from the submission.
@@ -893,7 +885,7 @@ function CoontiFormSubmission(frm, sbm) {
 			values[i] = v;
 		});
 		return values;
-	}
+	};
 
 	/**
 	 * Validates the form submission. Errors are injected into form submission fields.
@@ -935,7 +927,7 @@ function CoontiFormSubmission(frm, sbm) {
 					if(typeof v == 'function') {
 						validator = v;
 					}
-					else if(typeof v == 'string' || v instanceof String){
+					else if(typeof v == 'string' || v instanceof String) {
 						validator = formManager.getValidator(v);
 					}
 					else if(typeof v == 'object' && v['validator']) {
@@ -982,7 +974,7 @@ function CoontiFormSubmission(frm, sbm) {
 
 		validated = true;
 		return !errors;
-	}
+	};
 
 	/**
 	 * Checks whether the submission has been validated.
@@ -991,7 +983,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.isValidated = function() {
 		return validated;
-	}
+	};
 
 	/**
 	 * Checks whether the submission is ok (validated and has no errors).
@@ -1000,7 +992,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.isOk = function() {
 		return validated && !errors;
-	}
+	};
 
 	/**
 	 * Gets fields of the form submission.
@@ -1009,7 +1001,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getFields = function() {
 		return fields;
-	}
+	};
 
 	/**
 	 * Gets form field at the given position, calls the same function in the CoontiForm object.
@@ -1028,7 +1020,7 @@ function CoontiFormSubmission(frm, sbm) {
 		}
 
 		return fields[pos];
-	}
+	};
 
 	/**
 	 * Gets field by name, calls the same function in the CoontiForm object.
@@ -1041,7 +1033,7 @@ function CoontiFormSubmission(frm, sbm) {
 			return false;
 		}
 		return fieldsByName[nm];
-	}
+	};
 
 	/**
 	 * Adds an error to a form field.
@@ -1057,7 +1049,7 @@ function CoontiFormSubmission(frm, sbm) {
 		fieldsByName[nm].errors.push(error);
 		errors = true;
 		return true;
-	}
+	};
 
 	/**
 	 * Adds a generic message to the form.
@@ -1066,14 +1058,14 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.addMessage = function(msg) {
 		message = msg;
-	}
+	};
 
 	/**
 	 * Removes a message from the form.
 	 */
 	this.removeMessage = function() {
 		message = false;
-	}
+	};
 
 	/**
 	 * Fetches the generic message (if set) from the form.
@@ -1082,8 +1074,8 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getMessage = function() {
 		return message;
-	}
-	
+	};
+
 	/**
 	 * Returns the id of the form, used in hidden input fields to find the relevant form for validation etc.
 	 *
@@ -1091,7 +1083,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getId = function() {
 		return form.getId();
-	}
+	};
 
 	/**
 	 * Returns the collection of the form.
@@ -1100,7 +1092,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getCollection = function() {
 		return form.getCollection();
-	}
+	};
 
 	/**
 	 * Returns the name of the form.
@@ -1109,7 +1101,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getName = function() {
 		return form.getName();
-	}
+	};
 
 	/**
 	 * Returns the handler of the form.
@@ -1118,7 +1110,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 */
 	this.getHandler = function() {
 		return form.getHandler();
-	}
+	};
 
 	/**
 	 * Serialises the form submission along form data for templating and other purposes.
@@ -1126,7 +1118,7 @@ function CoontiFormSubmission(frm, sbm) {
 	 * @return {Object} The form serialisation.
 	 */
 	this.simpleSerialise = function() {
-		var ret =  {};
+		var ret = {};
 		ret.fields = {};
 
 		ret.collection = form.formCollection;
@@ -1165,7 +1157,7 @@ function CoontiFormSubmission(frm, sbm) {
 			ret['fields'][r.name] = r;
 		});
 		return ret;
-	}
+	};
 }
 
 module.exports = CoontiFormManager;

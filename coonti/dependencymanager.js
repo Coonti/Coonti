@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,7 +37,7 @@ function CoontiDependencyManager(cnti) {
 	 * Initialises the dependency manager.
 	 */
 	this.initialise = function() {
-	}
+	};
 
 	/**
 	 * Creates an empty component. These components are used to resolve dependencies, i.e. check whether a subsystem has all dependencies satisfied or not.
@@ -63,7 +63,7 @@ function CoontiDependencyManager(cnti) {
 		}
 
 		return new Component(self, col, name, version, versionNumber, state);
-	}
+	};
 
 	/**
 	 * Adds a component and resolves dependencies. If there is already component with same collection and name, the old component is replaced with new one.
@@ -88,8 +88,8 @@ function CoontiDependencyManager(cnti) {
 		yield coonti.fireEvent('Coonti-Dependency-Component-Added', comp);
 		yield this._resolveDependencies();
 		return true;
-	}
-	
+	};
+
 	/**
 	 * Removes an available component and resolves dependencies.
 	 *
@@ -115,7 +115,7 @@ function CoontiDependencyManager(cnti) {
 		yield coonti.fireEvent('Coonti-Dependency-Component-Removed', comp);
 		yield this._resolveDependencies();
 		return true;
-	}
+	};
 
 	/**
 	 * Updates an available component version and resolves dependencies.
@@ -143,7 +143,7 @@ function CoontiDependencyManager(cnti) {
 		yield coonti.fireEvent('Coonti-Dependency-Component-Updated', comp);
 		yield this._resolveDependencies();
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches a component.
@@ -162,8 +162,8 @@ function CoontiDependencyManager(cnti) {
 		}
 
 		return components[col][name];
-	}
-	
+	};
+
 	/**
 	 * Lists available components and their dependencies.
 	 *
@@ -171,7 +171,7 @@ function CoontiDependencyManager(cnti) {
 	 */
 	this.listComponents = function() {
 		return components;
-	}
+	};
 
 	/**
 	 * Resolves dependencies, called by all methods that changes components or dependencies.
@@ -196,7 +196,7 @@ function CoontiDependencyManager(cnti) {
 				}
 			}
 		}
-	}
+	};
 }
 
 /**
@@ -212,7 +212,6 @@ function CoontiDependencyManager(cnti) {
  * @param {String} st - The state of the component.
  */
 function Component(dm, col, nm, verString, verNumber, st) {
-	
 	var dependencyManager = dm;
 	var collection = col;
 	var name = nm;
@@ -221,7 +220,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	var state = st;
 
 	var dependencies = [];
-	var resolved = false;	
+	var resolved = false;
 
 	/**
 	 * Fetches the collection of the component.
@@ -230,8 +229,8 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this.getCollection = function() {
 		return collection;
-	}
-	
+	};
+
 	/**
 	 * Fetches the name of the component.
 	 *
@@ -239,8 +238,8 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this.getName = function() {
 		return name;
-	}
-	
+	};
+
 	/**
 	 * Fetches the version of the component.
 	 *
@@ -248,8 +247,8 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this.getVersionNumber = function() {
 		return versionNumber;
-	}
-	
+	};
+
 	/**
 	 * Fetches the state of the component.
 	 *
@@ -257,7 +256,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this.getState = function() {
 		return state;
-	}
+	};
 
 	/**
 	 * Sets the state of the component. This method is not to be called outside DependencyManager.
@@ -266,8 +265,8 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this._setState = function(newState) {
 		state = newState;
-	}
-	
+	};
+
 	/**
 	 * Adds a dependency as an Object.
 	 *
@@ -289,7 +288,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 			dep.states = false;
 		}
 		this.addDependency(dep.collection, dep.name, dep.minVersion, dep.maxVersion, dep.states);
-	}
+	};
 
 	/**
 	 * Adds a dependency.
@@ -345,11 +344,11 @@ function Component(dm, col, nm, verString, verNumber, st) {
 			maxVersionNumber: maxVersionNumber,
 			states: states,
 			satisfied: false
-		}
+		};
 		dependencies.push(dependency);
-		
+
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a dependency.
@@ -369,9 +368,9 @@ function Component(dm, col, nm, verString, verNumber, st) {
 				break;
 			}
 		}
-		
+
 		return true;
-	}
+	};
 
 	/**
 	 * Checks whether the component has its dependencies resolved.
@@ -380,8 +379,8 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this.isResolved = function() {
 		return resolved;
-	}
-	
+	};
+
 	/**
 	 * Tries to resolve component dependencies and sets resolved flag accordingly.
 	 *
@@ -418,8 +417,8 @@ function Component(dm, col, nm, verString, verNumber, st) {
 			}
 		}
 		return resolved;
-	}
-	
+	};
+
 	/**
 	 * Fetches the component dependencies.
 	 *
@@ -427,7 +426,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 	 */
 	this.getDependencies = function() {
 		return dependencies;
-	}
+	};
 
 	/**
 	 * Creates JSON representation of the component.
@@ -444,7 +443,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 			resolved: resolved,
 			dependencies: dependencies
 		};
-	}
+	};
 }
 
 /**
@@ -463,12 +462,12 @@ var _calculateVersionNumber = function(version) {
 	else if(tmp.length == 2) {
 		tmp[2] = 0;
 	}
-	
+
 	var versionNumber = parseInt(tmp[0], 10) * 1000000 + parseInt(tmp[1], 10) * 1000 + parseInt(tmp[2], 10);
 	if(isNaN(versionNumber)) {
 		return false;
 	}
 	return versionNumber;
-}
+};
 
 module.exports = CoontiDependencyManager;

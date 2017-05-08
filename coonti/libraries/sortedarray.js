@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,7 +27,7 @@ var _ = require('underscore');
  * @return An empty SortedArray.
  */
 function SortedArray() {
-    this.array = [];
+	this.array = [];
 	this.weights = [];
 }
 
@@ -45,7 +45,7 @@ SortedArray.prototype.insert = function(el, w) {
 	var s = _.sortedIndex(this.weights, w);
 	this.array.splice(s, 0, el);
 	this.weights.splice(s, 0, w);
-}
+};
 
 /**
  * Removes all references to the given item.
@@ -61,7 +61,7 @@ SortedArray.prototype.remove = function(el) {
 	});
 	this.array = _.without(this.array, el);
 	this.weights = _.without(this.weights, '');
-}
+};
 
 /**
  * Fetches the value at the given position.
@@ -78,7 +78,7 @@ SortedArray.prototype.valueAt = function(pos) {
 		return undefined;
 	}
 	return this.array[pos];
-}
+};
 
 /**
  * Fetches the weight at the given position.
@@ -95,7 +95,7 @@ SortedArray.prototype.weightAt = function(pos) {
 		return undefined;
 	}
 	return this.weights[pos];
-}
+};
 
 /**
  * Provides the values in the SortedArray as a normal JavaScript array, in order of weights.
@@ -104,7 +104,7 @@ SortedArray.prototype.weightAt = function(pos) {
  */
 SortedArray.prototype.toArray = function() {
 	return _.toArray(this.array);
-}
+};
 
 /**
  * Calculates the size of the SortedArray.
@@ -113,7 +113,7 @@ SortedArray.prototype.toArray = function() {
  */
 SortedArray.prototype.size = function() {
 	return this.array.length;
-}
+};
 
 /**
  * Creates a generator for iterating one or more SortedArrays in weight order. To iterate several SortedArrays, add them as parameters to this function.
@@ -134,7 +134,7 @@ SortedArray.prototype.iterator = function*() {
 		if(arrays.length == 0) {
 			return;
 		}
-		
+
 		if(arrays.length == 1) {
 			if(positions[0] == arrays[0].size()) {
 				return;
@@ -159,6 +159,6 @@ SortedArray.prototype.iterator = function*() {
 		}
 		yield ret;
 	}
-}
+};
 
 module.exports = SortedArray;

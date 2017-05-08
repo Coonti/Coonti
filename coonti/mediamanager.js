@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -52,7 +52,7 @@ function CoontiMediaManager(cnti) {
 	var gmInstalled = false;
 	var iconDefinition = false;
 	var thumbnailIcons = {};
-	
+
 	var dirs;
 	var fileNameCache;
 	var _getFromCache;
@@ -67,8 +67,8 @@ function CoontiMediaManager(cnti) {
 	this.initialise = function() {
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
 		logger = coonti.getManager('log').getLogger('coonti-core-mediamanager');
-	}
-	
+	};
+
 	/**
 	 * Loads the media configuration.
 	 */
@@ -81,7 +81,7 @@ function CoontiMediaManager(cnti) {
 		_getFromCache = thunkify(fileNameCache.get);
 		_setToCache = thunkify(fileNameCache.set);
 		_delFromCache = thunkify(fileNameCache.del);
-		
+
 		var mediaConfig = coonti.getConfigParam('media');
 		if(!mediaConfig) {
 			mediaConfig = {};
@@ -95,7 +95,7 @@ function CoontiMediaManager(cnti) {
 
 		// Check whether GM has been installed or not
 		var exec = require('child_process').exec;
-		exec("gm version", function (error, stdout, stderr) {
+		exec('gm version', function (error, stdout, stderr) {
 			if(!error) {
 				gmInstalled = true;
 			}
@@ -120,7 +120,7 @@ function CoontiMediaManager(cnti) {
 		if(mediaConfig['iconDefinition']) {
 			iconDefinition = mediaConfig['iconDefinition'];
 		}
-		
+
 		var defaultFound = false;
 		var firstDir = false;
 		_.each(mediaConfig['directories'], function(dir, key) {
@@ -152,8 +152,8 @@ function CoontiMediaManager(cnti) {
 				if(dir.length > 0) {
 					if(dir[0] == '_') {
 						if(dir.length < 4) {
-							this.res.status=(404);
-							this.res.body=('Not found');
+							this.res.status = (404);
+							this.res.body = ('Not found');
 							return;
 						}
 						dir = dir[0] + '/' + dir[1] + '/' + dir[2];
@@ -161,7 +161,7 @@ function CoontiMediaManager(cnti) {
 					else {
 						dir = dir[0];
 					}
-					file = origFile.substring(dir.length + 1);
+					var file = origFile.substring(dir.length + 1);
 					if(dirs[dir]) {
 						var realFile = dirs[dir].path + '/' + file;
 						try {
@@ -177,8 +177,8 @@ function CoontiMediaManager(cnti) {
 				}
 			}
 			// ##TODO## get 404 from template/config/etc.
-			this.res.status=(404);
-			this.res.body=('Not found');
+			this.res.status = (404);
+			this.res.body = ('Not found');
 			yield next;
 		});
 
@@ -195,8 +195,8 @@ function CoontiMediaManager(cnti) {
 				});
 			});
 		}
-	}
-	
+	};
+
 	/**
 	 * Adds a new theme media directory.
 	 *
@@ -219,7 +219,7 @@ function CoontiMediaManager(cnti) {
 			type: 'theme'
 		};
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a theme media directory.
@@ -234,14 +234,14 @@ function CoontiMediaManager(cnti) {
 		}
 
 		webPath = '_/' + theme + '/' + webPath;
-		
+
 		if(!dirs[webPath]) {
 			return true;
 		}
 
 		delete dirs[webPath];
 		return true;
-	}
+	};
 
 	/**
 	 * Adds a new file to a media directory.
@@ -254,8 +254,8 @@ function CoontiMediaManager(cnti) {
 		// ##TODO##
 
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Removes a file from a media directory.
 	 *
@@ -271,7 +271,7 @@ function CoontiMediaManager(cnti) {
 		if(dirs[dir].type != 'content') {
 			return false;
 		}
-		
+
 		try {
 			yield cofs.unlink(dirs[dir].path + '/' + file);
 			yield this._purgeFileFromCache(dir, file);
@@ -280,8 +280,8 @@ function CoontiMediaManager(cnti) {
 		catch(e) {
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Fetches the web path of the media manager.
 	 *
@@ -289,7 +289,7 @@ function CoontiMediaManager(cnti) {
 	 */
 	this.getWebPath = function() {
 		return webPath;
-	}
+	};
 
 	/**
 	 * Fetches the available media directories of the given type.
@@ -309,7 +309,7 @@ function CoontiMediaManager(cnti) {
 			}
 		});
 		return ret;
-	}
+	};
 
 	/**
 	 * Fetches the available media directories.
@@ -318,7 +318,7 @@ function CoontiMediaManager(cnti) {
 	 */
 	this.getMediaDirectories = function() {
 		return dirs;
-	}
+	};
 
 	/**
 	 * Fetches the default directory.
@@ -332,8 +332,8 @@ function CoontiMediaManager(cnti) {
 			}
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Fetches the media files from the given (virtual) media directory.
 	 *
@@ -365,7 +365,7 @@ function CoontiMediaManager(cnti) {
 			}
 			files = nFiles;
 		}
-		
+
 		pg['total'] = files.length;
 		var ret = [];
 
@@ -376,7 +376,7 @@ function CoontiMediaManager(cnti) {
 		if(end > files.length) {
 			end = files.length;
 		}
-		
+
 		var st = pg['start'];
 		var en = end;
 		if(pg['sort'] != 'name' && pg['sort'] != '-name') {
@@ -394,16 +394,16 @@ function CoontiMediaManager(cnti) {
 				}
 			}
 		}
-		
+
 		for(var i = st; i < en; i++) {
-			var st = yield cofs.stat(dirs[dir].path + '/' + files[i]);			
+			var st = yield cofs.stat(dirs[dir].path + '/' + files[i]);
 			var fileData = {
 				name: files[i],
 				size: st.size,
 				mtime: st.mtime.getTime(),
 				type: mime.lookup(files[i]),
 				thumbnail: this.getThumbnail(dir, files[i])
-			}
+			};
 			ret.push(fileData);
 		}
 		if(pg['sort'] != 'name' && pg['sort'] != '-name') {
@@ -427,9 +427,9 @@ function CoontiMediaManager(cnti) {
 			}
 			ret = ret.slice(pg['start'], end);
 		}
-		
+
 		return ret;
-	}
+	};
 
 	/**
 	 * Provides thumbnail web path for the given file.
@@ -454,19 +454,19 @@ function CoontiMediaManager(cnti) {
 				return dir + '/' + split[1] + '_' + iconDefinition + '.' + split[2];
 			}
 		}
-		
+
 		if(thumbnailIcons[mimeType]) {
 			return thumbnailIcons[mimeType];
 		}
-		else {
-			mimeType = 'default';
-		}
+
+		mimeType = 'default';
+
 		if(thumbnailIcons[mimeType]) {
 			return thumbnailIcons[mimeType];
 		}
 
 		return false;
-	}
+	};
 
 	/**
 	 * Moves and renames a file to the given directory. If the new name is already taken, the method creates a new name.
@@ -484,8 +484,8 @@ function CoontiMediaManager(cnti) {
 
 		var odf = dirs[oldDir].path + '/' + oldFile;
 		return yield this.moveFileIntoDirectory(odf, dir, file);
-	}
-	
+	};
+
 	/**
 	 * Moves a (temporary) file to the given directory. If the name is already taken, the method renames the file.
 	 *
@@ -510,7 +510,7 @@ function CoontiMediaManager(cnti) {
 		var destFileExt = path.extname(file);
 		var destFileName = path.basename(file, destFileExt);
 		var finalFile = destFileBase;
-		for(var i = 1;; i++) {
+		for(var i = 1; ; i++) {
 			try {
 				yield cofs.stat(dirs[dir].path + '/' + finalFile);
 				finalFile = destFileName + '-' + i + destFileExt;
@@ -526,8 +526,8 @@ function CoontiMediaManager(cnti) {
 			return false;
 		}
 		return finalFile;
-	}
-	
+	};
+
 	/**
 	 * Checks whether a resized version of the media is cached or can be created and serves that to the client.
 	 *
@@ -538,8 +538,8 @@ function CoontiMediaManager(cnti) {
 	this._cacheCreateServe = function*(ctx, dir, file) {
 		if(!gmInstalled) {
 			// ##TODO## get 404 from template/config/etc.
-			ctx.status=(404);
-			ctx.body=('Not found');
+			ctx.status = (404);
+			ctx.body = ('Not found');
 			return;
 		}
 
@@ -551,7 +551,7 @@ function CoontiMediaManager(cnti) {
 			return;
 		} catch(e) {
 		}
-		
+
 		var re = /^(.+)_(\d+|-)x(\d+|-)([a-z]*)\.(\w+)$/;
 		var split = realFile.match(re);
 		if(split) {
@@ -578,12 +578,12 @@ function CoontiMediaManager(cnti) {
 						return function(callback) {
 							img.size(callback);
 						};
-					}
+					};
 					var size = yield sizer(img);
 					if(size) {
 						var ow = size.width;
 						var oh = size.height;
-						
+
 						if(w == -1) {
 							w = h / oh * w;
 						}
@@ -593,22 +593,22 @@ function CoontiMediaManager(cnti) {
 
 						var nw = w;
 						var nh = h;
-						
+
 						var cw = w;
 						var ch = h;
 						var cx = 0;
 						var cy = 0;
-						
+
 						var scale = false;
-						
+
 						// Crop
 						if(method[0] == 'c') {
 							nw = Math.max(nw, w * ow / oh * h / w);
 							nh = Math.max(nh, h * oh / ow * w / h);
-							
+
 							cx = Math.floor((nw - cw) / 2);
 							cy = Math.floor((nh - ch) / 2);
-							
+
 							if(method[1]) {
 								if(method[1] == 'l') {
 									cx = 0;
@@ -617,7 +617,7 @@ function CoontiMediaManager(cnti) {
 									cx = nw - cw;
 								}
 							}
-							
+
 							if(method[2]) {
 								if(method[2] == 't') {
 									cy = 0;
@@ -627,22 +627,22 @@ function CoontiMediaManager(cnti) {
 								}
 							}
 						}
-						
+
 						// Scale
 						else if(method[0] == 's') {
 							scale = true;
 						}
-						
+
 						// Pad
 						else if(method[0] == 'p') {
 							// ##TODO##
 						}
-						
+
 						var resizer = function(file) {
 							return function(callback) {
 								img.resize(nw, nh, (scale ? '' : '!')).crop(cw, ch, cx, cy).write(cacheFile, callback);
 							};
-						}
+						};
 
 						yield resizer(file);
 						ctx.body = yield self._safeCreateReadStream(cacheFile);
@@ -657,9 +657,9 @@ function CoontiMediaManager(cnti) {
 		}
 
 		// ##TODO## get 404 from template/config/etc.
-		this.status=(404);
-		this.body=('Not found');
-	}
+		this.status = (404);
+		this.body = ('Not found');
+	};
 
 	/**
 	 * Removes all versions of file from cache. Must be called when file is removed or updated.
@@ -695,7 +695,7 @@ function CoontiMediaManager(cnti) {
 				}
 			}
 		}
-	}
+	};
 
 	/**
 	 * Creates a ReadStream instance through opening the file first and passing the handle to the fs.createReadStream(). This ensures that if the file does not exist, the error is thrown inside Coonti and not Koa code.
@@ -707,7 +707,7 @@ function CoontiMediaManager(cnti) {
 	this._safeCreateReadStream = function*(file) {
 		var fd = yield cofs.open(file, 'r');
 		return fs.createReadStream(file, { fd: fd });
-	}
+	};
 }
 
 module.exports = CoontiMediaManager;

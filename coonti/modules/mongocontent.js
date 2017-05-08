@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-var co = require('co');
 var _ = require('underscore');
 
 /**
@@ -35,7 +34,7 @@ function MongoContent(cnti) {
 	var contentTypes = {};
 
 	var logger;
-	
+
 	/**
 	 * Fetches the module information for admin users.
 	 *
@@ -45,7 +44,7 @@ function MongoContent(cnti) {
 		return {
 			name: 'MongoContent',
 			description: 'Reads content from MongoDB databases. Requires MongoConnect module.',
-			author: 'Coonti Project',	
+			author: 'Coonti Project',
 			authorUrl: 'http://coonti.org',
 			version: '0.1.0',
 			moduleUrl: 'http://coonti.org',
@@ -54,7 +53,7 @@ function MongoContent(cnti) {
 				name: 'MongoConnect'
 			}]
 		};
-	}
+	};
 
 	/**
 	 * Receives a new configuration for the module.
@@ -64,8 +63,8 @@ function MongoContent(cnti) {
 	this.setConfig = function*(cf) {
 		config = cf;
 		return true;
-	}
-	
+	};
+
 	/**
 	 * Initialises the module and reads in the configuration
 	 *
@@ -113,7 +112,7 @@ function MongoContent(cnti) {
 
 		logger.debug('MongoContent - Initialised.');
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -123,7 +122,7 @@ function MongoContent(cnti) {
 	this.remove = function*() {
 		logger.debug('MongoContent - Removed.');
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers MongoDB based content handler.
@@ -133,7 +132,7 @@ function MongoContent(cnti) {
 	this.start = function*() {
 		logger.debug('MongoContent - Started.');
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters MongoDB based content handler.
@@ -143,7 +142,7 @@ function MongoContent(cnti) {
 	this.stop = function*() {
 		logger.debug('MongoContent - Stopped.');
 		return true;
-	}
+	};
 
 	/**
 	 * Lists content items based on the criteria.
@@ -156,8 +155,8 @@ function MongoContent(cnti) {
 	this.listContent = function*(keys, params, pg) {
 		var cnt = yield storage.getAllData(config.contentCollection, keys, params, pg);
 		return cnt;
-	}
-	
+	};
+
 	/**
 	 * Fetches content.
 	 *
@@ -171,7 +170,7 @@ function MongoContent(cnti) {
 			return false;
 		}
 		return cnt;
-	}
+	};
 
 	/**
 	 * Fetches content with direct access.
@@ -186,7 +185,7 @@ function MongoContent(cnti) {
 			return false;
 		}
 		return cnt;
-	}
+	};
 
 	/**
 	 * Fetches content by id.
@@ -204,7 +203,7 @@ function MongoContent(cnti) {
 			return false;
 		}
 		return cnt;
-	}
+	};
 
 	/**
 	 * Adds new content.
@@ -222,12 +221,12 @@ function MongoContent(cnti) {
 		}
 
 		if(!ct['_id']) {
-			ct['_id'] = yield storage.getId(config.contentCollection);		
+			ct['_id'] = yield storage.getId(config.contentCollection);
 		}
 		ct['mtime'] = new Date();
 		yield storage.insertData(config.contentCollection, ct);
 		return true;
-	}
+	};
 
 	/**
 	 * Updates a content item.
@@ -247,7 +246,7 @@ function MongoContent(cnti) {
 		ct['mtime'] = new Date();
 		yield storage.updateData(config.contentCollection, ct);
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a content item.
@@ -262,7 +261,7 @@ function MongoContent(cnti) {
 
 		yield storage.removeDataById(config.contentCollection, id);
 		return true;
-	}
+	};
 
 	/**
 	 * Fetches content type object.
@@ -280,7 +279,7 @@ function MongoContent(cnti) {
 		}
 
 		return contentTypes[name];
-	}
+	};
 
 	/**
 	 * Adds a new content type.
@@ -301,13 +300,13 @@ function MongoContent(cnti) {
 		}
 
 		if(!ct['_id']) {
-			ct['_id'] = yield storage.getId(config.contentTypeCollection);		
+			ct['_id'] = yield storage.getId(config.contentTypeCollection);
 		}
 		yield storage.insertData(config.contentTypeCollection, ct);
 
 		contentTypes[name] = ct;
 		return true;
-	}
+	};
 
 	/**
 	 * Updates a content type.
@@ -330,7 +329,7 @@ function MongoContent(cnti) {
 		delete contentTypes[name];
 		contentTypes[ct['name']] = ct;
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a content type.
@@ -356,7 +355,7 @@ function MongoContent(cnti) {
 		yield storage.removeDataById(config.contentTypeCollection, id);
 		delete contentTypes[name];
 		return true;
-	}
+	};
 }
 
 module.exports = MongoContent;

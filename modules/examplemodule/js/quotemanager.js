@@ -1,5 +1,5 @@
+/* globals coonti,angular */
 if(coonti && coonti['user']) {
-
 	// Name all Angular assets with ModuleName + Object description, using CamelCase notation.
 
 	// Angular REST factories can be used in a very straightforward manner in most cases
@@ -15,7 +15,6 @@ if(coonti && coonti['user']) {
 
 	// Angular controller that contains the UI logic for the module admin interface. The routes to launch the controller are set in the main module code
 	angular.module('coontiAdmin').controller('ExampleModuleQuoteCtrl', ['$scope', '$location', '$routeParams', 'ExampleModuleQuote', 'ngDialog', 'notifications', function($scope, $location, $routeParams, Quote, ngDialog, notifications) {
-		var self = this;
 
 		// Transform the returned object into a sorted array
 		$scope.$watch('quotes.items', function(newVal, oldVal) {
@@ -49,12 +48,12 @@ if(coonti && coonti['user']) {
 			var quote = new Quote();
 			quote.quote = q;
 			quote.$create({}, function() {
-				notifications.success('', "Quote added.");
+				notifications.success('', 'Quote added.');
 				$location.path('/module/quote');
 			}, function() {
-				notifications.error('', "Quote could not be added.");
+				notifications.error('', 'Quote could not be added.');
 			});
-		}
+		};
 
 		$scope.remove = function(key, item) {
 			ngDialog.openConfirm({
@@ -69,9 +68,9 @@ if(coonti && coonti['user']) {
 					notifications.success('', "Removed quote '" + item + "'.");
 					$scope.quotes = Quote.get($routeParams);
 				}, function() {
-					notifications.error('', "Could not remove quote.");
+					notifications.error('', 'Could not remove quote.');
 				});
 			});
-		}
+		};
 	}]);
 }

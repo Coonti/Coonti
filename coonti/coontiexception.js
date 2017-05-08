@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,7 +34,7 @@ function CoontiException(severity, cd, msg) {
 
 	this.toString = function() {
 		return 'CoontiException (' + this.severity + ') ' + this.code + ': ' + this.message;
-	}
+	};
 }
 
 /** Fatal error, execution should stop. */

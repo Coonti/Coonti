@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,7 @@ function FileConnect(cnti) {
 			version: '0.1.0',
 			moduleUrl: 'http://coonti.org'
 		};
-	}
+	};
 
 	/**
 	 * Initialises the module.
@@ -67,7 +67,6 @@ function FileConnect(cnti) {
 		storageManager = coonti.getManager('storage');
 
 		var dbs = coonti.getConfigParam('databases');
-		var self = this;
 		_.each(dbs, function(db) {
 			if(db.type == 'file') {
 				if(!db.name && !db.dir) {
@@ -92,7 +91,7 @@ function FileConnect(cnti) {
 
 		logger.info('FileConnect - Initialised.');
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the module.
@@ -101,7 +100,7 @@ function FileConnect(cnti) {
 	 */
 	this.remove = function*() {
 		return true;
-	}
+	};
 
 	/**
 	 * Starts the module and registers file based content handler.
@@ -110,13 +109,12 @@ function FileConnect(cnti) {
 	 */
 	this.start = function*() {
 		for(var i in connections) {
-			var db = connections[i];
 			var fh = new FileHandler(this, connections[i].dir, connections[i].encoding);
 			storageManager.addStorageHandler(i, fh);
 		}
 		logger.info('FileConnect - Started.');
 		return true;
-	}
+	};
 
 	/**
 	 * Stops the module and unregisters file based content handler.
@@ -129,7 +127,7 @@ function FileConnect(cnti) {
 		}
 		logger.info('FileConnect - Stopped.');
 		return true;
-	}
+	};
 }
 
 /**
@@ -137,14 +135,12 @@ function FileConnect(cnti) {
  *
  * @class
  * @classdesc Class for reading and writing to the file system.
- * @param {fileConnect} fileCnnct - FileConnect The owner of the handler.
+ * @param {FileConnect} fileCnnct - FileConnect The owner of the handler.
  * @param {String} dr - The directory that contains the content.
  * @param {String} enc - The encoding that is used.
  */
 function FileHandler(fileCnnct, dr, enc) {
-	var fileConnect = fileCnnct;
 	var dir = dr;
-	var encoding = enc;
 
 	/**
 	 * Fetches one item from the database.
@@ -175,7 +171,7 @@ function FileHandler(fileCnnct, dr, enc) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches all matching data from a collection.
@@ -193,7 +189,7 @@ function FileHandler(fileCnnct, dr, enc) {
 		var ret = [];
 		try {
 			var files = yield fs.readdir(dir + collection);
-			for(f in files) {
+			for(var f in files) {
 				try {
 					var fc = yield fs.readFile(dir + collection + '/' + files[f], enc);
 					ret.push(JSON.parse(fc));
@@ -208,13 +204,13 @@ function FileHandler(fileCnnct, dr, enc) {
 			return false;
 		}
 		return ret;
-	}
+	};
 
 	this.setData = function(collection, path, data) {
-	}
+	};
 
 	this.removeData = function(collection, path) {
-	}
+	};
 }
 
 module.exports = FileConnect;

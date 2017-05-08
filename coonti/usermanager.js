@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2016 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,15 +18,11 @@
  */
 
 var _ = require('underscore');
-var _s = require('underscore.string');
-var acl = require('acl');
 var cacheManager = require('cache-manager');
 var thunkify = require('thunkify');
 var bcrypt = require('bcryptjs');
-var Reflect = require('harmony-reflect');
 
 var coonti;
-var app;
 var userManager;
 var storage;
 
@@ -42,7 +38,6 @@ var SESSION_USER = 'coontiUser';
  */
 function CoontiUserManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 	userManager = this;
 
 	var usersCollection = 'users'; // ##TODO## Read from config
@@ -55,7 +50,7 @@ function CoontiUserManager(cnti) {
 	var rights = {};
 
 	var logger;
-	
+
 	/**
 	 * Initialises the UserManager instance. This method is called by Coonti core.
 	 */
@@ -72,21 +67,21 @@ function CoontiUserManager(cnti) {
 
 		coonti.addEventListener('Coonti-Module-Start-MongoConnect', this.mongoConnectStarted);
 		coonti.addEventListener('Coonti-Module-Stop-MongoConnect', this.mongoConnectStopped);
-	
+
 		users = new UserManagerStorage(usersCollection, 'account', this.importUser);
 		roles = new UserManagerStorage(rolesCollection, 'name', this.importRole);
 		groups = new UserManagerStorage(groupsCollection, 'name', this.importGroup);
 
 		addSystemRights();
-	}
+	};
 
 	/**
 	 * Initialises the logger.
 	 */
 	var loggingInitialised = function*() {
 		logger = coonti.getManager('log').getLogger('coonti-core-usermanager');
-	}
-	
+	};
+
 	/**
 	 * Sets the storage when made available.
 	 */
@@ -100,7 +95,7 @@ function CoontiUserManager(cnti) {
 		else {
 			logger.info('UserManager - MongoDB storage available.');
 		}
-	}
+	};
 
 	/**
 	 * Clears the storage when it becomes unavailable
@@ -108,7 +103,7 @@ function CoontiUserManager(cnti) {
 	this.mongoConnectStopped = function*() {
 		storage = false;
 		logger.info('UserManager - MongoDB storage unavailable.');
-	}
+	};
 
 	/**
 	 * Adds a new user.
@@ -154,7 +149,7 @@ function CoontiUserManager(cnti) {
 			return user;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Updates user data.
@@ -178,7 +173,7 @@ function CoontiUserManager(cnti) {
 		if(!user) {
 			return false;
 		}
-		
+
 		userData = userData || {};
 
 		user.removeAllParameters();
@@ -188,27 +183,27 @@ function CoontiUserManager(cnti) {
 		user.removeAllGroups();
 
 		user.setParameters(userData);
-		
+
 		if(allowed && Object.prototype.toString.call(allowed) === '[object Array]') {
 			user.addAllowed(allowed);
 		}
-		
+
 		if(denied && Object.prototype.toString.call(denied) === '[object Array]') {
 			user.addDenied(denied);
 		}
-		
+
 		if(roles && Object.prototype.toString.call(roles) === '[object Array]') {
 			user.addRole(roles);
 		}
-		
+
 		if(groups && Object.prototype.toString.call(groups) === '[object Array]') {
 			user.addToGroup(groups);
 		}
-		
+
 		var ret = yield users.updateObject(user);
 		logger.info("UserManager - Updated user '%s'.", user.account);
 		return ret;
-	}
+	};
 
 	/**
 	 * Stores a user to the database.
@@ -223,8 +218,8 @@ function CoontiUserManager(cnti) {
 
 		var ret = yield users.updateObject(user);
 		return ret;
-	}
-	
+	};
+
 	/**
 	 * Fetches a number of users. Do note that this method does not add the fetched users to cache, as it is used typically in user searches and listings.
 	 *
@@ -241,7 +236,7 @@ function CoontiUserManager(cnti) {
 		}
 
 		return yield storage.getAllData(usersCollection, keys, params);
-	}
+	};
 
 	/**
 	 * Fetches a user by account.
@@ -251,7 +246,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getUser = function*(account) {
 		return yield users.getByName(account);
-	}
+	};
 
 	/**
 	 * Fetches a user by id.
@@ -261,7 +256,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getUserById = function*(id) {
 		return yield users.getById(id);
-	}
+	};
 
 	/**
 	 * Removes a user by id.
@@ -270,12 +265,11 @@ function CoontiUserManager(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.removeUserById = function*(id) {
-
 		// ##TODO## Remove role from users
 		return yield users.removeById(id);
-	}
-	
-	
+	};
+
+
 	/**
 	 * Fetches the current user.
 	 *
@@ -288,8 +282,8 @@ function CoontiUserManager(cnti) {
 			return yield this.getUser(userName);
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Fetches the current user account.
 	 *
@@ -298,7 +292,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.currentUserAccount = function*(ctx) {
 		return ctx.coonti.getFromSession(SESSION_USER);
-	}
+	};
 
 	/**
 	 * Logs a user in.
@@ -324,8 +318,8 @@ function CoontiUserManager(cnti) {
 			return user;
 		}
 		return false;
-	}
-	
+	};
+
 	/**
 	 * Logs the current user out.
 	 *
@@ -333,7 +327,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.logout = function*(ctx) {
 		ctx.coonti.destroySession();
-	}
+	};
 
 	/**
 	 * Checks whether the current user has the given access rights.
@@ -349,8 +343,8 @@ function CoontiUserManager(cnti) {
 		}
 
 		return yield user.isAllowed(access);
-	}
-	
+	};
+
 	/**
 	 * Adds a new Role.
 	 *
@@ -387,7 +381,7 @@ function CoontiUserManager(cnti) {
 			return role;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Updates a role.
@@ -423,8 +417,8 @@ function CoontiUserManager(cnti) {
 		var ret = yield roles.updateObject(role);
 		logger.info("UserManager - Updated role '%s'.", role.getName());
 		return ret;
-	}
-	
+	};
+
 	/**
 	 * Fetches a number of roles. Do note that this method does not add the fetched roles to cache, as it is used typically in role searches and listings.
 	 *
@@ -441,7 +435,7 @@ function CoontiUserManager(cnti) {
 		}
 
 		return yield storage.getAllData(rolesCollection, keys, params);
-	}
+	};
 
 	/**
 	 * Fetches a role by name.
@@ -451,7 +445,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getRole = function*(name) {
 		return yield roles.getByName(name);
-	}
+	};
 
 	/**
 	 * Fetches a role by id.
@@ -461,7 +455,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getRoleById = function*(id) {
 		return yield roles.getById(id);
-	}
+	};
 
 	/**
 	 * Removes a role by id.
@@ -470,11 +464,10 @@ function CoontiUserManager(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.removeRoleById = function*(id) {
-
 		// ##TODO## Remove role from users
 		return yield roles.removeById(id);
-	}
-	
+	};
+
 	/**
 	 * Adds a new Group.
 	 *
@@ -496,7 +489,7 @@ function CoontiUserManager(cnti) {
 
 		grp = new Group(groupName);
 		grp.setDescription(descr);
-		
+
 		if(allowed && Object.prototype.toString.call(allowed) === '[object Array]') {
 			grp.addAllowed(allowed);
 		}
@@ -511,8 +504,8 @@ function CoontiUserManager(cnti) {
 			return grp;
 		}
 		return ret;
-	}
-	
+	};
+
 	/**
 	 * Updates a group.
 	 *
@@ -547,8 +540,8 @@ function CoontiUserManager(cnti) {
 		var ret = yield groups.updateObject(group);
 		logger.info("UserManager - Updated group '%s'.", group.getName());
 		return ret;
-	}
-	
+	};
+
 	/**
 	 * Fetches a number of groups. Do note that this method does not add the fetched groups to cache, as it is used typically in group searches and listings.
 	 *
@@ -565,7 +558,7 @@ function CoontiUserManager(cnti) {
 		}
 
 		return yield storage.getAllData(groupsCollection, keys, params);
-	}
+	};
 
 	/**
 	 * Fetches a group by name.
@@ -575,7 +568,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getGroup = function*(name) {
 		return yield groups.getByName(name);
-	}
+	};
 
 	/**
 	 * Fetches a group by id.
@@ -585,7 +578,7 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getGroupById = function*(id) {
 		return yield groups.getById(id);
-	}
+	};
 
 	/**
 	 * Removes a group by id.
@@ -594,11 +587,10 @@ function CoontiUserManager(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.removeGroupById = function*(id) {
-
 		// ##TODO## Remove group from users
 		return yield groups.removeById(id);
-	}
-	
+	};
+
 	/**
 	 * Adds a new right. The method does not store the right to the database, thus this method is to be called whenever a new right is introduced to the system, for example, by a module.
 	 *
@@ -616,10 +608,10 @@ function CoontiUserManager(cnti) {
 
 		rights[right['name']] = right;
 		logger.debug("UserManager - Added right '%s'.", right.name);
-		
+
 		return true;
-	}
-	
+	};
+
 	/**
 	 * Fetches all available rights in the system. Do note that the system allows also other rights to be assigned, but this list is shown on the GUI and it is considered a bad user experience to use a right not on this list.
 	 *
@@ -627,50 +619,50 @@ function CoontiUserManager(cnti) {
 	 */
 	this.getRights = function() {
 		return rights;
-	}
+	};
 
 	/**
 	 * Adds the basic rights used by the system.
 	 */
-	addSystemRights = function() {
+	var addSystemRights = function() {
 		userManager.addRight({ name: '*',
 							   displayName: '*',
-							   description: 'Allows access to all functionality.'});
+							   description: 'Allows access to all functionality.' });
 		userManager.addRight({ name: 'admin.accessAdmin',
 							   displayName: 'Access Admin Interface',
-							   description: 'Allows user to use the administration user interface.'});
+							   description: 'Allows user to use the administration user interface.' });
 		userManager.addRight({ name: 'admin.addContent',
 							   displayName: 'Add Content',
-							   description: 'Allows user to add content.'});
+							   description: 'Allows user to add content.' });
 		userManager.addRight({ name: 'admin.manageContent',
 							   displayName: 'Manage Content',
-							   description: 'Allows user to add, edit and remove content.'});
+							   description: 'Allows user to add, edit and remove content.' });
 		userManager.addRight({ name: 'admin.manageContentTypes',
 							   displayName: 'Manage Content Types',
-							   description: 'Allows user to add, edit and remove content types.'});
+							   description: 'Allows user to add, edit and remove content types.' });
 		userManager.addRight({ name: 'admin.addMedia',
 							   displayName: 'Add Media',
-							   description: 'Allows user to add media files.'});
+							   description: 'Allows user to add media files.' });
 		userManager.addRight({ name: 'admin.manageMedia',
 							   displayName: 'Manage Media',
-							   description: 'Allows user to add, edit and remove media files.'});
+							   description: 'Allows user to add, edit and remove media files.' });
 		userManager.addRight({ name: 'admin.manageThemes',
 							   displayName: 'Manage Themes',
-							   description: 'Allows user to configure and change themes.'});
+							   description: 'Allows user to configure and change themes.' });
 		userManager.addRight({ name: 'admin.manageAccounts',
 							   displayName: 'Manage User Accounts',
-							   description: 'Allows user to add, edit and remove user accounts, and their roles, groups and rights.'});
+							   description: 'Allows user to add, edit and remove user accounts, and their roles, groups and rights.' });
 		userManager.addRight({ name: 'admin.manageGroups',
 							   displayName: 'Manage User Groups',
-							   description: 'Allows user to add, edit and remove user groups and their rights.'});
+							   description: 'Allows user to add, edit and remove user groups and their rights.' });
 		userManager.addRight({ name: 'admin.manageRoles',
 							   displayName: 'Manage User Roles',
-							   description: 'Allows user to add, edit and remove user roles and their rights.'});
+							   description: 'Allows user to add, edit and remove user roles and their rights.' });
 		userManager.addRight({ name: 'admin.manageModules',
 							   displayName: 'Manage Modules',
-							   description: 'Allows user to configure and change states of modules.'});
-	}
-	
+							   description: 'Allows user to configure and change states of modules.' });
+	};
+
 	/**
 	 * Creates a new User object based on the JSON data. ##TODO## Change this into a class level method of User.
 	 *
@@ -678,7 +670,6 @@ function CoontiUserManager(cnti) {
 	 * @return {User} A new user object or false, if creation fails.
 	 */
 	this.importUser = function(data) {
-
 		if(!data || _.size(data) == 0 || !data['account']) {
 			return false;
 		}
@@ -687,7 +678,7 @@ function CoontiUserManager(cnti) {
 		var id = false;
 		if(data['_id']) {
 			id = data['_id'];
-			delete(data['_id']);
+			delete (data['_id']);
 		}
 		var userData = data['userData'] || {};
 		var password = data['password'] || false;
@@ -704,7 +695,7 @@ function CoontiUserManager(cnti) {
 
 		logger.info("UserManager - Imported user '%s'.", acc);
 		return u;
-	}
+	};
 
 	/**
 	 * Creates a new Role object based on the JSON data. ##TODO## Change this into a class level method of Role.
@@ -721,7 +712,7 @@ function CoontiUserManager(cnti) {
 		var id = false;
 		if(data['_id']) {
 			id = data['_id'];
-			delete(data['_id']);
+			delete (data['_id']);
 		}
 
 		var role = new Role(name);
@@ -732,7 +723,7 @@ function CoontiUserManager(cnti) {
 
 		logger.info("UserManager - Imported role '%s'.", name);
 		return role;
-	}
+	};
 
 	/**
 	 * Creates a new Group object based on the JSON data. ##TODO## Change this into a class level method of Group.
@@ -749,7 +740,7 @@ function CoontiUserManager(cnti) {
 		var id = false;
 		if(data['_id']) {
 			id = data['_id'];
-			delete(data['_id']);
+			delete (data['_id']);
 		}
 
 		var group = new Group(name);
@@ -760,7 +751,7 @@ function CoontiUserManager(cnti) {
 
 		logger.info("UserManager - Imported group '%s'.", name);
 		return group;
-	}
+	};
 }
 
 /**
@@ -805,7 +796,7 @@ function UserManagerStorage(collection, key, factory) {
 		if(!storage) {
 			return false;
 		}
-		
+
 		var query = {};
 		query[key] = name;
 		var jsonRes = yield storage.getData(collection, query);
@@ -821,7 +812,7 @@ function UserManagerStorage(collection, key, factory) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches an object from storage by its database id.
@@ -842,7 +833,7 @@ function UserManagerStorage(collection, key, factory) {
 		if(!storage) {
 			return false;
 		}
-		
+
 		var query = { _id: id };
 		var jsonRes = yield storage.getData(collection, query);
 		if(jsonRes) {
@@ -855,7 +846,7 @@ function UserManagerStorage(collection, key, factory) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Inserts a new object.
@@ -884,7 +875,7 @@ function UserManagerStorage(collection, key, factory) {
 		yield _setId(obj.getId(), obj);
 
 		return true;
-	}
+	};
 
 	/**
 	 * Updates an object.
@@ -912,7 +903,7 @@ function UserManagerStorage(collection, key, factory) {
 		yield _setId(id, obj);
 
 		return true;
-	}
+	};
 
 	/**
 	 * Removes an object from the cache and also from the database.
@@ -944,7 +935,7 @@ function UserManagerStorage(collection, key, factory) {
 			// ##TODO## Purge name cache
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Deletes an object by its name.
@@ -974,7 +965,7 @@ function UserManagerStorage(collection, key, factory) {
 			// ##TODO## Purge ID cache?
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Deletes an object by its database id.
@@ -1000,7 +991,7 @@ function UserManagerStorage(collection, key, factory) {
 			// ##TODO## Purge name cache?
 		}
 		return true;
-	}
+	};
 }
 
 /**
@@ -1013,10 +1004,9 @@ function UserManagerStorage(collection, key, factory) {
  * @return {User} The new user object, or false if the operation failed.
  */
 function User(account, userData) {
-
 	// The database id of the user
 	var id = false;
-	
+
 	// The user name of the user
 	var account = account;
 
@@ -1046,7 +1036,7 @@ function User(account, userData) {
 	 */
 	this.getName = function() {
 		return account;
-	}
+	};
 
 	/**
 	 * Sets the user database id. This method must not be called outside UserManager.
@@ -1055,7 +1045,7 @@ function User(account, userData) {
 	 */
 	this.setId = function(dbid) {
 		id = dbid;
-	}
+	};
 
 	/**
 	 * Fetches the user database id. If the user is not yet stored, it might not have an id and false is returned.
@@ -1064,7 +1054,7 @@ function User(account, userData) {
 	 */
 	this.getId = function() {
 		return id;
-	}
+	};
 
 	/**
 	 * Sets the user password in plain text form.
@@ -1079,7 +1069,7 @@ function User(account, userData) {
 
 		var hash = bcrypt.hashSync(pw, 8);
 		password = hash;
-	}
+	};
 
 	/**
 	 * Sets the user password in crypted form.
@@ -1092,7 +1082,7 @@ function User(account, userData) {
 			return;
 		}
 		password = pw;
-	}
+	};
 
 	/**
 	 * Checks the user password.
@@ -1106,7 +1096,7 @@ function User(account, userData) {
 		}
 
 		return bcrypt.compareSync(pw, password);
-	}
+	};
 
 	/**
 	 * Fetches a user parameter.
@@ -1119,7 +1109,7 @@ function User(account, userData) {
 			return userData[key];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Sets a user parameter.
@@ -1135,7 +1125,7 @@ function User(account, userData) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes a user parameter.
@@ -1150,14 +1140,14 @@ function User(account, userData) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes all user parameters.
 	 */
 	this.removeAllParameters = function(key) {
 		this.userData = [];
-	}
+	};
 
 	/**
 	 * Sets several user parameters.
@@ -1173,7 +1163,7 @@ function User(account, userData) {
 		});
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Lists all user parameter keys.
@@ -1182,7 +1172,7 @@ function User(account, userData) {
 	 */
 	this.listParameterKeys = function() {
 		return _.keys(userData);
-	}
+	};
 
 	/**
 	 * Adds an allowed access to the user. If the access is currently denied, the deny item is deleted simultaneously.
@@ -1210,10 +1200,10 @@ function User(account, userData) {
 			delete denied[tmp[i]];
 			allowed[tmp[i]] = tmp[i];
 		}
-		
+
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Remove an allowed access from the user.
@@ -1240,14 +1230,14 @@ function User(account, userData) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all allowed access.
 	 */
 	this.removeAllAllowed = function() {
 		allowed = [];
-	}
+	};
 
 	/**
 	 * List the allowed accesses of the user.
@@ -1256,7 +1246,7 @@ function User(account, userData) {
 	 */
 	this.listAllowed = function() {
 		return _.keys(allowed);
-	}
+	};
 
 	/**
 	 * Adds a denied access to the user. If the access is currently allowed, the allow item is deleted simultaneously.
@@ -1287,7 +1277,7 @@ function User(account, userData) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Remove a denied access from the user.
@@ -1314,14 +1304,14 @@ function User(account, userData) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all denied access.
 	 */
 	this.removeAllDenied = function() {
 		denied = [];
-	}
+	};
 
 	/**
 	 * List the denied accesses of the user.
@@ -1330,7 +1320,7 @@ function User(account, userData) {
 	 */
 	this.listDenied = function() {
 		return _.keys(denied);
-	}
+	};
 
 	/**
 	 * Checks whether user is allowed for the given access. The user is allowed when either the user, its role, or its group contains allowed access.
@@ -1348,15 +1338,15 @@ function User(account, userData) {
 				return true;
 			}
 
-			for(r in roles) {
-				var role = yield userManager.getRoleById(r);
+			for(var roleId in roles) {
+				var role = yield userManager.getRoleById(roleId);
 				var res = yield role.isAllowed(access);
 				if(res) {
 					return true;
 				}
 			}
-			for(g in groups) {
-				var group = yield userManager.getGroupById(g);
+			for(var groupId in groups) {
+				var group = yield userManager.getGroupById(groupId);
 				var res = yield group.isAllowed(access);
 				if(res) {
 					return true;
@@ -1364,7 +1354,7 @@ function User(account, userData) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Checks whether user is denied of the given access. The user is denied when either the user, its role, or its group contains denied access.
@@ -1378,15 +1368,15 @@ function User(account, userData) {
 				return true;
 			}
 
-			for(r in roles) {
-				var role = yield userManager.getRoleById(r);
+			for(var roleId in roles) {
+				var role = yield userManager.getRoleById(roleId);
 				var res = yield role.isDenied(access);
 				if(res) {
 					return true;
 				}
 			}
-			for(g in groups) {
-				var group = yield userManager.getGroupById(g);
+			for(var groupId in groups) {
+				var group = yield userManager.getGroupById(groupId);
 				var res = yield group.isDenied(access);
 				if(res) {
 					return true;
@@ -1394,7 +1384,7 @@ function User(account, userData) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Adds a role to the user.
@@ -1424,7 +1414,7 @@ function User(account, userData) {
 			roles[tmp[i]] = tmp[i];
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a role from the user.
@@ -1446,17 +1436,17 @@ function User(account, userData) {
 		}
 
 		for(var i in tmp) {
-			delete(roles[tmp[i]]);
+			delete (roles[tmp[i]]);
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all roles.
 	 */
 	this.removeAllRoles = function() {
 		roles = [];
-	}
+	};
 
 	/**
 	 * List the roles of the user.
@@ -1465,7 +1455,7 @@ function User(account, userData) {
 	 */
 	this.listRoles = function() {
 		return _.keys(roles);
-	}
+	};
 
 	/**
 	 * Checks whether the user has the given role.
@@ -1483,7 +1473,7 @@ function User(account, userData) {
 		}
 
 		return false;
-	}
+	};
 
 	/**
 	 * Adds user to a group.
@@ -1513,7 +1503,7 @@ function User(account, userData) {
 		}
 		// ##TODO## Add user to the group, too
 		return true;
-	}
+	};
 
 	/**
 	 * Removes the user from a group.
@@ -1539,18 +1529,18 @@ function User(account, userData) {
 				continue;
 			}
 
-			delete(groups[tmp[i]]);
+			delete (groups[tmp[i]]);
 			// ##TODO## Remove user from the group, too
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all groups.
 	 */
 	this.removeAllGroups = function() {
 		groups = [];
-	}
+	};
 
 	/**
 	 * List the groups of the user.
@@ -1559,7 +1549,7 @@ function User(account, userData) {
 	 */
 	this.listGroups = function() {
 		return _.keys(groups);
-	}
+	};
 
 	/**
 	 * Checks whether the user belongs to the given group.
@@ -1577,7 +1567,7 @@ function User(account, userData) {
 		}
 
 		return false;
-	}
+	};
 
 	/**
 	 * Returns a simple JS object containing data of the user, ready to be written to the database.
@@ -1595,7 +1585,7 @@ function User(account, userData) {
 			allowed: _.keys(allowed),
 			denied: _.keys(denied)
 		};
-	}
+	};
 
 	/**
 	 * Returns a read-only Proxy object for this User instance.
@@ -1641,7 +1631,7 @@ function User(account, userData) {
 				return undefined;
 			}
 		});
-	}
+	};
 }
 
 /**
@@ -1652,7 +1642,6 @@ function User(account, userData) {
  * @param {String} nm - The role name, must be unique among roles.
  */
 function Role(nm) {
-
 	// The id of the role
 	var id = false;
 
@@ -1675,7 +1664,7 @@ function Role(nm) {
 	 */
 	this.getName = function() {
 		return name;
-	}
+	};
 
 	/**
 	 * Sets the role database id. This method must not be called outside UserManager.
@@ -1684,7 +1673,7 @@ function Role(nm) {
 	 */
 	this.setId = function(dbid) {
 		id = dbid;
-	}
+	};
 
 	/**
 	 * Fetches the role database id. If the role is not yet stored, it might not have an id and false is returned.
@@ -1693,7 +1682,7 @@ function Role(nm) {
 	 */
 	this.getId = function() {
 		return id;
-	}
+	};
 
 	/**
 	 * Sets the role description.
@@ -1702,7 +1691,7 @@ function Role(nm) {
 	 */
 	this.setDescription = function(descr) {
 		description = descr;
-	}
+	};
 
 	/**
 	 * Fetches the role description.
@@ -1711,7 +1700,7 @@ function Role(nm) {
 	 */
 	this.getDescription = function() {
 		return description;
-	}
+	};
 
 	/**
 	 * Adds an allowed access to the role. If the access is currently denied, the deny item is deleted simultaneously.
@@ -1742,7 +1731,7 @@ function Role(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Remove an allowed access from the role.
@@ -1769,14 +1758,14 @@ function Role(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all allowed access.
 	 */
 	this.removeAllAllowed = function() {
 		allowed = [];
-	}
+	};
 
 	/**
 	 * List the allowed accesses of the role.
@@ -1785,7 +1774,7 @@ function Role(nm) {
 	 */
 	this.listAllowed = function() {
 		return _.keys(allowed);
-	}
+	};
 
 	/**
 	 * Adds a denied access to the role. If the access is currently allowed, the allow item is deleted simultaneously.
@@ -1816,7 +1805,7 @@ function Role(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Remove a denied access from the role.
@@ -1842,14 +1831,14 @@ function Role(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all denied access.
 	 */
 	this.removeAllDenied = function() {
 		denied = [];
-	}
+	};
 
 	/**
 	 * List the denied accesses of the role.
@@ -1858,7 +1847,7 @@ function Role(nm) {
 	 */
 	this.listDenied = function() {
 		return _.keys(denied);
-	}
+	};
 
 	/**
 	 * Checks whether role is allowed for the given access.
@@ -1877,7 +1866,7 @@ function Role(nm) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Checks whether role is denied of the given access.
@@ -1892,7 +1881,7 @@ function Role(nm) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Returns a simple JS object containing data of the role, ready to be written to the database.
@@ -1907,7 +1896,7 @@ function Role(nm) {
 			allowed: _.keys(allowed),
 			denied: _.keys(denied)
 		};
-	}
+	};
 }
 
 
@@ -1919,10 +1908,9 @@ function Role(nm) {
  * @param {String} nm - The group name, must be unique among groups.
  */
 function Group(nm) {
-
 	// The database id of the group
 	var id = false;
-	
+
 	// The name of the group
 	var name = nm;
 
@@ -1942,7 +1930,7 @@ function Group(nm) {
 	 */
 	this.getName = function() {
 		return name;
-	}
+	};
 
 	/**
 	 * Sets the group database id. This method must not be called outside UserManager.
@@ -1951,7 +1939,7 @@ function Group(nm) {
 	 */
 	this.setId = function(dbid) {
 		id = dbid;
-	}
+	};
 
 	/**
 	 * Fetches the group database id. If the group is not yet stored, it might not have an id and false is returned.
@@ -1960,7 +1948,7 @@ function Group(nm) {
 	 */
 	this.getId = function() {
 		return id;
-	}
+	};
 
 	/**
 	 * Sets the group description.
@@ -1969,7 +1957,7 @@ function Group(nm) {
 	 */
 	this.setDescription = function(descr) {
 		description = descr;
-	}
+	};
 
 	/**
 	 * Fetches the group description.
@@ -1978,7 +1966,7 @@ function Group(nm) {
 	 */
 	this.getDescription = function() {
 		return description;
-	}
+	};
 
 	/**
 	 * Adds an allowed access to the group. If the access is currently denied, the deny item is deleted simultaneously.
@@ -2009,7 +1997,7 @@ function Group(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Remove an allowed access from the group.
@@ -2036,14 +2024,14 @@ function Group(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all allowed access.
 	 */
 	this.removeAllAllowed = function() {
 		allowed = [];
-	}
+	};
 
 	/**
 	 * List the allowed accesses of the group.
@@ -2052,7 +2040,7 @@ function Group(nm) {
 	 */
 	this.listAllowed = function() {
 		return _.keys(allowed);
-	}
+	};
 
 	/**
 	 * Adds a denied access to the group. If the access is currently allowed, the allow item is deleted simultaneously.
@@ -2083,7 +2071,7 @@ function Group(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Remove a denied access from the group.
@@ -2110,14 +2098,14 @@ function Group(nm) {
 
 		// ##TODO## Store
 		return true;
-	}
+	};
 
 	/**
 	 * Removes all denied access.
 	 */
 	this.removeAllDenied = function() {
 		denied = [];
-	}
+	};
 
 	/**
 	 * List the denied accesses of the group.
@@ -2126,7 +2114,7 @@ function Group(nm) {
 	 */
 	this.listDenied = function() {
 		return _.keys(denied);
-	}
+	};
 
 	/**
 	 * Checks whether group is allowed for the given access.
@@ -2145,7 +2133,7 @@ function Group(nm) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Checks whether group is denied of the given access.
@@ -2160,7 +2148,7 @@ function Group(nm) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Returns a simple JS object containing data of the group, ready to be written to the database.
@@ -2175,7 +2163,7 @@ function Group(nm) {
 			allowed: _.keys(allowed),
 			denied: _.keys(denied)
 		};
-	}
+	};
 }
 
 module.exports = CoontiUserManager;

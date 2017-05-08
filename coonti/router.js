@@ -3,7 +3,7 @@
  * @author Janne Kalliola
  *
  * Copyright 2017 Coonti Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,9 +38,8 @@ function CoontiRouter(cnti) {
 	var app = coonti.getApplication();
 	var router;
 	var users;
-	
-	var redirects = new SortedArray();
-	var self = this;
+
+	var redirects = new SortedArray();  // eslint-disable-line no-unused-vars
 	var firstInit = true;
 
 	var stateMachines = {};
@@ -54,7 +53,7 @@ function CoontiRouter(cnti) {
 	var contents;
 
 	var logger;
-	
+
 	// ##TODO## Add uploaddir etc.
 	var koaBodyParams = {
 		multipart: true,
@@ -70,7 +69,7 @@ function CoontiRouter(cnti) {
 		coonti.addEventListener('Coonti-Logging-Init', loggingInitialised);
 
 		users = coonti.getManager('user');
-		
+
 		router = koaRouter();
 
 		var res = true;
@@ -87,16 +86,16 @@ function CoontiRouter(cnti) {
 
 		if(!res) {
 			throw new CoontiException(CoontiException.FATAL, 4004, 'Could not initialise internal handlers.');
-		}				
-	}
+		}
+	};
 
 	/**
 	 * Initialises the logger.
 	 */
 	var loggingInitialised = function*() {
 		logger = coonti.getManager('log').getLogger('coonti-core-router');
-	}
-	
+	};
+
 	/**
 	 * Sets up routes based on configuration
 	 */
@@ -105,7 +104,7 @@ function CoontiRouter(cnti) {
 
 		sessionConfig = coonti.getConfigParam('session');
 		if(!sessionConfig.key) {
-			sessionConfig.key = "coontiSession";
+			sessionConfig.key = 'coontiSession';
 		}
 		if(!sessionConfig.cookiePath) {
 			sessionConfig.cookiePath = '/';
@@ -114,10 +113,10 @@ function CoontiRouter(cnti) {
 			sessionConfig.cookiePath = '/' + sessionConfig.cookiePath;
 		}
 
-		app.keys = [ coonti.getConfigParam('cookieKey') ];
+		app.keys = [coonti.getConfigParam('cookieKey')];
 
 		if(firstInit) {
-			//app.use(session(app));
+			// app.use(session(app));
 			app.use(convert(session(app)));
 			app.use(router.routes());
 			forms = coonti.getManager('form');
@@ -133,7 +132,7 @@ function CoontiRouter(cnti) {
 		_.each(sms, function(sm, name) {
 			self.addExecutionPath(name, sm);
 		});
-	}
+	};
 
 	/**
 	 * Adds a new execution path to the system.
@@ -146,7 +145,7 @@ function CoontiRouter(cnti) {
 		var stateMachine = self.addStateMachine(name);
 		if(stateMachine === false) {
 			throw new CoontiException(CoontiException.FATAL, 4001, 'Invalid execution path name "' + name + '".');
-		}				
+		}
 		_.each(sm, function(st) {
 			var fn = self.getStateHandler(st.name);
 			var config = st.config || {};
@@ -155,7 +154,7 @@ function CoontiRouter(cnti) {
 			}
 			if(stateMachine.addState(st.name, fn, st.priority, config) === false) {
 				throw new CoontiException(CoontiException.FATAL, 4003, 'Invalid execution path state "' + st.name + '" in path "' + name + '".');
-			}				
+			}
 		});
 		var path = '/' + name + '*';
 		if(name === 'default') {
@@ -184,7 +183,7 @@ function CoontiRouter(cnti) {
 			yield stateMachine.execute(this, next);
 		});
 		return stateMachine;
-	}
+	};
 
 	/**
 	 * Removes an execution path from the system.
@@ -197,7 +196,7 @@ function CoontiRouter(cnti) {
 			return false;
 		}
 		return this.removeStateMachine(name);
-	}
+	};
 
 	/**
 	 * Adds a new state machine.
@@ -215,7 +214,7 @@ function CoontiRouter(cnti) {
 		var sm = new CoontiStateMachine(this, name);
 		stateMachines[name] = sm;
 		return sm;
-	}
+	};
 
 	/**
 	 * Fetches a state machine.
@@ -231,7 +230,7 @@ function CoontiRouter(cnti) {
 			return stateMachines[name];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Removes all state machines.
@@ -244,7 +243,7 @@ function CoontiRouter(cnti) {
 			self.removeStateMachine(nm);
 		});
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a state machine.
@@ -262,7 +261,7 @@ function CoontiRouter(cnti) {
 		self.removeRoute('router_' + name);
 		delete stateMachines[name];
 		return true;
-	}
+	};
 
 	/**
 	 * Adds a route to the system.
@@ -280,7 +279,7 @@ function CoontiRouter(cnti) {
 		}
 
 		priority = -priority;
-		
+
 		var args = Array.prototype.slice.call(arguments);
 		args.shift();
 
@@ -289,13 +288,13 @@ function CoontiRouter(cnti) {
 				args[i] = convert(args[i]);
 			}
 		}
-		
+
 		if(!methods || methods.length == 0 || (methods.length == 1 && methods[0] == 'all')) {
 			args.splice(2, 1);
-			router.all.apply(router, args);
+			router.all(...args);
 		}
 		else {
-			router.register.apply(router, args);
+			router.register(...args);
 		}
 		_.each(router.stack, function(r) {
 			if(r.name == name) {
@@ -306,7 +305,7 @@ function CoontiRouter(cnti) {
 			}
 		});
 		router.stack = _.sortBy(router.stack, 'priority');
-	}
+	};
 
 	/**
 	 * Removes a route from the system.
@@ -326,7 +325,7 @@ function CoontiRouter(cnti) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Adds a new handler for a state machine phase.
@@ -344,7 +343,7 @@ function CoontiRouter(cnti) {
 		}
 		stateHandlers[name] = fn;
 		return true;
-	}
+	};
 
 
 	/**
@@ -361,7 +360,7 @@ function CoontiRouter(cnti) {
 			return stateHandlers[name];
 		}
 		return false;
-	}
+	};
 
 
 	/**
@@ -379,7 +378,7 @@ function CoontiRouter(cnti) {
 		}
 		delete stateHandlers[name];
 		return true;
-	}
+	};
 
 
 	/**
@@ -391,7 +390,7 @@ function CoontiRouter(cnti) {
 	 */
 	this.addRedirect = function(oldPath, newPath, weight) {
 		// ##TODO## Implement
-	}
+	};
 
 	/**
 	 * Reads in cookies from the request.
@@ -403,7 +402,7 @@ function CoontiRouter(cnti) {
 	this.handleCookies = function*(csm, config, next) {
 		logger.debug('HandleCookies');
 		yield next;
-	}
+	};
 
 	/**
 	 * Forms session from the request.
@@ -414,10 +413,10 @@ function CoontiRouter(cnti) {
 	 */
 	this.handleSession = function*(csm, config, next) {
 		logger.debug('HandleSession');
-		var session = this.session;
+		var session = this.session;  // eslint-disable-line no-unused-vars
 
 		yield next;
-	}
+	};
 
 	/**
 	 * Calculates route from the request.
@@ -450,9 +449,9 @@ function CoontiRouter(cnti) {
 		this.coonti.setItem('fullRoute', path);
 
 		logger.debug('Routed to %s', route);
-		
+
 		yield next;
-	}
+	};
 
 	/**
 	 * Checks user access to the content.
@@ -509,7 +508,7 @@ function CoontiRouter(cnti) {
 		}
 
 		yield next;
-	}
+	};
 
 	/**
 	 * Checks user access to JSON content. Works like handleAccess, but uses error code 401 instead of redirects.
@@ -524,7 +523,7 @@ function CoontiRouter(cnti) {
 		if(config['requireLogin']) {
 			var user = yield users.getCurrentUser(this);
 			if(!user) {
-				this.status=(401);
+				this.status = (401);
 				return;
 			}
 
@@ -533,7 +532,7 @@ function CoontiRouter(cnti) {
 				if(user) {
 					var allowed = yield user.isAllowed(access);
 					if(!allowed) {
-						this.status=(401);
+						this.status = (401);
 						return;
 					}
 				}
@@ -541,7 +540,7 @@ function CoontiRouter(cnti) {
 		}
 
 		yield next;
-	}
+	};
 
 	/**
 	 * Reads submitted form data, populates and validates the relevant form.
@@ -563,7 +562,7 @@ function CoontiRouter(cnti) {
 		}
 
 		yield next;
-	}
+	};
 
 	/**
 	 * Produces content based on the request.
@@ -585,13 +584,13 @@ function CoontiRouter(cnti) {
 		if(!ch) {
 			logger.warn('No Content Handler found in HandleContent');
 			// ##TODO## Show 500 page
-			return false;
+			return;
 		}
 
 		var content = yield ch.getContent(this);
 		this.coonti.mergeItem('content', content);
 		yield next;
-	}
+	};
 
 	/**
 	 * Selects and executes template.
@@ -612,7 +611,7 @@ function CoontiRouter(cnti) {
 
 		yield templates.render(this);
 		yield next;
-	}
+	};
 
 	/**
 	 * Filters and outputs the content as JSON object.
@@ -643,13 +642,13 @@ function CoontiRouter(cnti) {
 		// Filter content by content type field json attribute
 		_.each(ctData.contentType.fields, function(f, key) {
 			if(!f.json) {
-				delete(self.coonti.content.content[key]);
+				delete (self.coonti.content.content[key]);
 			}
 		});
 
-		this.body=(JSON.stringify(content));
+		this.body = (JSON.stringify(content));
 		yield next;
-	}
+	};
 
 	/**
 	 * Ends request / response cycle.
@@ -661,7 +660,7 @@ function CoontiRouter(cnti) {
 	this.handleEnd = function*(csm, config, next) {
 		logger.debug('HandleEnd');
 		yield next;
-	}
+	};
 
 	/**
 	 * Checks admin level access to the resources.
@@ -673,7 +672,7 @@ function CoontiRouter(cnti) {
 	this.handleAdminAccess = function*(csm, config, next) {
 		logger.debug('HandleAdminAccess');
 		yield next;
-	}
+	};
 
 	/**
 	 * Handles errors in state machine execution. Note that the state machine stops when it has called this method.
@@ -683,8 +682,7 @@ function CoontiRouter(cnti) {
 	 */
 	this.handleError = function*(error, csm) {
 		logger.debug('HandleError');
-		return;
-	}
+	};
 }
 
 /**
@@ -698,8 +696,6 @@ function CoontiRouter(cnti) {
  */
 function CoontiStateMachine(rtr, nm) {
 	var router = rtr;
-	var coonti = router.coonti;
-	var name = nm;
 	var states = {};
 	var errorHandler = false;
 	var statesOrder = [];
@@ -707,8 +703,6 @@ function CoontiStateMachine(rtr, nm) {
 	var beforeStates = {};
 	var afterStates = {};
 	var disabled = false;
-
-	var self = this;
 
 	/**
 	 * Adds a new state to the state machine.
@@ -732,14 +726,14 @@ function CoontiStateMachine(rtr, nm) {
 			return false;
 		}
 
-		configuration = configuration || {}
-		
+		configuration = configuration || {};
+
 		var state = {
 			name: name,
 			handler: handler,
 			priority: priority,
 			config: configuration
-		}
+		};
 
 		states[name] = state;
 		var s = _.sortedIndex(statesOrder, state, function(st) {
@@ -752,7 +746,7 @@ function CoontiStateMachine(rtr, nm) {
 		afterStates[name] = [];
 
 		return true;
-	}
+	};
 
 	/**
 	 * Sets the error handler for the state machine.
@@ -763,7 +757,7 @@ function CoontiStateMachine(rtr, nm) {
 	this.setErrorHandler = function(handler) {
 		errorHandler = handler;
 		return true;
-	}
+	};
 
 	/**
 	 * Removes a state.
@@ -792,7 +786,7 @@ function CoontiStateMachine(rtr, nm) {
 		delete afterStates[name];
 
 		return true;
-	}
+	};
 
 	/**
 	 * Adds a callback function that is executed after the state has been processed.
@@ -805,7 +799,7 @@ function CoontiStateMachine(rtr, nm) {
 	 */
 	this.addBeforeStateCallback = function(state, name, fn, priority) {
 		return addStateCallback(beforeStates, state, name, fn, priority);
-	}
+	};
 
 	/**
 	 * Adds a callback function that is executed after the state has been processed.
@@ -818,7 +812,7 @@ function CoontiStateMachine(rtr, nm) {
 	 */
 	this.addAfterStateCallback = function(state, name, fn, priority) {
 		return addStateCallback(afterStates, state, name, fn, priority);
-	}
+	};
 
 	/**
 	 * Adds a callback function to a state. This function is called by addBefore... and addAfter... state callback functions.
@@ -845,7 +839,7 @@ function CoontiStateMachine(rtr, nm) {
 			name: name,
 			callback: fn,
 			priority: priority
-		}
+		};
 
 		var s = _.sortedIndex(store, cb, function(st) {
 			return -st.priority;
@@ -884,7 +878,7 @@ function CoontiStateMachine(rtr, nm) {
 		var self = this;
 
 		if(beforeStates[st.name]) {
-			for(s in beforeStates[st.name]) {
+			for(var s in beforeStates[st.name]) {
 				var cb = beforeStates[st.name][s];
 				try {
 					yield cb.callback(ctx, st);
@@ -895,13 +889,13 @@ function CoontiStateMachine(rtr, nm) {
 			}
 		}
 
-		var invoker = function *() {
+		var invoker = function*() {
 			var nst = self.getNextState(st);
 			if(nst === false) {
 				return;
 			}
 			yield st.handler.call(ctx, self, st.config, function*() { yield self.execute(ctx, next, nst); });
-		}
+		};
 
 		yield invoker();
 
@@ -917,12 +911,12 @@ function CoontiStateMachine(rtr, nm) {
 			}
 		}
 
-		return;
+
 /*
 		if(!error) {
 			st.handler(crr, this, executeAfterStates);
 		}*/
-	}
+	};
 
 	/**
 	 * Returns the name of the next state.
@@ -942,7 +936,7 @@ function CoontiStateMachine(rtr, nm) {
 		}
 
 		return statesOrder[i].name;
-	}
+	};
 
 	/**
 	 * Sets the path of the state machine. This path is removed from HTTP request path when the request internal path is constructed.
@@ -951,7 +945,7 @@ function CoontiStateMachine(rtr, nm) {
 	 */
 	this.setPath = function(pth) {
 		path = pth;
-	}
+	};
 
 	/**
 	 * Fetches the path of the state machine.
@@ -960,14 +954,14 @@ function CoontiStateMachine(rtr, nm) {
 	 */
 	this.getPath = function() {
 		return path;
-	}
+	};
 
 	/**
 	 * Disables the state machine. Disabled state machines will pass through any requests.
 	 */
 	this.disable = function() {
 		disabled = true;
-	}
+	};
 }
 
 
@@ -991,11 +985,11 @@ function CoontiContext(cnti, rtr, ctx) {
 
 	this.getCoonti = function() {
 		return coonti;
-	}
+	};
 
 	this.getRouter = function() {
 		return router;
-	}
+	};
 
 	/**
 	 * Returns the session object.
@@ -1007,7 +1001,7 @@ function CoontiContext(cnti, rtr, ctx) {
 			return context.session;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Checks whether the context has session.
@@ -1016,7 +1010,7 @@ function CoontiContext(cnti, rtr, ctx) {
 	 */
 	this.hasSession = function() {
 		return (_.size(context['session']) > 0);
-	}
+	};
 
 	/**
 	 * Fetches an item from the session.
@@ -1029,7 +1023,7 @@ function CoontiContext(cnti, rtr, ctx) {
 			return context.session[key];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Adds a new item to session object.
@@ -1041,7 +1035,7 @@ function CoontiContext(cnti, rtr, ctx) {
 		if(!!key) {
 			context.session[key] = value;
 		}
-	}
+	};
 
 	/**
 	 * Removes an item to session object.
@@ -1055,15 +1049,15 @@ function CoontiContext(cnti, rtr, ctx) {
 			return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Destroys the session.
 	 */
 	this.destroySession = function() {
 		context.session = null;
-	}
-	
+	};
+
 	// ##TODO## Removing items from session
 
 	/**
@@ -1082,7 +1076,7 @@ function CoontiContext(cnti, rtr, ctx) {
 			}
 			forms[name] = form;
 		}
-	}
+	};
 
 	/**
 	 * Checks whether the context has forms.
@@ -1091,7 +1085,7 @@ function CoontiContext(cnti, rtr, ctx) {
 	 */
 	this.hasForms = function() {
 		return (_.size(forms) > 0);
-	}
+	};
 
 	/**
 	 * Fetches a form.
@@ -1110,7 +1104,7 @@ function CoontiContext(cnti, rtr, ctx) {
 			}
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches all forms in the context.
@@ -1119,7 +1113,7 @@ function CoontiContext(cnti, rtr, ctx) {
 	 */
 	this.getForms = function() {
 		return forms;
-	}
+	};
 
 	/**
 	 * Sets a new item to the object, either creating or updating the current value.
@@ -1131,7 +1125,7 @@ function CoontiContext(cnti, rtr, ctx) {
 		if(!!key) {
 			items[key] = value;
 		}
-	}
+	};
 
 	/**
 	 * Merges a new item to the object.
@@ -1148,7 +1142,7 @@ function CoontiContext(cnti, rtr, ctx) {
 				items[key] = _.extend(items[key], value);
 			}
 		}
-	}
+	};
 
 	/**
 	 * Fetches a single item.
@@ -1161,7 +1155,7 @@ function CoontiContext(cnti, rtr, ctx) {
 			return items[key];
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * Fetches all items.
@@ -1170,7 +1164,7 @@ function CoontiContext(cnti, rtr, ctx) {
 	 */
 	this.getItems = function() {
 		return items;
-	}
+	};
 }
 
 module.exports = CoontiRouter;
