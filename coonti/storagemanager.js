@@ -157,15 +157,17 @@ function CachingStorageHandler(sh) {  // eslint-disable-line no-unused-vars
 	 * @param {Object} data - The data to be written.
 	 */
 	this.setData = function*(collection, data) {
+		// ##TODO##
 	};
 
 	/**
-	 * Removes data fromt the database.
+	 * Removes data from the database.
 	 *
 	 * @param {String} Collection - The name of the collection.
 	 * @param {String} id - The id of the data.
 	 */
 	this.removeData = function*(collection, id) {
+		// ##TODO##
 	};
 
 	/**
@@ -187,7 +189,7 @@ function CachingStorageHandler(sh) {  // eslint-disable-line no-unused-vars
 		};
 
 		this.caches[collection] = cache;
-		return csh;
+		return cache;
 	};
 }
 

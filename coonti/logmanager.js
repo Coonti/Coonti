@@ -36,7 +36,6 @@ function CoontiLogManager(cnti) {
 	logManager = this;
 
 	var defaultLogger = 'coonti';
-	var defaultConfig = {};
 
 	/**
 	 * Initialises the LogManager instance. This method is called by Coonti core.

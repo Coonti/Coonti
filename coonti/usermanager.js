@@ -78,14 +78,14 @@ function CoontiUserManager(cnti) {
 	/**
 	 * Initialises the logger.
 	 */
-	var loggingInitialised = function*() {
+	var loggingInitialised = function*() { // eslint-disable-line require-yield
 		logger = coonti.getManager('log').getLogger('coonti-core-usermanager');
 	};
 
 	/**
 	 * Sets the storage when made available.
 	 */
-	this.mongoConnectStarted = function*() {
+	this.mongoConnectStarted = function*() { // eslint-disable-line require-yield
 		var sm = coonti.getManager('storage');
 		storage = sm.getStorageHandler('mongo'); // ##TODO## Read from the configuration
 
@@ -100,7 +100,7 @@ function CoontiUserManager(cnti) {
 	/**
 	 * Clears the storage when it becomes unavailable
 	 */
-	this.mongoConnectStopped = function*() {
+	this.mongoConnectStopped = function*() { // eslint-disable-line require-yield
 		storage = false;
 		logger.info('UserManager - MongoDB storage unavailable.');
 	};
@@ -290,7 +290,7 @@ function CoontiUserManager(cnti) {
 	 * @param {Context ctx - The Koa context.
 	 * @return {String} The current user account or false, if the user is not logged in.
 	 */
-	this.currentUserAccount = function*(ctx) {
+	this.currentUserAccount = function*(ctx) { // eslint-disable-line require-yield
 		return ctx.coonti.getFromSession(SESSION_USER);
 	};
 
@@ -325,7 +325,7 @@ function CoontiUserManager(cnti) {
 	 *
 	 * @param {Context} ctx - The Koa context.
 	 */
-	this.logout = function*(ctx) {
+	this.logout = function*(ctx) { // eslint-disable-line require-yield
 		ctx.coonti.destroySession();
 	};
 
@@ -1855,7 +1855,7 @@ function Role(nm) {
 	 * @param {String} access - The name of the access.
 	 * @return {boolean} True, if the role is allowed, false otherwise.
 	 */
-	this.isAllowed = function*(access) {
+	this.isAllowed = function*(access) { // eslint-disable-line require-yield
 		if(!!access) {
 			if(allowed[access]) {
 				return true;
@@ -1874,7 +1874,7 @@ function Role(nm) {
 	 * @param {String} access - The name of the access.
 	 * @return {boolean} True, if the user is denied, false otherwise.
 	 */
-	this.isDenied = function*(access) {
+	this.isDenied = function*(access) { // eslint-disable-line require-yield
 		if(!!access) {
 			if(denied[access]) {
 				return true;
@@ -2122,7 +2122,7 @@ function Group(nm) {
 	 * @param {String} access - The name of the access.
 	 * @return {boolean} True, if the group is allowed, false otherwise.
 	 */
-	this.isAllowed = function*(access) {
+	this.isAllowed = function*(access) { // eslint-disable-line require-yield
 		if(!!access) {
 			if(allowed[access]) {
 				return true;
@@ -2141,7 +2141,7 @@ function Group(nm) {
 	 * @param {String} access - The name of the access.
 	 * @return {boolean} True, if the user is denied, false otherwise.
 	 */
-	this.isDenied = function*(access) {
+	this.isDenied = function*(access) { // eslint-disable-line require-yield
 		if(!!access) {
 			if(denied[access]) {
 				return true;

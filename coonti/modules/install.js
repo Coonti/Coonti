@@ -86,7 +86,7 @@ function CoontiInstall(cnti) {
 	 * @param {Object} params - The initialisation parameters from Coonti.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.initialise = function*(params) {
+	this.initialise = function*(params) { // eslint-disable-line require-yield
 		logger = params.logger;
 
 		var coontiMode = coonti.getConfigParam('coontiMode');
@@ -204,7 +204,7 @@ function CoontiInstall(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -213,7 +213,7 @@ function CoontiInstall(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.start = function*() {
+	this.start = function*() { // eslint-disable-line require-yield
 		if(!initialised) {
 			return false;
 		}
@@ -227,7 +227,7 @@ function CoontiInstall(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		logger.info('CoontiInstall - Stopped.');
 		return true;
 	};
@@ -578,7 +578,7 @@ function CoontiInstall(cnti) {
 				yield fs.writeFile(basePath + 'config/coontiConfig.json', fileConfigStr);
 			}
 			catch(e) {
-				console.error('CoontiInstall - Could not write the configuration file due to an exception.', e);
+				console.error('CoontiInstall - Could not write the configuration file due to an exception.', e); // eslint-disable-line no-console
 				// ##TODO## Handle error and tell user.
 			}
 

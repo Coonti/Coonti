@@ -159,6 +159,7 @@ function CoontiConfig(cnti) {
 			fc = fs.readFileSync(baseConfig.basePath + 'config/coontiConfig.json');
 		}
 		catch(e) {
+			// Pass-through
 		}
 
 		if(fc) {
@@ -176,7 +177,7 @@ function CoontiConfig(cnti) {
 
 		// The configuration was not found, we are in installation mode
 		if(!config['coontiMode']) {
-			console.log('Coonti in installation mode.');
+			console.log('Coonti in installation mode.'); // eslint-disable-line no-console
 			config.coontiMode = 'install';
 		}
 
@@ -187,7 +188,7 @@ function CoontiConfig(cnti) {
 					dbUrl = db[i]['url'];
 					self._readCoontiConfigFromDb(function(err) {
 						if(err) {
-							console.log('ERROR: Coonti could not connect to the database "' + db[i]['name'] + '". Exiting.');
+							console.log('ERROR: Coonti could not connect to the database "' + db[i]['name'] + '". Exiting.'); // eslint-disable-line no-console
 							process.exit(1);
 						}
 						coonti.fireEventCallback('Coonti-Config-Init', false, cb);

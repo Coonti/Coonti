@@ -143,7 +143,6 @@ function CoontiTools() {
 			return data;
 		}
 		catch(e) {
-			console.dir(e);
 			return false;
 		}
 	};

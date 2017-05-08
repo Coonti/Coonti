@@ -52,7 +52,7 @@ function ExampleModule(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.initialise = function*() {
+	this.initialise = function*() { // eslint-disable-line require-yield
 		// If needed, check here whether the module has been initialised earlier in the lifecycle and skip parts that can be done only once.
 
 		// Get the required Coonti Managers
@@ -103,7 +103,7 @@ function ExampleModule(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		// The Twig extension we added in initiate() cannot be removed, as some templates might break.
 		// We are already stopped here, so the extension returns empty strings.
 		return true;
@@ -184,7 +184,7 @@ function ExampleModule(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		// If the module is not running, there is no need to stop it.
 		if(!started) {
 			return true;

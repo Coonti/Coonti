@@ -325,6 +325,7 @@ function CoontiContentManager(cnti) {
 			var tmp = yield ch.getDirectContent('');
 			if(tmp) {
 				if(id && id != tmp._id) {
+					var ctObj = contentTypes[content['contentType']];
 					path = slug(ctObj.name, { lower: true }) + '-1';
 				}
 			}

@@ -60,7 +60,7 @@ function MongoContent(cnti) {
 	 *
  	 * @return {boolean} True on success, false on failure.
 	 */
-	this.setConfig = function*(cf) {
+	this.setConfig = function*(cf) { // eslint-disable-line require-yield
 		config = cf;
 		return true;
 	};
@@ -119,7 +119,7 @@ function MongoContent(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		logger.debug('MongoContent - Removed.');
 		return true;
 	};
@@ -129,7 +129,7 @@ function MongoContent(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.start = function*() {
+	this.start = function*() { // eslint-disable-line require-yield
 		logger.debug('MongoContent - Started.');
 		return true;
 	};
@@ -139,7 +139,7 @@ function MongoContent(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		logger.debug('MongoContent - Stopped.');
 		return true;
 	};

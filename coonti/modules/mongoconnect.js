@@ -100,7 +100,7 @@ function MongoConnect(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*(cb) {
+	this.remove = function*(cb) { // eslint-disable-line require-yield
 		// ##TODO## Close connections
 
 		return true;
@@ -111,7 +111,7 @@ function MongoConnect(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.start = function*() {
+	this.start = function*() { // eslint-disable-line require-yield
 		for(var i in connections) {
 			var mdb = connections[i];
 			var mh = new MongoHandler(this, mdb);
@@ -125,7 +125,7 @@ function MongoConnect(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		for(var i in connections) {
 			storageManager.removeStorageHandler(i);
 		}

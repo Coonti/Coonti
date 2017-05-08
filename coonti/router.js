@@ -92,14 +92,14 @@ function CoontiRouter(cnti) {
 	/**
 	 * Initialises the logger.
 	 */
-	var loggingInitialised = function*() {
+	var loggingInitialised = function*() { // eslint-disable-line require-yield
 		logger = coonti.getManager('log').getLogger('coonti-core-router');
 	};
 
 	/**
 	 * Sets up routes based on configuration
 	 */
-	var configInitialised = function*() {
+	var configInitialised = function*() { // eslint-disable-line require-yield
 		coontiPath = coonti.getConfigParam('pathPrefix');
 
 		sessionConfig = coonti.getConfigParam('session');
@@ -680,7 +680,7 @@ function CoontiRouter(cnti) {
 	 * @param {integer} error - HTTP status code.
 	 * @param {CoontiStateMachine} csm - The CoontiStateMachine instance.
 	 */
-	this.handleError = function*(error, csm) {
+	this.handleError = function*(error, csm) { // eslint-disable-line require-yield
 		logger.debug('HandleError');
 	};
 }

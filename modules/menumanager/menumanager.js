@@ -54,7 +54,7 @@ function MenuManager(cnti) {
 	 * @param {Object} params - The initialisation parameters from Coonti.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.initialise = function*(params) {
+	this.initialise = function*(params) { // eslint-disable-line require-yield
 		logger = params.logger;
 
 		config.menuCollection = 'menu';
@@ -136,7 +136,7 @@ function MenuManager(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		logger.debug('MenuManager - Removed.');
 		return true;
 	};
@@ -146,7 +146,7 @@ function MenuManager(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.start = function*() {
+	this.start = function*() { // eslint-disable-line require-yield
 		if(started) {
 			return true;
 		}
@@ -207,7 +207,7 @@ function MenuManager(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		if(!coonti.removeManager('menu')) {
 			return false;
 		}
