@@ -49,7 +49,7 @@ function CoontiContentManager(cnti) {
 	/**
 	 * Finalises content manager initialisation.
 	 */
-	var configInitialised = function*() {
+	var configInitialised = function*() { // eslint-disable-line require-yield
 		formManager = coonti.getManager('form');
 		formManager.addCollection(formCollection);
 	};
@@ -138,6 +138,7 @@ function CoontiContentManager(cnti) {
 
 		contentTypes[name] = { name: name, contentType: ct, contentHandler: ch };
 		this.saveContentTypeForm(name, ct);
+		return true;
 	};
 
 	/**

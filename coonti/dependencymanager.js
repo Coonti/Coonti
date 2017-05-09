@@ -181,7 +181,6 @@ function CoontiDependencyManager(cnti) {
 	 * @fires Coonti-Dependency-Component-Nonresolved with the changed component as param.
 	 */
 	this._resolveDependencies = function*() {
-		var changedDeps = [];
 		for(var c in components) {
 			for(var n in components[c]) {
 				var oldResolved = components[c][n].isResolved();
@@ -288,6 +287,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 			dep.states = false;
 		}
 		this.addDependency(dep.collection, dep.name, dep.minVersion, dep.maxVersion, dep.states);
+		return true;
 	};
 
 	/**
@@ -363,7 +363,7 @@ function Component(dm, col, nm, verString, verNumber, st) {
 		}
 
 		for(var i = 0; i < dependencies.length; i++) {
-			if(dependencies[i].collection = col && dependencies[i].name == name) {
+			if(dependencies[i].collection == col && dependencies[i].name == name) {
 				dependencies.splice(i, 1);
 				break;
 			}

@@ -65,7 +65,7 @@ function CoontiModuleManager(cnti) {
 	/**
 	 * Initialises the logger.
 	 */
-	var loggingInitialised = function*() {
+	var loggingInitialised = function*() { // eslint-disable-line require-yield
 		logger = coonti.getManager('log').getLogger('coonti-core-modulemanager');
 	};
 
@@ -77,7 +77,7 @@ function CoontiModuleManager(cnti) {
 		webPath = moduleConfig['path'];
 		if(!!webPath) {
 			var router = coonti.getManager('router');
-			router.addRoute(2000, 'moduleFiles', '/' + webPath + '/:module/:file+', false, function*(next) {
+			router.addRoute(2000, 'moduleFiles', '/' + webPath + '/:module/:file+', false, function*(next) { // eslint-disable-line require-yield
 				var module = this.params['module'];
 				var file = this.params['file'];
 				if(!!module && !!file && moduleFiles[module] && moduleFiles[module][file]) {

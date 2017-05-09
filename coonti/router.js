@@ -305,6 +305,7 @@ function CoontiRouter(cnti) {
 			}
 		});
 		router.stack = _.sortBy(router.stack, 'priority');
+		return true;
 	};
 
 	/**
@@ -911,11 +912,12 @@ function CoontiStateMachine(rtr, nm) {
 			}
 		}
 
-
 /*
 		if(!error) {
 			st.handler(crr, this, executeAfterStates);
 		}*/
+
+		return true;
 	};
 
 	/**
@@ -961,6 +963,15 @@ function CoontiStateMachine(rtr, nm) {
 	 */
 	this.disable = function() {
 		disabled = true;
+	};
+
+	/**
+	 * Fetches the router instance the state machine is bound to.
+	 *
+	 * @return {CoontiRouter} The router instance.
+	 */
+	this.getRouter = function() {
+		return router;
 	};
 }
 

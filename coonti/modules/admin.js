@@ -290,7 +290,7 @@ function CoontiAdmin(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -367,7 +367,7 @@ function CoontiAdmin(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -404,7 +404,7 @@ function CoontiAdmin(cnti) {
 	/**
 	 * Provides Coonti administration assets for Angular.
 	 */
-	this.getCoontiAssets = function*() {
+	this.getCoontiAssets = function*() { // eslint-disable-line require-yield
 		var ret = [];
 
 		var modulePath = moduleManager.getModuleAssetPath();
@@ -424,7 +424,7 @@ function CoontiAdmin(cnti) {
 	/**
 	 * Provides Coonti form elements for Angular.
 	 */
-	this.getCoontiFormElements = function*() {
+	this.getCoontiFormElements = function*() { // eslint-disable-line require-yield
 		var ret = formManager.getFormElements();
 
 		this.coonti.setItem('response', ret);
@@ -565,7 +565,7 @@ function CoontiAdmin(cnti) {
 	 *
 	 * @param {String=} name - The content type name. Optional.
 	 */
-	this.getContentType = function*(name) {
+	this.getContentType = function*(name) { // eslint-disable-line require-yield
 		if(!name) {
 			name = false;
 		}
@@ -1055,14 +1055,14 @@ function CoontiAdmin(cnti) {
 	/**
 	 * Lists the available rights.
 	 */
-	this.getRights = function*() {
+	this.getRights = function*() { // eslint-disable-line require-yield
 		this.coonti.setItem('response', userManager.getRights());
 	};
 
 	/**
 	 * Lists the modules in the system.
 	 */
-	this.listModule = function*() {
+	this.listModule = function*() { // eslint-disable-line require-yield
 		var ret = moduleManager.listModules();
 		this.coonti.setItem('response', ret);
 	};
@@ -1107,7 +1107,7 @@ function CoontiAdmin(cnti) {
 	 *
 	 * @param {String=} name - The name of the theme, optional.
 	 */
-	this.getTheme = function*(name) {
+	this.getTheme = function*(name) { // eslint-disable-line require-yield
 		if(!!name) {
 			var ret = templateManager.getTheme(name);
 			if(!ret) {

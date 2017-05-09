@@ -61,7 +61,7 @@ function FileConnect(cnti) {
 	 * @param {Object} params - The initialisation parameters from Coonti.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.initialise = function*(params) {
+	this.initialise = function*(params) { // eslint-disable-line require-yield
 		logger = params.logger;
 
 		storageManager = coonti.getManager('storage');
@@ -98,7 +98,7 @@ function FileConnect(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -107,7 +107,7 @@ function FileConnect(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.start = function*() {
+	this.start = function*() { // eslint-disable-line require-yield
 		for(var i in connections) {
 			var fh = new FileHandler(this, connections[i].dir, connections[i].encoding);
 			storageManager.addStorageHandler(i, fh);
@@ -121,7 +121,7 @@ function FileConnect(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		for(var i in connections) {
 			storageManager.removeStorageHandler(i);
 		}

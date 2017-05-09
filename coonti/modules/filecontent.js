@@ -32,6 +32,7 @@ function FileContent(cnti) {
 	var config = {};
 	var storage = false;
 	var contentTypes = {};
+	var logger;
 
 	/**
 	 * Fetches the module information for admin users.
@@ -59,17 +60,20 @@ function FileContent(cnti) {
 	 *
  	 * @return {boolean} True on success, false on failure.
 	 */
-	this.setConfig = function*(cf) {
+	this.setConfig = function*(cf) { // eslint-disable-line require-yield
 		config = cf;
 		return true;
 	};
-
 	/**
 	 * Initialises the module and reads in the configuration
 	 *
+	 * @param {Object} params - The initialisation parameters from Coonti.
+	 * @return {boolean} True on success, false on failure.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.initialise = function*() {
+	this.initialise = function*(params) {
+		logger = params.logger;
+
 		var name = 'file';
 		if(!!config.handlerName) {
 			name = config.handlerName;
@@ -111,7 +115,7 @@ function FileContent(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.remove = function*() {
+	this.remove = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -120,7 +124,7 @@ function FileContent(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.start = function*() {
+	this.start = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -129,7 +133,7 @@ function FileContent(cnti) {
 	 *
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.stop = function*() {
+	this.stop = function*() { // eslint-disable-line require-yield
 		return true;
 	};
 
@@ -180,7 +184,7 @@ function FileContent(cnti) {
 	 * @param {Object} ct - The content type object.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.addContentType = function*(name, ct) {
+	this.addContentType = function*(name, ct) { // eslint-disable-line require-yield
 		if(!name || !ct) {
 			return false;
 		}
@@ -192,6 +196,8 @@ function FileContent(cnti) {
 		contentTypes[name] = ct;
 
 		// ##TODO## Save to the database
+
+		return true;
 	};
 }
 

@@ -153,7 +153,7 @@ function MongoHandler(mongoCnnct, db) {
 	 * @param {String} collection - The name of the collection.
 	 * @return {Object} A new id or false, if the key cannot be generated.
 	 */
-	this.getId = function*(collection) {
+	this.getId = function*(collection) { // eslint-disable-line require-yield
 		return mongo.id();
 /*		var col = this.getCollection(collection);
 		if(!col) {

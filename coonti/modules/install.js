@@ -384,7 +384,6 @@ function CoontiInstall(cnti) {
 						yield userManager.addUser(account, pw1, { email: email }, false, false, [r.getId()]);
 					}
 					catch(e) {
-						console.log(e);
 						formSubmitted.addError('account', 'Could not write to MongoDB. Please check that it is available and try again.');
 						userCreated = false;
 					}

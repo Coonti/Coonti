@@ -103,6 +103,7 @@ MiniRouter.prototype.route = function(request) {
 			};
 		}
 	}
+	return false;
 };
 
 /**

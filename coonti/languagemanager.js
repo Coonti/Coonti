@@ -53,7 +53,7 @@ function CoontiLanguageManager(cnti) {
 	/**
 	 * Loads the languages based on configuration
 	 */
-	var configInitialised = function*() {
+	var configInitialised = function*() { // eslint-disable-line require-yield
 		var lc = coonti.getConfigParam('languages');
 		if(!lc) {
 			return;
@@ -114,7 +114,7 @@ function CoontiLanguageManager(cnti) {
 			return false;
 		}
 		defaultLanguage = lang;
-		gt.textdomain(lang);
+		gt.textdomain(defaultLanguage);
 		return true;
 	};
 

@@ -56,7 +56,7 @@ function CoontiFormManager(cnti) {
 	/**
 	 * Finalises the manager initialisation.
 	 */
-	var configInitialised = function*() {
+	var configInitialised = function*() { // eslint-disable-line require-yield
 		var formConfig = coonti.getConfigParam('forms');
 		if(!formConfig) {
 			return;
@@ -68,7 +68,7 @@ function CoontiFormManager(cnti) {
 		var router = coonti.getManager('router');
 		// ##TODO## Support CoontiPath config
 		if(!!path) {
-			router.addRoute(2000, 'formManagerForms', '/' + path + '/:col/:form', false, function*(next) {
+			router.addRoute(2000, 'formManagerForms', '/' + path + '/:col/:form', false, function*(next) { // eslint-disable-line require-yield
 				var col = this.params.col;
 				var fm = this.params.form;
 				if(!!col && !!fm) {
@@ -92,7 +92,7 @@ function CoontiFormManager(cnti) {
 		}
 
 		if(!!tmplPath) {
-			router.addRoute(2000, 'formManagerTemplates', '/' + tmplPath + '/:lang/:tmpl', false, function*(next) {
+			router.addRoute(2000, 'formManagerTemplates', '/' + tmplPath + '/:lang/:tmpl', false, function*(next) { // eslint-disable-line require-yield
 				var lang = this.params.lang;
 				var tmpl = this.params.tmpl;
 				if(!!lang && !!tmpl) {
@@ -292,13 +292,14 @@ function CoontiFormManager(cnti) {
 	 * Creates an empty form submission for forms that are not yet submitted.
 	 *
 	 * @param {CoontiForm} form - The form instance.
-	 * @return {CoontiFormSubmission} The empty form submission.
+	 * @return {CoontiFormSubmission} The empty form submission or false, if the form is not found.
 	 */
 	this.createEmptyFormSubmission = function(form) {
 		if(form) {
 			var submission = form.createSubmission({}, false);
 			return submission;
 		}
+		return false;
 	};
 
 	/**
@@ -872,6 +873,7 @@ function CoontiFormSubmission(frm, sbm) {
 		if(!!key && fieldsByName[key]) {
 			return fieldsByName[key].value;
 		}
+		return false;
 	};
 
 	/**

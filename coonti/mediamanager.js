@@ -27,9 +27,9 @@ var path = require('path');
 var cacheManager = require('cache-manager');
 var thunkify = require('thunkify');
 var tools = require('./tools');
+var exec = require('child_process').exec;
 
 var coonti;
-var app;
 var config;
 
 /**
@@ -42,10 +42,8 @@ var config;
  */
 function CoontiMediaManager(cnti) {
 	coonti = cnti;
-	app = coonti.getApplication();
 
 	var self = this;
-	var mediaDir = false;
 	var cacheDir = false;
 	var webPath;
 
@@ -94,7 +92,6 @@ function CoontiMediaManager(cnti) {
 		}
 
 		// Check whether GM has been installed or not
-		var exec = require('child_process').exec;
 		exec('gm version', function (error, stdout, stderr) {
 			if(!error) {
 				gmInstalled = true;
@@ -250,7 +247,7 @@ function CoontiMediaManager(cnti) {
 	 * @param {String} file - The name of the file.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.addFile = function*(dir, file) {
+	this.addFile = function*(dir, file) { // eslint-disable-line require-yield
 		// ##TODO##
 
 		return false;
@@ -278,6 +275,7 @@ function CoontiMediaManager(cnti) {
 			return true;
 		}
 		catch(e) {
+			// No action
 		}
 		return false;
 	};
@@ -390,7 +388,8 @@ function CoontiMediaManager(cnti) {
 			for(var i = 0; i < files.length; i++) {
 				if(files[i] == pg['search']) {
 					st = pg['start'] = Math.floor(i / pg['len']) * pg['len'];
-					en = end = Math.min(pg['start'] + pg['len'], files.length);
+					en = Math.min(pg['start'] + pg['len'], files.length);
+					end = en;
 				}
 			}
 		}
@@ -550,6 +549,7 @@ function CoontiMediaManager(cnti) {
 			yield _setToCache(dir + '/' + file, cacheFile);
 			return;
 		} catch(e) {
+			// Fall through
 		}
 
 		var re = /^(.+)_(\d+|-)x(\d+|-)([a-z]*)\.(\w+)$/;
