@@ -692,6 +692,7 @@ function CoontiMediaManager(cnti) {
 					yield cofs.unlink(cacheDir + cacheFiles[i]);
 				}
 				catch(e) {
+					// Fall through
 				}
 			}
 		}

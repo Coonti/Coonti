@@ -151,7 +151,7 @@ function CoontiConfig(cnti) {
 	 */
 	this.initialise = function(cb) {
 		config = JSON.parse(JSON.stringify(defaultConfig));
-		for(var i in baseConfig) {
+		for(var i of Object.keys(baseConfig)) {
 			config[i] = baseConfig[i];
 		}
 		var fc = false;

@@ -51,7 +51,6 @@ function CoontiTemplateManager(cnti) {
 
 	var self = this;
 
-	var templateConfig = {};
 	var staticCollections = {};
 	var contentTypeThemes = {};
 	var contentTypeTemplates = {};
@@ -81,7 +80,7 @@ function CoontiTemplateManager(cnti) {
 	/**
 	 * Initialises the logger.
 	 */
-	var loggingInitialised = function*() {
+	var loggingInitialised = function*() { // eslint-disable-line require-yield
 		logger = coonti.getManager('log').getLogger('coonti-core-templatemanager');
 	};
 
@@ -118,22 +117,22 @@ function CoontiTemplateManager(cnti) {
 
 		var themeDirs = [];
 		var dirRegexp = /^[^\/]+\/package\.json$/;
-		for(var i in files) {
-			if(dirRegexp.test(files[i])) {
-				themeDirs.push(path.dirname(files[i]));
+		for(const i of files) {
+			if(dirRegexp.test(i)) {
+				themeDirs.push(path.dirname(i));
 			}
 		}
 
-		for(var i in themeDirs) {
+		for(const dir of themeDirs) {
 			try {
-				var fileData = yield cofs.readFile(themeDir + themeDirs[i] + '/package.json', 'utf8');
+				var fileData = yield cofs.readFile(themeDir + dir + '/package.json', 'utf8');
 				var themeData = JSON.parse(stripJsonComments(fileData));
 				if(!themeData['name']) {
-					logger.error("TemplateManager - Could not load theme '%s', as it is missing 'name' directive.", themeDirs[i]);
+					logger.error("TemplateManager - Could not load theme '%s', as it is missing 'name' directive.", dir);
 					continue;
 				}
 				if(themes[themeData['name']]) {
-					logger.error("TemplateManager - Could not load theme '%s', as theme with name '%s' is already loaded.", themeDirs[i], themeData['name']);
+					logger.error("TemplateManager - Could not load theme '%s', as theme with name '%s' is already loaded.", dir, themeData['name']);
 					continue;
 				}
 				var themeCfg = false;
@@ -146,7 +145,7 @@ function CoontiTemplateManager(cnti) {
 				if(themeCfg) {
 					_.deepExtend(themeData, themeCfg);
 				}
-				themeData.directory = themeDir + themeDirs[i] + '/';
+				themeData.directory = themeDir + dir + '/';
 				var depComp = dependencies.createComponent('theme', themeData.name, themeData.version, 'installed');
 				if(themeData.dependencies && themeData.dependencies.length > 0) {
 					for(var i = 0; i < themeData.dependencies.length; i++) {
@@ -159,7 +158,7 @@ function CoontiTemplateManager(cnti) {
 				yield dependencies.addComponent(depComp);
 			}
 			catch(e) {
-				logger.error("TemplateManager - Could not load '" + themeDir + themeDirs[i] + "/package.json'.");
+				logger.error("TemplateManager - Could not load '" + themeDir + dir + "/package.json'.");
 			}
 		}
 		for(var i in themesOrder) {
@@ -681,10 +680,11 @@ function CoontiTemplateManager(cnti) {
 				}
 			};
 
-			self.removeAllTemplates = Twig.Templates.removeAll = function() {
+			self.removeAllTemplates = function() {
 				Twig.Templates.registry = {};
 			};
-
+			Twig.Templates.removeAll = self.removeAllTemplates;
+			
 			Twig.Template.prototype.renderGenerator = function*(context, params) {
 				params = params || {};
 
@@ -718,7 +718,7 @@ function CoontiTemplateManager(cnti) {
 
 					// check for the template file via include
 					if(!ext_template) {
-						url = relativePath(this, this.extend);
+						url = relativePath(this, this.extend); // eslint-disable-line no-undef
 
 						ext_template = Twig.Templates.loadRemote(url, {
 							method: this.url ? 'ajax' : 'fs',
@@ -785,6 +785,8 @@ function CoontiTemplateManager(cnti) {
 									Twig.log.debug('Twig.parse: ', 'Output token: ', token.stack);
 							// Parse the given expression in the given context
 									output.push(yield Twig.expression.parseGenerator.apply(that, [token.stack, context]));
+									break;
+								default:
 									break;
 						}
 					};
@@ -1330,7 +1332,7 @@ function CoontiTemplateManager(cnti) {
 					open: true,
 					nameOfTemplate: false,
 					compile: function(token) {
-						nameOfTemplate = this.id;
+						nameOfTemplate = this.id; // eslint-disable-line no-undef
 						token.stack = Twig.expression.compile.apply(this, [{
 							type: Twig.expression.type.expression,
 							value: ''
@@ -1344,7 +1346,7 @@ function CoontiTemplateManager(cnti) {
 
 						return {
 							chain: false,
-							output: nameOfTemplate
+							output: nameOfTemplate // eslint-disable-line no-undef
 						};
 					}
 				};
@@ -1763,6 +1765,7 @@ function CoontiTemplateManager(cnti) {
 											found = true;
 											return true;
 										}
+										return false;
 									});
 								}
 
@@ -2044,7 +2047,7 @@ function CoontiStaticCollection(tm, nm, cf) {
 		}
 
 		var router = coonti.getManager('router');
-		router.addRoute(1000, 'template_' + name, path + ':file(.*)', false, function*(next) {
+		router.addRoute(1000, 'template_' + name, path + ':file(.*)', false, function*(next) { // eslint-disable-line require-yield
 			var file = this.params.file;
 			if(files[file]) {
 				this.type = (config.contentType);
@@ -2235,11 +2238,11 @@ function CoontiStaticCollection(tm, nm, cf) {
  * @param {String} nm - The name of the collection.
  * @param {Object} cf - The configuration for the collection.
  */
-function CoontiDirectoryCollection(tm, nm, cf) {
+/*function CoontiDirectoryCollection(tm, nm, cf) {
 	var templateManager = tm;
 	var name = nm;
 	var config = cf;
 	var files = {};
-}
+}*/
 
 module.exports = CoontiTemplateManager;
