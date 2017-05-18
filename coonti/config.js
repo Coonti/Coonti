@@ -169,7 +169,7 @@ function CoontiConfig(cnti) {
 			}
 			fc = JSON.parse(stripJsonComments(fc));
 			if(fc) {
-				for(var i in fc) {
+				for(var i of Object.keys(fc)) {
 					config[i] = fc[i];
 				}
 			}
@@ -183,7 +183,7 @@ function CoontiConfig(cnti) {
 
 		var db = config['databases'];
 		if(db && db.length > 0) {
-			for(var i in db) {
+			for(var i = 0; i < db.length; i++) {
 				if(db[i]['name'] && db[i]['name'] == 'mongo') {
 					dbUrl = db[i]['url'];
 					self._readCoontiConfigFromDb(function(err) {

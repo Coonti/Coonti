@@ -19,6 +19,7 @@
 
 var _ = require('underscore');
 var thunkify = require('thunkify');
+var cacheManager = require('cache-manager');
 
 /**
  * Storage manager that contains all storage handlers.
@@ -147,7 +148,7 @@ function CachingStorageHandler(sh) {  // eslint-disable-line no-unused-vars
 			return {};
 		}
 
-		yield sh.getAllData(collection, key);
+		return yield sh.getAllData(collection, key);
 	};
 
 	/**

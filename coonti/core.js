@@ -292,7 +292,7 @@ function Coonti(koaApp) {
 	 */
 	this.fireEvent = function*(eventName, params) {
 		if(eventListeners[eventName]) {
-			for(var i in eventListeners[eventName]) {
+			for(var i = 0; i < eventListeners[eventName].length; i++) {
 				yield eventListeners[eventName][i](params);
 			}
 		}

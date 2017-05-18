@@ -182,7 +182,7 @@ function deepExtend(obj) {
 		slice = Array.prototype.slice;
 
 	_.each(slice.call(arguments, 1), function(source) {
-		for(var prop in source) {
+		for(var prop in source) { // eslint-disable-line no-restricted-syntax
 			if(_.isUndefined(obj[prop]) || _.isFunction(obj[prop]) || _.isNull(source[prop]) || _.isDate(source[prop])) {
 				obj[prop] = source[prop];
 			}

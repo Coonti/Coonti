@@ -312,7 +312,7 @@ function MenuManager(cnti) {
 		}
 
 		var dbKeys = {};
-		for(var i in keys) {
+		for(var i = 0; i < keys.length; i++) {
 			dbKeys[keys[i].trim()] = 1;
 		}
 
@@ -323,7 +323,7 @@ function MenuManager(cnti) {
 		}
 
 		var cntObject = {};
-		for(var i in cnt) {
+		for(var i = 0; i < cnt.length; i++) {
 			if(!!cnt[i]['_id']) {
 				cntObject[cnt[i]['_id']] = cnt[i];
 				delete cnt[i]['_id'];

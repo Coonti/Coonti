@@ -922,7 +922,8 @@ function CoontiFormSubmission(frm, sbm) {
 					iter = validators[0].iterator(validators[1]);
 				}
 				var val = f.get('value');
-				for(var v of iter) {
+				for(var i = 0; i < iter.length; i++) { //v of iter) {
+					var v = iter[i];
 					var validator = false;
 					var params = false;
 					var message = false;

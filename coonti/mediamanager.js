@@ -387,7 +387,8 @@ function CoontiMediaManager(cnti) {
 		if(pg['search'] && (pg['sort'] == 'name' || pg['sort'] == '-name')) {
 			for(var i = 0; i < files.length; i++) {
 				if(files[i] == pg['search']) {
-					st = pg['start'] = Math.floor(i / pg['len']) * pg['len'];
+					st = Math.floor(i / pg['len']) * pg['len'];
+					pg['start'] = st;
 					en = Math.min(pg['start'] + pg['len'], files.length);
 					end = en;
 				}
@@ -571,7 +572,6 @@ function CoontiMediaManager(cnti) {
 			}
 			var method = split[4];
 			try {
-				var st = yield cofs.stat(origFile);
 				var img = gm(origFile);
 				if(img) {
 					var sizer = function(img) {
@@ -585,7 +585,7 @@ function CoontiMediaManager(cnti) {
 						var oh = size.height;
 
 						if(w == -1) {
-							w = h / oh * w;
+							w = h / oh * ow;
 						}
 						else if(h == -1) {
 							h = w / ow * oh;

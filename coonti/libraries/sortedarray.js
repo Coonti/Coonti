@@ -38,7 +38,7 @@ function SortedArray() {
  * @param {integer} w - The weight.
  */
 SortedArray.prototype.insert = function(el, w) {
-	w = parseInt(w);
+	w = parseInt(w, 10);
 	if(isNaN(w)) {
 		w = 0;
 	}
@@ -70,7 +70,7 @@ SortedArray.prototype.remove = function(el) {
  * @return {Object} The item on that position.
  */
 SortedArray.prototype.valueAt = function(pos) {
-	pos = parseInt(pos);
+	pos = parseInt(pos, 10);
 	if(isNaN(pos)) {
 		return undefined;
 	}
@@ -87,7 +87,7 @@ SortedArray.prototype.valueAt = function(pos) {
  * @return {integer} The weight on that position.
  */
 SortedArray.prototype.weightAt = function(pos) {
-	pos = parseInt(pos);
+	pos = parseInt(pos, 10);
 	if(isNaN(pos)) {
 		return undefined;
 	}
