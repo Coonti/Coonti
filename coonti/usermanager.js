@@ -1193,7 +1193,7 @@ function User(account, userData) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(allowed[tmp[i]]) {
 				continue;
 			}
@@ -1224,7 +1224,7 @@ function User(account, userData) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete allowed[tmp[i]];
 		}
 
@@ -1267,7 +1267,7 @@ function User(account, userData) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(denied[tmp[i]]) {
 				continue;
 			}
@@ -1298,7 +1298,7 @@ function User(account, userData) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete denied[tmp[i]];
 		}
 
@@ -1338,16 +1338,21 @@ function User(account, userData) {
 				return true;
 			}
 
-			for(var roleId in roles) {
-				var role = yield userManager.getRoleById(roleId);
-				var res = yield role.isAllowed(access);
+			const roleKeys = Object.keys(roles);
+			for(let i = 0; i < roleKeys.length; i++) {
+				const roleId = roleKeys[i];
+				const role = yield userManager.getRoleById(roleId);
+				const res = yield role.isAllowed(access);
 				if(res) {
 					return true;
 				}
 			}
-			for(var groupId in groups) {
-				var group = yield userManager.getGroupById(groupId);
-				var res = yield group.isAllowed(access);
+
+			const groupKeys = Object.keys(groups);
+			for(let i = 0; i < groupKeys.length; i++) {
+				const groupId = groupKeys[i];
+				const group = yield userManager.getGroupById(groupId);
+				const res = yield group.isAllowed(access);
 				if(res) {
 					return true;
 				}
@@ -1368,16 +1373,21 @@ function User(account, userData) {
 				return true;
 			}
 
-			for(var roleId in roles) {
-				var role = yield userManager.getRoleById(roleId);
-				var res = yield role.isDenied(access);
+			const roleKeys = Object.keys(roles);
+			for(let i = 0; i < roleKeys.length; i++) {
+				const roleId = roleKeys[i];
+				const role = yield userManager.getRoleById(roleId);
+				const res = yield role.isDenied(access);
 				if(res) {
 					return true;
 				}
 			}
-			for(var groupId in groups) {
-				var group = yield userManager.getGroupById(groupId);
-				var res = yield group.isDenied(access);
+
+			const groupKeys = Object.keys(groups);
+			for(let i = 0; i < groupKeys.length; i++) {
+				const groupId = groupKeys[i];
+				const group = yield userManager.getGroupById(groupId);
+				const res = yield group.isDenied(access);
 				if(res) {
 					return true;
 				}
@@ -1406,7 +1416,7 @@ function User(account, userData) {
 		}
 
 		// ##TODO## Check existence of the role
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(roles[tmp[i]]) {
 				continue;
 			}
@@ -1435,7 +1445,7 @@ function User(account, userData) {
 			tmp = [role];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete (roles[tmp[i]]);
 		}
 		return true;
@@ -1494,7 +1504,7 @@ function User(account, userData) {
 			tmp = [group];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(groups[tmp[i]]) {
 				return true;
 			}
@@ -1524,7 +1534,7 @@ function User(account, userData) {
 			tmp = [group];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(!groups[tmp[i]]) {
 				continue;
 			}
@@ -1721,7 +1731,7 @@ function Role(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(allowed[tmp[i]]) {
 				continue;
 			}
@@ -1752,7 +1762,7 @@ function Role(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete allowed[tmp[i]];
 		}
 
@@ -1795,7 +1805,7 @@ function Role(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(denied[tmp[i]]) {
 				continue;
 			}
@@ -1825,7 +1835,7 @@ function Role(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete denied[tmp[i]];
 		}
 
@@ -1987,7 +1997,7 @@ function Group(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(allowed[tmp[i]]) {
 				continue;
 			}
@@ -2018,7 +2028,7 @@ function Group(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete allowed[tmp[i]];
 		}
 
@@ -2061,7 +2071,7 @@ function Group(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			if(denied[tmp[i]]) {
 				continue;
 			}
@@ -2092,7 +2102,7 @@ function Group(nm) {
 			tmp = [access];
 		}
 
-		for(var i in tmp) {
+		for(let i = 0; i < tmp.length; i++) {
 			delete denied[tmp[i]];
 		}
 

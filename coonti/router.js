@@ -319,7 +319,7 @@ function CoontiRouter(cnti) {
 			return false;
 		}
 		var r = router.stack;
-		for(var i in r) {
+		for(let i = 0; i < r.length; i++) {
 			if(r[i]['name'] == name) {
 				r.splice(i, 1);
 				return true;
@@ -859,8 +859,6 @@ function CoontiStateMachine(rtr, nm) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.execute = function*(ctx, next, csn) {
-		var error = false;
-
 		if(statesOrder.length == 0) {
 			return true;
 		}
@@ -879,13 +877,16 @@ function CoontiStateMachine(rtr, nm) {
 		var self = this;
 
 		if(beforeStates[st.name]) {
-			for(var s in beforeStates[st.name]) {
+			for(let s = 0; s < beforeStates[st.name].length; s++) {
 				var cb = beforeStates[st.name][s];
 				try {
 					yield cb.callback(ctx, st);
 				}
 				catch(e) {
-					// ##TODO## Handle this somehow
+					if(errorHandler) {
+						yield errorHandler(500, this);
+					}
+					return false;
 				}
 			}
 		}
@@ -901,13 +902,16 @@ function CoontiStateMachine(rtr, nm) {
 		yield invoker();
 
 		if(afterStates[st.name]) {
-			for(s in afterStates[st.name]) {
+			for(let s = 0; s < afterStates[st.name].length; s++) {
 				var cb = afterStates[st.name][s];
 				try {
 					yield cb.callback(ctx, st);
 				}
 				catch(e) {
-					// ##TODO## Handle this somehow
+					if(errorHandler) {
+						yield errorHandler(500, this);
+					}
+					return false;
 				}
 			}
 		}
@@ -963,6 +967,15 @@ function CoontiStateMachine(rtr, nm) {
 	 */
 	this.disable = function() {
 		disabled = true;
+	};
+
+	/**
+	 * Checks whether the state machine is disabled.
+	 *
+	 * @return {Bool} Disabled (true) or not (false).
+	 */
+	this.isDisabled = function() {
+		return disabled;
 	};
 
 	/**

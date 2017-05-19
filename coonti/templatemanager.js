@@ -61,7 +61,7 @@ function CoontiTemplateManager(cnti) {
 	var themesOrder;
 	var twigTags = {};
 
-	var languageManager;
+//	var languageManager;
 	var formManager;
 	var users;
 	var dependencies;
@@ -88,7 +88,7 @@ function CoontiTemplateManager(cnti) {
 	 * Loads the templates based on configuration.
 	 */
 	var configInitialised = function*() {
-		languageManager = coonti.getManager('language');
+//		languageManager = coonti.getManager('language');
 		formManager = coonti.getManager('form');
 		users = coonti.getManager('user');
 		mediaManager = coonti.getManager('media');
@@ -117,13 +117,14 @@ function CoontiTemplateManager(cnti) {
 
 		var themeDirs = [];
 		var dirRegexp = /^[^\/]+\/package\.json$/;
-		for(const i of files) {
-			if(dirRegexp.test(i)) {
-				themeDirs.push(path.dirname(i));
+		for(let i = 0; i < files.length; i++) {
+			if(dirRegexp.test(files[i])) {
+				themeDirs.push(path.dirname(files[i]));
 			}
 		}
 
-		for(const dir of themeDirs) {
+		for(let i = 0; i < themeDirs.length; i++) {
+			const dir = themeDirs[i];
 			try {
 				var fileData = yield cofs.readFile(themeDir + dir + '/package.json', 'utf8');
 				var themeData = JSON.parse(stripJsonComments(fileData));
@@ -136,7 +137,7 @@ function CoontiTemplateManager(cnti) {
 					continue;
 				}
 				var themeCfg = false;
-				for(var j in themesConfig) {
+				for(let j = 0; j < themesConfig.length; j++) {
 					if(themesConfig[j]['name'] == themeData['name']) {
 						themeCfg = themesConfig[j];
 						break;
@@ -148,8 +149,8 @@ function CoontiTemplateManager(cnti) {
 				themeData.directory = themeDir + dir + '/';
 				var depComp = dependencies.createComponent('theme', themeData.name, themeData.version, 'installed');
 				if(themeData.dependencies && themeData.dependencies.length > 0) {
-					for(var i = 0; i < themeData.dependencies.length; i++) {
-						depComp.addDependencyObject(themeData.dependencies[i]);
+					for(let j = 0; j < themeData.dependencies.length; j++) {
+						depComp.addDependencyObject(themeData.dependencies[j]);
 					}
 				}
 				themeData.dependency = depComp;
@@ -161,7 +162,7 @@ function CoontiTemplateManager(cnti) {
 				logger.error("TemplateManager - Could not load '" + themeDir + dir + "/package.json'.");
 			}
 		}
-		for(var i in themesOrder) {
+		for(let i = 0; i < themesOrder.length; i++) {
 			var t = themesOrder[i];
 
 			if(!t.active) {
@@ -608,7 +609,7 @@ function CoontiTemplateManager(cnti) {
 	 * @param {Function} callback - The callback to be called when the content is rendered or an error has occurred.
 	 */
 	this.renderError = function(crr, callback) {
-		var code = 500;
+		var code = 500; // eslint-disable-line no-unused-vars
 		if(crr.error && crr.error.code) {
 			code = crr.error.code;
 		}
@@ -672,9 +673,11 @@ function CoontiTemplateManager(cnti) {
 			self._removeThemeTemplates = function(theme) {
 				if(!!theme) {
 					theme += '_';
-					for(var i in Twig.Templates.registry) {
-						if(_s.startsWith(i, theme)) {
-							delete Twig.Templates.registry[i];
+					const rk = Object.keys(Twig.Templates.registry);
+					for(let i = 0; i < rk.length; i++) {
+						const th = rk[i];
+						if(_s.startsWith(th, theme)) {
+							delete Twig.Templates.registry[th];
 						}
 					}
 				}
@@ -855,7 +858,7 @@ function CoontiTemplateManager(cnti) {
 					}
 				};
 
-				for(var i in tokens) {
+				for(let i = 0; i < tokens.length; i++) {
 					yield handler(tokens[i]);
 				}
 
@@ -1343,8 +1346,6 @@ function CoontiTemplateManager(cnti) {
 						return token;
 					},
 					parse: function(token, context, chain) {
-						var name = Twig.expression.parse.apply(this, [token.stack, context]);
-
 						return {
 							chain: false,
 							output: nameOfTemplate // eslint-disable-line no-undef
@@ -1592,16 +1593,16 @@ function CoontiTemplateManager(cnti) {
 						}
 
 						// Store defined language, if exists
-						if(token.match[4]) {
-							language = token.match[4];  // TODO: should this assign to `token`?
+						if(token.match[4]) { // TODO: should this assign to `token`?
+							language = token.match[4]; // eslint-disable-line no-undef
 						}
 						delete token.match;
 						return token;
 					},
 					parse: function (token, context, chain) {
 						var innerContext = context;
-						if(localVars) {  // TODO: should this read from `token`?
-							innerContext = {};
+						if(localVars) { // eslint-disable-line no-undef
+							innerContext = {}; // TODO: should this read from `token`?
 							if(!token.only) {
 								innerContext = Twig.ChildContext(context);
 							}
@@ -1615,8 +1616,8 @@ function CoontiTemplateManager(cnti) {
 								}
 							}
 
-							_.each(localVars, function(v, i) {  // TODO: should this read from `token`?
-								innerContext[i] = Twig.parse.apply(this, [v, innerContext]);
+							_.each(localVars, function(v, i) { // eslint-disable-line no-undef
+								innerContext[i] = Twig.parse.apply(this, [v, innerContext]);  // TODO: should this read from `token`?
 							});
 						}
 
@@ -1687,8 +1688,8 @@ function CoontiTemplateManager(cnti) {
 						}
 
 						// Store defined language, if exists
-						if(token.match[5]) {
-							language = token.match[5];  // TODO: should this assign to `token`?
+						if(token.match[5]) { // TODO: should this assign to `token`?
+							language = token.match[5]; // eslint-disable-line no-undef
 						}
 						delete token.match;
 						return token;
@@ -1703,8 +1704,8 @@ function CoontiTemplateManager(cnti) {
 						}
 
 						var innerContext = context;
-						if(localVars) {  // TODO: should this read from `token`?
-							innerContext = {};
+						if(localVars) { // eslint-disable-line no-undef
+							innerContext = {}; // TODO: should this read from `token`?
 							if(!token.only) {
 								innerContext = Twig.ChildContext(context);
 							}
@@ -1718,8 +1719,8 @@ function CoontiTemplateManager(cnti) {
 								}
 							}
 
-							_.each(localVars, function(v, i) {  // TODO: should this read from `token`?
-								innerContext[i] = Twig.parse.apply(this, [v, innerContext]);
+							_.each(localVars, function(v, i) { // eslint-disable-line no-undef
+								innerContext[i] = Twig.parse.apply(this, [v, innerContext]); // TODO: should this read from `token`?
 							});
 						}
 
@@ -1737,7 +1738,7 @@ function CoontiTemplateManager(cnti) {
 						var chosenText = rawValues;
 						var choicesText = rawValues.split('|');
 						if(choicesText.length > 1) {
-							var choices = {};
+//							var choices = {};
 							_.find(choicesText, function(ct) {
 								var found = false;
 								ct = _s.trim(ct);
@@ -1956,7 +1957,7 @@ function CoontiTemplateManager(cnti) {
 			if(_s.endsWith(f, '.twig')) {
 				var tid = _s.strLeftBack(f, '.twig');
 				self._removeTemplate(theme + '_' + tid);
-				var tpl = twig.twig({
+				twig.twig({
 					id: theme + '_' + tid,
 					path: p + '/' + file,
 					async: false
@@ -1965,7 +1966,7 @@ function CoontiTemplateManager(cnti) {
 				if(themes[theme].clientAccess && staticCollectionTwig) {
 					var add = true;
 					if(themes[theme].clientDenyListRegexp) {
-						add = !_.some(themes[theme].clientDenyListRegexp, function(cd) {
+						add = !_.some(themes[theme].clientDenyListRegexp, function(cd) { // eslint-disable-line no-loop-func
 							if(f.search(cd) != -1) {
 								return true;
 							}
@@ -1979,7 +1980,7 @@ function CoontiTemplateManager(cnti) {
 				continue;
 			}
 			if(staticCollectionAngular) {
-				var add = _.some(themes[theme]['staticCollections']['angular'].loadRegexp, function(cr) {
+				var add = _.some(themes[theme]['staticCollections']['angular'].loadRegexp, function(cr) { // eslint-disable-line no-loop-func
 					if(f.search(cr) != -1) {
 						return true;
 					}
@@ -1991,7 +1992,7 @@ function CoontiTemplateManager(cnti) {
 				}
 			}
 			if(staticCollectionCss) {
-				var add = _.some(themes[theme]['staticCollections']['css'].loadRegexp, function(cr) {
+				var add = _.some(themes[theme]['staticCollections']['css'].loadRegexp, function(cr) { // eslint-disable-line no-loop-func
 					if(f.search(cr) != -1) {
 						return true;
 					}
@@ -2003,7 +2004,7 @@ function CoontiTemplateManager(cnti) {
 				}
 			}
 			if(staticCollectionJs) {
-				var add = _.some(themes[theme]['staticCollections']['js'].loadRegexp, function(jr) {
+				var add = _.some(themes[theme]['staticCollections']['js'].loadRegexp, function(jr) { // eslint-disable-line no-loop-func
 					if(f.search(jr) != -1) {
 						return true;
 					}
@@ -2239,7 +2240,7 @@ function CoontiStaticCollection(tm, nm, cf) {
  * @param {String} nm - The name of the collection.
  * @param {Object} cf - The configuration for the collection.
  */
-/*function CoontiDirectoryCollection(tm, nm, cf) {
+/* function CoontiDirectoryCollection(tm, nm, cf) {
 	var templateManager = tm;
 	var name = nm;
 	var config = cf;

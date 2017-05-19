@@ -84,9 +84,9 @@ MiniRouter.prototype.removeRoute = function(name) {
  * @return {Function} The function that handles such requests or false, if no route was found.
  */
 MiniRouter.prototype.route = function(request) {
-	for(var i = 0; i < this.routes.length; i++) {
-		var r = this.routes[i];
-		var params = request.match(r.regexp);
+	for(let i = 0; i < this.routes.length; i++) {
+		const r = this.routes[i];
+		const params = request.match(r.regexp);
 		if(params) {
 			var callParams = [];
 			for(var j = 1; j < params.length; j++) {
@@ -97,8 +97,8 @@ MiniRouter.prototype.route = function(request) {
 					callParams[j - 1] = params[j];
 				}
 			}
-			var func = r.func;
-			return function*(ctx) {
+			const func = r.func;
+			return function*(ctx) { // eslint-disable-line no-loop-func
 				return yield func.apply(ctx, callParams);
 			};
 		}

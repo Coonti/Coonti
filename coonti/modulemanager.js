@@ -117,11 +117,12 @@ function CoontiModuleManager(cnti) {
 		var singleRegexp = /^[^\/]+\.js$/;
 		var dirRegexp = /^[^\/]+\/package\.json$/;
 
-		for(var j = 0; j < modulePaths.length; j++) {
-			var mPath = modulePaths[j];
+		let i;
+		for(let j = 0; j < modulePaths.length; j++) {
+			const mPath = modulePaths[j];
 
-			var list = yield readDirsThunk(mPath);
-			for(var i in list) {
+			const list = yield readDirsThunk(mPath);
+			for(i = 0; i < list.length; i++) {
 				if(singleRegexp.test(list[i])) {
 					mdls.push(mPath + '/' + list[i]);
 				}
@@ -134,13 +135,13 @@ function CoontiModuleManager(cnti) {
 			return;
 		}
 
-		for(var i in mdls) {
+		for(i = 0; i < mdls.length; i++) {
 			yield self.loadModule(mdls[i]);
 		}
 
 		var moduleConfigConfig = moduleConfig['moduleConfig'];
 		if(moduleConfigConfig) {
-			for(var i in moduleConfigConfig) {
+			for(i in moduleConfigConfig) {
 				if(moduleConfigConfig[i]['config']) {
 					yield _setModuleConfig(i, moduleConfigConfig[i]['config']);
 				}
@@ -148,7 +149,7 @@ function CoontiModuleManager(cnti) {
 		}
 
 		var moduleNames = _.keys(modules);
-		var i = moduleNames.length;
+		i = moduleNames.length;
 		while(i--) {
 			var mn = moduleNames[i];
 			if(!moduleConfigConfig[mn]) {
@@ -167,7 +168,7 @@ function CoontiModuleManager(cnti) {
 
 		for(;;) {
 			var len = moduleNames.length;
-			var i = moduleNames.length;
+			i = moduleNames.length;
 			while(i--) {
 				var mn = moduleNames[i];
 				var cf = moduleConfigConfig[mn];

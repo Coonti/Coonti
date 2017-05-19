@@ -55,7 +55,7 @@ function CoontiMediaManager(cnti) {
 	var fileNameCache;
 	var _getFromCache;
 	var _setToCache;
-	var _delFromCache;
+//	var _delFromCache;
 
 	var logger;
 
@@ -78,7 +78,7 @@ function CoontiMediaManager(cnti) {
 		fileNameCache = cacheManager.caching({ store: 'memory', max: 100 }); // ##TODO## Read max from configuration
 		_getFromCache = thunkify(fileNameCache.get);
 		_setToCache = thunkify(fileNameCache.set);
-		_delFromCache = thunkify(fileNameCache.del);
+//		_delFromCache = thunkify(fileNameCache.del);
 
 		var mediaConfig = coonti.getConfigParam('media');
 		if(!mediaConfig) {
@@ -324,9 +324,10 @@ function CoontiMediaManager(cnti) {
 	 * @return {String} The name of the default directory.
 	 */
 	this.getDefaultDirectory = function() {
-		for(var i in dirs) {
-			if(dirs[i].default) {
-				return i;
+		const dk = Object.keys(dirs);
+		for(let i = 0; i < dk.length; i++) {
+			if(dirs[dk[i]].default) {
+				return dk[i];
 			}
 		}
 		return false;
@@ -673,20 +674,20 @@ function CoontiMediaManager(cnti) {
 			return;
 		}
 
-		var cacheFiles = yield cofs.readdir(cacheDir);
+		const cacheFiles = yield cofs.readdir(cacheDir);
 		if(!cacheFiles || cacheFiles.length == 0) {
 			return;
 		}
 
-		var fileRe = file;
-		var split = file.match(/^(.+)\.(\w+)$/);
+		let fileRe = file;
+		const split = file.match(/^(.+)\.(\w+)$/);
 		if(split) {
 			fileRe = split[1] + '_(\\d+)x(\\d+)([a-z]*)\\.' + split[2];
 		}
 
-		var fileRegexp = new RegExp('^' + dir + '-_-' + fileRe + '$');
+		const fileRegexp = new RegExp('^' + dir + '-_-' + fileRe + '$');
 
-		for(var i in cacheFiles) {
+		for(let i = 0; i < cacheFiles.length; i++) {
 			if(fileRegexp.test(cacheFiles[i])) {
 				try {
 					yield cofs.unlink(cacheDir + cacheFiles[i]);

@@ -182,11 +182,13 @@ function CoontiDependencyManager(cnti) {
 	 */
 	this._resolveDependencies = function*() {
 		var compKeys = Object.keys(components);
-		for(var i = 0; i < compKeys.length; i++) {
-			var c = compKeys[i];
-			for(var n in components[c]) {
-				var oldResolved = components[c][n].isResolved();
-				var resolved = components[c][n]._resolveDependencies();
+		for(let i = 0; i < compKeys.length; i++) {
+			const c = compKeys[i];
+			const ck = Object.keys(components[c]);
+			for(let j = 0; j < ck.length; j++) {
+				const n = ck[j];
+				const oldResolved = components[c][n].isResolved();
+				const resolved = components[c][n]._resolveDependencies();
 				if(resolved != oldResolved) {
 					if(resolved) {
 						yield coonti.fireEvent('Coonti-Dependency-Component-Resolved', components[c][n]);

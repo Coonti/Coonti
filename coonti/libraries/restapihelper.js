@@ -72,8 +72,8 @@ function RestApiHelper(cnti, get, post, put, del) {
 				if(typeof handler['allow'] == 'string') {
 					handler['allow'] = [handler['allow']];
 				}
-				for(var i in handler['allow']) {
-					var ret = yield user.isAllowed(handler['allow'][i]);
+				for(let i = 0; i < handler['allow'].length; i++) {
+					const ret = yield user.isAllowed(handler['allow'][i]);
 					if(ret) {
 						pass = true;
 						break;
@@ -90,8 +90,8 @@ function RestApiHelper(cnti, get, post, put, del) {
 				if(typeof handler['deny'] == 'string') {
 					handler['deny'] = [handler['deny']];
 				}
-				for(var i in handler['deny']) {
-					var ret = yield user.isDenied(handler['deny'][i]);
+				for(let i = 0; i < handler['deny'].length; i++) {
+					const ret = yield user.isDenied(handler['deny'][i]);
 					if(ret) {
 						pass = false;
 						break;

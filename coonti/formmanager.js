@@ -798,7 +798,7 @@ function CoontiFormSubmission(frm, sbm) {
 			},
 			_get: function(ref) {
 				var getter = false;
-				if(this.hasOwnProperty(ref) && typeof (this[ref]) != 'undefined') {
+				if(this.hasOwnProperty(ref) && typeof (this[ref]) != 'undefined') { // eslint-disable-line no-prototype-builtins
 					getter = this[ref];
 				}
 				else if(this.field[ref]) {
@@ -922,7 +922,7 @@ function CoontiFormSubmission(frm, sbm) {
 					iter = validators[0].iterator(validators[1]);
 				}
 				var val = f.get('value');
-				for(var i = 0; i < iter.length; i++) { //v of iter) {
+				for(var i = 0; i < iter.length; i++) {
 					var v = iter[i];
 					var validator = false;
 					var params = false;

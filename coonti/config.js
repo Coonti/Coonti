@@ -151,10 +151,11 @@ function CoontiConfig(cnti) {
 	 */
 	this.initialise = function(cb) {
 		config = JSON.parse(JSON.stringify(defaultConfig));
-		for(var i of Object.keys(baseConfig)) {
-			config[i] = baseConfig[i];
+		const keys = Object.keys(baseConfig);
+		for(let i = 0; i < keys.length; i++) {
+			config[keys[i]] = baseConfig[keys[i]];
 		}
-		var fc = false;
+		let fc = false;
 		try {
 			fc = fs.readFileSync(baseConfig.basePath + 'config/coontiConfig.json');
 		}
@@ -169,8 +170,9 @@ function CoontiConfig(cnti) {
 			}
 			fc = JSON.parse(stripJsonComments(fc));
 			if(fc) {
-				for(var i of Object.keys(fc)) {
-					config[i] = fc[i];
+				const fck = Object.keys(fc);
+				for(let i = 0; i < fck.length; i++) {
+					config[fck[i]] = fc[fck[i]];
 				}
 			}
 		}
@@ -183,10 +185,10 @@ function CoontiConfig(cnti) {
 
 		var db = config['databases'];
 		if(db && db.length > 0) {
-			for(var i = 0; i < db.length; i++) {
+			for(let i = 0; i < db.length; i++) {
 				if(db[i]['name'] && db[i]['name'] == 'mongo') {
 					dbUrl = db[i]['url'];
-					self._readCoontiConfigFromDb(function(err) {
+					self._readCoontiConfigFromDb(function(err) { // eslint-disable-line no-loop-func
 						if(err) {
 							console.log('ERROR: Coonti could not connect to the database "' + db[i]['name'] + '". Exiting.'); // eslint-disable-line no-console
 							process.exit(1);
