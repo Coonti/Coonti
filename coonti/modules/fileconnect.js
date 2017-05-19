@@ -108,9 +108,10 @@ function FileConnect(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.start = function*() { // eslint-disable-line require-yield
-		for(var i in connections) {
-			var fh = new FileHandler(this, connections[i].dir, connections[i].encoding);
-			storageManager.addStorageHandler(i, fh);
+		const keys = Object.keys(connections);
+		for(let i = 0; i < keys.length; i++) {
+			const fh = new FileHandler(this, connections[keys[i]].dir, connections[keys[i]].encoding);
+			storageManager.addStorageHandler(keys[i], fh);
 		}
 		logger.info('FileConnect - Started.');
 		return true;
@@ -122,8 +123,9 @@ function FileConnect(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.stop = function*() { // eslint-disable-line require-yield
-		for(var i in connections) {
-			storageManager.removeStorageHandler(i);
+		const keys = Object.keys(connections);
+		for(let i = 0; i < keys.length; i++) {
+			storageManager.removeStorageHandler(keys[i]);
 		}
 		logger.info('FileConnect - Stopped.');
 		return true;

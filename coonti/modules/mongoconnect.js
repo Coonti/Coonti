@@ -61,8 +61,8 @@ function MongoConnect(cnti) {
 	 */
 	this.initialise = function*() {
 		storageManager = coonti.getManager('storage');
-		var dbs = coonti.getConfigParam('databases');
-		for(var i in dbs) {
+		const dbs = coonti.getConfigParam('databases');
+		for(let i = 0; i < dbs.length; i++) {
 			var db = dbs[i];
 			if(db.type == 'mongodb') {
 				if(!db.name && !db.url) {
@@ -112,10 +112,11 @@ function MongoConnect(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.start = function*() { // eslint-disable-line require-yield
-		for(var i in connections) {
-			var mdb = connections[i];
-			var mh = new MongoHandler(this, mdb);
-			storageManager.addStorageHandler(i, mh);
+		const keys = Object.keys(connections);
+		for(let i = 0; i < keys.length; i++) {
+			const mdb = connections[keys[i]];
+			const mh = new MongoHandler(this, mdb);
+			storageManager.addStorageHandler(keys[i], mh);
 		}
 		return true;
 	};
@@ -126,8 +127,9 @@ function MongoConnect(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.stop = function*() { // eslint-disable-line require-yield
-		for(var i in connections) {
-			storageManager.removeStorageHandler(i);
+		const keys = Object.keys(connections);
+		for(let i = 0; i < keys.length; i++) {
+			storageManager.removeStorageHandler(keys[i]);
 		}
 		return true;
 	};
@@ -211,9 +213,9 @@ function MongoHandler(mongoCnnct, db) {
 		if(pg.sort) {
 			var st = pg.sort.split('|');
 			var mst = {};
-			for(var i in st) {
-				var k = st[i];
-				var dir = 1;
+			for(let i = 0; i < st.length; i++) {
+				let k = st[i];
+				let dir = 1;
 				if(_s.startsWith(k, '-')) {
 					dir = -1;
 					k = k.substring(1);
@@ -291,15 +293,15 @@ function MongoHandler(mongoCnnct, db) {
 	 * Drops the collections in the database.
 	 */
 	this.dropDatabase = function*() {
-		var items = yield mongoDb._db.listCollections().toArray();
+		const items = yield mongoDb._db.listCollections().toArray();
 		if(items.length > 0) {
-			for(var i in items) {
-				var col = items[i]['name'];
+			for(let i = 0; i < items.length; i++) {
+				const col = items[i]['name'];
 				if(col.indexOf('system.') == 0) {
 					continue;
 				}
 
-				var mongoCol = this.getCollection(col);
+				const mongoCol = this.getCollection(col);
 				yield mongoCol.drop();
 			}
 		}

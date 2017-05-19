@@ -2030,7 +2030,7 @@ function CoontiTemplateManager(cnti) {
  * @param {Object} cf - The configuration for the collection.
  */
 function CoontiStaticCollection(tm, nm, cf) {
-	var templateManager = tm;
+	var templateManager = tm; // eslint-disable-line no-unused-vars
 	var name = nm;
 	var config = cf;
 	var files = {};
