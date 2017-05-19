@@ -684,7 +684,7 @@ function CoontiTemplateManager(cnti) {
 				Twig.Templates.registry = {};
 			};
 			Twig.Templates.removeAll = self.removeAllTemplates;
-			
+
 			Twig.Template.prototype.renderGenerator = function*(context, params) {
 				params = params || {};
 
@@ -811,6 +811,7 @@ function CoontiTemplateManager(cnti) {
 						return ex.toString();
 					}
 				}
+				return '';
 			};
 
 			Twig.logic.parseGenerator = function*(token, context, chain) {
@@ -2229,7 +2230,7 @@ function CoontiStaticCollection(tm, nm, cf) {
 	};
 }
 
-/**
+/*
  * CoontiDirectoryCollection keeps static files from various directories under a single virtual directory split into subdirectories, readily available for all theme files.
  *
  * @class

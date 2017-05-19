@@ -279,7 +279,7 @@ function CoontiModuleManager(cnti) {
 					dir: dir,
 					module: module,
 					config: config,
-					logger: logger,
+					logger: moduleLogger,
 					initialised: false,
 					started: false,
 					dependency: depComp

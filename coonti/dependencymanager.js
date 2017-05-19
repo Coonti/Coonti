@@ -181,7 +181,9 @@ function CoontiDependencyManager(cnti) {
 	 * @fires Coonti-Dependency-Component-Nonresolved with the changed component as param.
 	 */
 	this._resolveDependencies = function*() {
-		for(var c in components) {
+		var compKeys = Object.keys(components);
+		for(var i = 0; i < compKeys.length; i++) {
+			var c = compKeys[i];
 			for(var n in components[c]) {
 				var oldResolved = components[c][n].isResolved();
 				var resolved = components[c][n]._resolveDependencies();
