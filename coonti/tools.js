@@ -28,7 +28,7 @@ var stripJsonComments = require('strip-json-comments');
  * @class
  * @classdesc Utility class holding numerous tools.
  */
-function CoontiTools() {
+function CoontiTools() { // eslint-disable-line padded-blocks
 
 	/**
 	 * Gets the Coonti directory.
@@ -181,7 +181,7 @@ function deepExtend(obj) {
 	var parentRE = /#{\s*?_\s*?}/,
 		slice = Array.prototype.slice;
 
-	_.each(slice.call(arguments, 1), function(source) {
+	_.each(slice.call(arguments, 1), function(source) { // eslint-disable-line prefer-rest-params
 		for(var prop in source) { // eslint-disable-line no-restricted-syntax
 			if(_.isUndefined(obj[prop]) || _.isFunction(obj[prop]) || _.isNull(source[prop]) || _.isDate(source[prop])) {
 				obj[prop] = source[prop];

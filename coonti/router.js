@@ -280,7 +280,7 @@ function CoontiRouter(cnti) {
 
 		priority = -priority;
 
-		var args = Array.prototype.slice.call(arguments);
+		var args = Array.prototype.slice.call(arguments); // eslint-disable-line prefer-rest-params
 		args.shift();
 
 		for(var i = 0; i < args.length; i++) {

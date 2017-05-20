@@ -453,7 +453,7 @@ function CoontiAdmin(cnti) {
 					add = yield user.isAllowed(arr[i]['allow']);
 				}
 				else {
-					for(var j in arr[i]['allow']) {
+					for(let j = 0; j < arr[i]['allow'].length; j++) {
 						var ret = yield user.isAllowed(arr[i]['allow'][j]);
 						if(ret) {
 							add = true;

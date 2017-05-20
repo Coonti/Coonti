@@ -48,7 +48,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 	/**
 	 * Serves a Koa request. If the request is denied due to user missing login, the function return HTTP error code 401; rights related reasons, error code 403; and if the request type is not supported, error code 405.
 	 */
-	this.serve = function*() {
+	this.serve = function*(...args) {
 		var method = this.request.method;
 		var handler = self.handlers[method];
 		if(!handler || !handler['handler']) {
@@ -105,7 +105,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 			}
 		}
 
-		yield handler.handler.apply(this, arguments);
+		yield handler.handler.apply(this, args);
 	};
 }
 

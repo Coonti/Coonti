@@ -121,12 +121,12 @@ SortedArray.prototype.size = function() {
  * @return {Generator} A generator that iterates one or several SortedArrays.
  * @throw {StopIteration} When there is nothing left to iterate.
  */
-SortedArray.prototype.iterator = function*() {
+SortedArray.prototype.iterator = function*(...args) {
 	var arrays = [this];
 	var positions = [0];
 
 	for(var i = 0; i < arguments.length; i++) {
-		arrays.push(arguments[i]);
+		arrays.push(args[i]);
 		positions.push(0);
 	}
 
