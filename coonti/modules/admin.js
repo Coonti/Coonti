@@ -795,14 +795,15 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['account']) {
-				this.status = (404); // ##TODO## Change error to something better
+				this.status = (400);
 				return;
 			}
 
 			// ##TODO## Handle initial password somehow
+			// ##TODO## Check existence of the user and complain to the admin UI
 			var ret = yield userManager.addUser(fields['account'], false, fields['userData'], fields['allowed'], fields['denied'], fields['roles'], fields['groups']);
 			if(!ret) {
-				this.status = (404); // ##TODO## Change error to something better
+				this.status = (500);
 				return;
 			}
 			this.coonti.setItem('response', {});
@@ -935,13 +936,14 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status = (404); // ##TODO## Change error to something better
+				this.status = (400);
 				return;
 			}
 
+			// ##TODO## Check existence of the group first
 			var ret = yield userManager.addGroup(fields['name'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status = (404); // ##TODO## Change error to something better
+				this.status = (500);
 				return;
 			}
 			this.coonti.setItem('response', {});
@@ -1022,13 +1024,14 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status = (404); // ##TODO## Change error to something better
+				this.status = (400);
 				return;
 			}
 
+			// ##TODO## Check existence of the role first
 			var ret = yield userManager.addRole(fields['name'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status = (404); // ##TODO## Change error to something better
+				this.status = (500);
 				return;
 			}
 			this.coonti.setItem('response', {});
@@ -1767,8 +1770,18 @@ function CoontiAdmin(cnti) {
 				controller: 'ModulesCtrl'
 			},
 			{
+				route: '/error/400',
+				template: '/angular/stem/error-400.html',
+				controller: 'ErrorCtrl'
+			},
+			{
 				route: '/error/404',
 				template: '/angular/stem/error-404.html',
+				controller: 'ErrorCtrl'
+			},
+			{
+				route: '/error/500',
+				template: '/angular/stem/error-500.html',
 				controller: 'ErrorCtrl'
 			},
 			{

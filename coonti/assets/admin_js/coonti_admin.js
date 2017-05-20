@@ -105,11 +105,17 @@ if(coonti && coonti['user']) {
 			},
 			responseError: function error(response) {
 				switch (response.status) {
+				case 400:
+					$location.path('/error/400');
+					break;
 				case 401:
 					$window.location.href = coonti.routing.coontiPath + '/admin/login';
 					break;
 				case 404:
 					$location.path('/error/404');
+					break;
+				case 500:
+					$location.path('/error/500');
 					break;
 				default:
 					$location.path('/error');
