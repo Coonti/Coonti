@@ -793,7 +793,7 @@ function CoontiTemplateManager(cnti) {
 									break;
 						}
 					};
-					for(var i in tokens) {
+					for(let i = 0; i < tokens.length; i++) {
 						yield parseToken(tokens[i]);
 					}
 					return Twig.output.apply(this, [output]);
@@ -853,8 +853,8 @@ function CoontiTemplateManager(cnti) {
 					if(token_template.parseGenerator) {
 						yield token_template.parseGenerator.apply(that, [token, stack, context]);
 					}
-					else {
-						token_template.parse && token_template.parse.apply(that, [token, stack, context]);
+					else if(token_template.parse) {
+						token_template.parse.apply(that, [token, stack, context]);
 					}
 				};
 
@@ -880,8 +880,8 @@ function CoontiTemplateManager(cnti) {
 				if(token.withStack !== undefined) {
 					withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-					for(i in withContext) {
-						if(withContext.hasOwnProperty(i)) {
+					for(i in withContext) { // eslint-disable-line no-restricted-syntax
+						if(withContext.hasOwnProperty(i)) { // eslint-disable-line no-prototype-builtins
 							innerContext[i] = withContext[i];
 						}
 					}
@@ -1191,7 +1191,7 @@ function CoontiTemplateManager(cnti) {
 							if(!context.theme._jsPrinted) {
 								output += '<script type="' + ct + "\"><!--\nvar coonti={routing:{prefix:'" + context.routing.prefix + "',route:'" + context.routing.route + "',coontiPath:'" + context.routing.coontiPath + "'},theme:{theme:'" + context.theme.theme + "',template:'" + context.theme.template + "',themeSettings:{";
 								if(context.theme.themeSettings && context.theme.themeSettings.js) {
-									for(var i in context.theme.themeSettings.js) {
+									for(var i in context.theme.themeSettings.js) { // eslint-disable-line no-restricted-syntax, guard-for-in
 										output += i + ":'" + context.theme.themeSettings.js[i] + "',";
 									}
 								}
@@ -1417,8 +1417,8 @@ function CoontiTemplateManager(cnti) {
 						if(token.withStack !== undefined) {
 							withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-							for(i in withContext) {
-								if(withContext.hasOwnProperty(i)) {
+							for(i in withContext) { // eslint-disable-line no-restricted-syntax
+								if(withContext.hasOwnProperty(i)) { // eslint-disable-line no-prototype-builtins
 									innerContext[i] = withContext[i];
 								}
 							}
@@ -1483,8 +1483,8 @@ function CoontiTemplateManager(cnti) {
 						if(token.withStack !== undefined) {
 							withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-							for(i in withContext) {
-								if(withContext.hasOwnProperty(i)) {
+							for(i in withContext) { // eslint-disable-line no-restricted-syntax
+								if(withContext.hasOwnProperty(i)) { // eslint-disable-line no-prototype-builtins
 									innerContext[i] = withContext[i];
 								}
 							}
@@ -1609,8 +1609,8 @@ function CoontiTemplateManager(cnti) {
 							if(token.withStack !== undefined) {
 								var withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-								for(var i in withContext) {
-									if(withContext.hasOwnProperty(i)) {
+								for(var i in withContext) { // eslint-disable-line no-restricted-syntax
+									if(withContext.hasOwnProperty(i)) { // eslint-disable-line no-prototype-builtins
 										innerContext[i] = withContext[i];
 									}
 								}
@@ -1712,8 +1712,8 @@ function CoontiTemplateManager(cnti) {
 							if(token.withStack !== undefined) {
 								var withContext = Twig.expression.parse.apply(this, [token.withStack, context]);
 
-								for(var i in withContext) {
-									if(withContext.hasOwnProperty(i)) {
+								for(var i in withContext) { // eslint-disable-line no-restricted-syntax
+									if(withContext.hasOwnProperty(i)) { // eslint-disable-line no-prototype-builtins
 										innerContext[i] = withContext[i];
 									}
 								}
@@ -1947,7 +1947,7 @@ function CoontiTemplateManager(cnti) {
 
 		var files = yield readDirsThunk(themeLoc);
 
-		for(var k in files) {
+		for(let k = 0; k < files.length; k++) {
 			var f = files[k];
 
 			var file = f.replace(/^[^\/]*\/(.*)$/, '$1');
