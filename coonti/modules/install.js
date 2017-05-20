@@ -49,12 +49,12 @@ function CoontiInstall(cnti) {
 
 	var formManager = false;
 
-	var language = 'en'; // ##TODO## Remove when MongoDB testing is done
+	var language = 'en'; // eslint-disable-line no-unused-vars
 	var mongoConnected = false;
 	var userCreated = false;
 	var allDone = false;
 
-	var originalDatabaseConfig = false;
+//	var originalDatabaseConfig = false;
 	var newDatabaseConfig = false;
 
 	var logger;
@@ -191,8 +191,8 @@ function CoontiInstall(cnti) {
 			value: 'Next'
 		});
 
-		var config = coonti.getConfig();
-		originalDatabaseConfig = config.getConfigParam('databases');
+//		var config = coonti.getConfig();
+//		originalDatabaseConfig = config.getConfigParam('databases');
 
 		initialised = true;
 		logger.info('CoontiInstall - Initialised.');
@@ -412,7 +412,7 @@ function CoontiInstall(cnti) {
 						if(defUsers) {
 							var userData = yield fch.getDirectContent('defaultUsers.json');
 							if(userData['roles'] && _.size(userData.roles) > 0) {
-								for(var i in userData.roles) {
+								for(let i = 0; i < userData.roles.length; i++) {
 									var role = userData.roles[i];
 									if(!!role['name']) {
 										var name = role['name'];
@@ -434,7 +434,7 @@ function CoontiInstall(cnti) {
 							}
 
 							if(userData['groups'] && _.size(userData.groups) > 0) {
-								for(var i in userData.groups) {
+								for(let i = 0; i < userData.groups.length; i++) {
 									var grp = userData.groups[i];
 									if(!!grp['name']) {
 										var name = grp['name'];
@@ -456,7 +456,7 @@ function CoontiInstall(cnti) {
 							}
 
 							if(userData['users'] && _.size(userData.users) > 0) {
-								for(var i in userData.users) {
+								for(let i = 0; i < userData.users.length; i++) {
 									var user = userData.users[i];
 									if(!!user['account']) {
 										var account = user['account'];
@@ -477,8 +477,8 @@ function CoontiInstall(cnti) {
 										}
 										if(user['roles']) {
 											roles = [];
-											for(var i in user['roles']) {
-												var r = user['roles'][i];
+											for(let j = 0; j < user['roles'].length; j++) {
+												var r = user['roles'][j];
 												var rl = yield userManager.getRole(r);
 												if(rl) {
 													roles.push(rl.getId());
@@ -487,8 +487,8 @@ function CoontiInstall(cnti) {
 										}
 										if(user['groups']) {
 											groups = [];
-											for(var i in user['groups']) {
-												var g = user['groups'][i];
+											for(let j = 0; j < user['groups'].length; j++) {
+												var g = user['groups'][j];
 												var gr = yield userManager.getGroup(g);
 												if(gr) {
 													groups.push(gr.getId());
@@ -509,7 +509,7 @@ function CoontiInstall(cnti) {
 							var content = yield fch.getDirectContent('defaultContent.json');
 							var mch = cm.getContentHandler('mongo');
 							if(content['contentTypes']) {
-								for(var i in content.contentTypes) {
+								for(let i = 0; i < content.contentTypes.length; i++) {
 									var ct = content.contentTypes[i];
 									if(!ct['name']) {
 										continue;
@@ -521,7 +521,7 @@ function CoontiInstall(cnti) {
 								}
 							}
 							if(content['content']) {
-								for(var i in content.content) {
+								for(let i = 0; i < content.content.length; i++) {
 									var ct = content.content[i];
 									if(!ct['contentType']) {
 										continue;
@@ -536,7 +536,7 @@ function CoontiInstall(cnti) {
 								var sm = coonti.getManager('storage');
 								var mongodb = sm.getStorageHandler('mongo');
 
-								for(var i in content.menus) {
+								for(let i = 0; i < content.menus.length; i++) {
 									var mn = content.menus[i];
 									if(!mn['name']) {
 										continue;

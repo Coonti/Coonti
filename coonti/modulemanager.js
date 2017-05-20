@@ -141,9 +141,10 @@ function CoontiModuleManager(cnti) {
 
 		var moduleConfigConfig = moduleConfig['moduleConfig'];
 		if(moduleConfigConfig) {
-			for(i in moduleConfigConfig) {
-				if(moduleConfigConfig[i]['config']) {
-					yield _setModuleConfig(i, moduleConfigConfig[i]['config']);
+			const keys = Object.keys(moduleConfigConfig);
+			for(i = 0; i < keys.length; i++) {
+				if(moduleConfigConfig[keys[i]]['config']) {
+					yield _setModuleConfig(keys[i], moduleConfigConfig[keys[i]]['config']);
 				}
 			}
 		}

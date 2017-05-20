@@ -190,10 +190,10 @@ function FileHandler(fileCnnct, dr, enc) {
 
 		var ret = [];
 		try {
-			var files = yield fs.readdir(dir + collection);
-			for(var f in files) {
+			const files = yield fs.readdir(dir + collection);
+			for(let f = 0; f < files.length; f++) {
 				try {
-					var fc = yield fs.readFile(dir + collection + '/' + files[f], enc);
+					const fc = yield fs.readFile(dir + collection + '/' + files[f], enc);
 					ret.push(JSON.parse(fc));
 				}
 				catch(e) {

@@ -405,15 +405,17 @@ function CoontiAdmin(cnti) {
 	 * Provides Coonti administration assets for Angular.
 	 */
 	this.getCoontiAssets = function*() { // eslint-disable-line require-yield
-		var ret = [];
+		const ret = [];
 
-		var modulePath = moduleManager.getModuleAssetPath();
+		const modulePath = moduleManager.getModuleAssetPath();
 		if(!!modulePath) {
-			var assets = moduleManager.getAllModuleAssets();
-			for(var i in assets) {
-				var path = '/' + i + '/';
-				for(var j in assets[i]) {
-					ret.push(modulePath + path + j);
+			const assets = moduleManager.getAllModuleAssets();
+			const assetsKeys = Object.keys(assets);
+			for(let i = 0; i < assetsKeys.length; i++) {
+				const path = '/' + assetsKeys[i] + '/';
+				const innerKeys = Object.keys(assets[assetsKeys[i]]);
+				for(let j = 0; j < innerKeys.length; j++) {
+					ret.push(modulePath + path + innerKeys[j]);
 				}
 			}
 		}
