@@ -598,7 +598,7 @@ function CoontiTemplateManager(cnti) {
 		}
 		else {
 			var html = yield storedTemplate.renderGenerator(templateVars);
-			ctx.body = (html);
+			ctx.body=(html); // eslint-disable-line space-infix-ops
 		}
 	};
 
@@ -2052,13 +2052,13 @@ function CoontiStaticCollection(tm, nm, cf) {
 		router.addRoute(1000, 'template_' + name, path + ':file(.*)', false, function*(next) { // eslint-disable-line require-yield
 			var file = this.params.file;
 			if(files[file]) {
-				this.type = (config.contentType);
-				this.body = fs.createReadStream(files[file].path);
+				this.type=(config.contentType); // eslint-disable-line space-infix-ops
+				this.body=(fs.createReadStream(files[file].path)); // eslint-disable-line space-infix-ops
 			}
 			else {
 				// ##TODO## get 404 from template/config/etc.
-				this.status = (404);
-				this.body = ('Not found');
+				this.status=(404); // eslint-disable-line space-infix-ops
+				this.body=('Not found'); // eslint-disable-line space-infix-ops
 			}
 		});
 	};

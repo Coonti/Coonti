@@ -53,7 +53,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 		var handler = self.handlers[method];
 		if(!handler || !handler['handler']) {
 			// ##TODO## Add Allow header
-			this.status = (405);
+			this.status=(405); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -62,7 +62,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 
 			// If not logged in
 			if(!user) {
-				this.status = (401);
+				this.status=(401); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -82,7 +82,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 			}
 
 			if(!pass) {
-				this.status = (403);
+				this.status=(403); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -100,7 +100,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 			}
 
 			if(!pass) {
-				this.status = (403);
+				this.status=(403); // eslint-disable-line space-infix-ops
 				return;
 			}
 		}

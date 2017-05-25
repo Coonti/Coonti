@@ -377,7 +377,7 @@ function ExampleModule(cnti) {
 					return;
 				}
 			}
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			this.coonti.setItem('response', false);
 		},
 
@@ -393,7 +393,7 @@ function ExampleModule(cnti) {
 				this.coonti.setItem('response', true);
 				return;
 			}
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			this.coonti.setItem('response', false);
 		}
 	};
