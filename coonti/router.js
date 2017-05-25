@@ -524,7 +524,7 @@ function CoontiRouter(cnti) {
 		if(config['requireLogin']) {
 			var user = yield users.getCurrentUser(this);
 			if(!user) {
-				this.status = (401);
+				this.status=(401); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -533,7 +533,7 @@ function CoontiRouter(cnti) {
 				if(user) {
 					var allowed = yield user.isAllowed(access);
 					if(!allowed) {
-						this.status = (401);
+						this.status=(401); // eslint-disable-line space-infix-ops
 						return;
 					}
 				}
@@ -647,7 +647,7 @@ function CoontiRouter(cnti) {
 			}
 		});
 
-		this.body = (JSON.stringify(content));
+		this.body=(JSON.stringify(content)); // eslint-disable-line space-infix-ops
 		yield next;
 	};
 

@@ -379,7 +379,7 @@ function CoontiAdmin(cnti) {
 	this.getCoontiMenu = function*() {
 		var user = yield userManager.getCurrentUser(this);
 		if(!user) {
-			this.status = (401);
+			this.status=(401); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -393,7 +393,7 @@ function CoontiAdmin(cnti) {
 	this.getCoontiRoutes = function*() {
 		var user = yield userManager.getCurrentUser(this);
 		if(!user) {
-			this.status = (401);
+			this.status=(401); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -555,11 +555,11 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield contentManager.removeContent(id);
 			if(!res) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -624,11 +624,11 @@ function CoontiAdmin(cnti) {
 		if(!!name) {
 			var res = yield contentManager.removeContentType(name);
 			if(!res) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -678,7 +678,7 @@ function CoontiAdmin(cnti) {
 				}
 			}
 		}
-		this.status = (400);
+		this.status=(400); // eslint-disable-line space-infix-ops
 		this.coonti.setItem('response', {});
 	};
 
@@ -700,7 +700,7 @@ function CoontiAdmin(cnti) {
 				return;
 			}
 		}
-		this.status = (400);
+		this.status=(400); // eslint-disable-line space-infix-ops
 		this.coonti.setItem('response', {});
 	};
 
@@ -715,11 +715,11 @@ function CoontiAdmin(cnti) {
 		if(!!dir && !!name) {
 			var res = yield mediaManager.removeFile(dir, name);
 			if(!res) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -738,7 +738,7 @@ function CoontiAdmin(cnti) {
 			}
 
 			if(!currentUser.isAllowed('admin.manageUsers')) {
-				this.status = (403);
+				this.status=(403); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -749,13 +749,13 @@ function CoontiAdmin(cnti) {
 				this.coonti.setItem('response', userJson);
 			}
 			else {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
 
 		if(!currentUser.isAllowed('admin.manageUsers')) {
-			this.status = (403);
+			this.status=(403); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -773,19 +773,19 @@ function CoontiAdmin(cnti) {
 		if(this.request.fields['_id']) {
 			var fields = this.request.fields;
 			if(!fields['_id']) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			var ret = yield userManager.updateUser(fields['_id'], fields['userData'], fields['allowed'], fields['denied'], fields['roles'], fields['groups']);
 			if(!ret) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -795,7 +795,7 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['account']) {
-				this.status = (400);
+				this.status=(400); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -803,13 +803,13 @@ function CoontiAdmin(cnti) {
 			// ##TODO## Check existence of the user and complain to the admin UI
 			var ret = yield userManager.addUser(fields['account'], false, fields['userData'], fields['allowed'], fields['denied'], fields['roles'], fields['groups']);
 			if(!ret) {
-				this.status = (500);
+				this.status=(500); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -822,11 +822,11 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield userManager.removeUserById(id);
 			if(!res) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -836,7 +836,7 @@ function CoontiAdmin(cnti) {
 	 */
 	this.changePassword = function*(id) {
 		if(!this.request['fields']) {
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			return;
 		}
 		var password = this.request.fields['password'];
@@ -850,14 +850,14 @@ function CoontiAdmin(cnti) {
 		if(!!id || id != user.getId()) {
 			// Let's change someone else's password
 			if(!user.isAllowed('admin.manageUsers')) {
-				this.status = (403);
+				this.status=(403); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			var targetUser = yield userManager.getUserById(id);
 
 			if(!targetUser) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -869,7 +869,7 @@ function CoontiAdmin(cnti) {
 
 		var currentPassword = this.request.fields['currentPassword'];
 		if(!currentPassword) {
-			this.status = (401);
+			this.status=(401); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -879,7 +879,7 @@ function CoontiAdmin(cnti) {
 			this.coonti.setItem('response', { success: 1 });
 		}
 		else {
-			this.status = (401);
+			this.status=(401); // eslint-disable-line space-infix-ops
 		}
 	};
 
@@ -895,7 +895,7 @@ function CoontiAdmin(cnti) {
 				this.coonti.setItem('response', group.exportData());
 			}
 			else {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
@@ -914,19 +914,19 @@ function CoontiAdmin(cnti) {
 		if(this.request.fields['_id']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			var ret = yield userManager.updateGroup(fields['_id'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -936,20 +936,20 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status = (400);
+				this.status=(400); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			// ##TODO## Check existence of the group first
 			var ret = yield userManager.addGroup(fields['name'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status = (500);
+				this.status=(500); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -962,11 +962,11 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield userManager.removeGroupById(id);
 			if(!res) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -981,7 +981,7 @@ function CoontiAdmin(cnti) {
 				this.coonti.setItem('response', role.exportData());
 			}
 			else {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
@@ -1002,19 +1002,19 @@ function CoontiAdmin(cnti) {
 		if(this.request.fields['_id']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			var ret = yield userManager.updateRole(fields['_id'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -1024,20 +1024,20 @@ function CoontiAdmin(cnti) {
 		if(this.request['fields']) {
 			var fields = this.request.fields;
 			if(!fields['name']) {
-				this.status = (400);
+				this.status=(400); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			// ##TODO## Check existence of the role first
 			var ret = yield userManager.addRole(fields['name'], fields['description'], fields['allowed'], fields['denied']);
 			if(!ret) {
-				this.status = (500);
+				this.status=(500); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', {});
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -1050,11 +1050,11 @@ function CoontiAdmin(cnti) {
 		if(!!id) {
 			var res = yield userManager.removeRoleById(id);
 			if(!res) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
-		this.status = (404);
+		this.status=(404); // eslint-disable-line space-infix-ops
 	};
 
 	/**
@@ -1080,13 +1080,13 @@ function CoontiAdmin(cnti) {
 	this.manageModule = function*(name) {
 		this.coonti.setItem('response', {});
 		if(!name || !this.request['query']) {
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			return;
 		}
 
 		var md = moduleManager.getModule(name);
 		if(!md) {
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -1103,7 +1103,7 @@ function CoontiAdmin(cnti) {
 		}
 
 		if(!res) {
-			this.status = (500);
+			this.status=(500); // eslint-disable-line space-infix-ops
 		}
 	};
 
@@ -1116,7 +1116,7 @@ function CoontiAdmin(cnti) {
 		if(!!name) {
 			var ret = templateManager.getTheme(name);
 			if(!ret) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', ret);
@@ -1135,13 +1135,13 @@ function CoontiAdmin(cnti) {
 	this.manageTheme = function*(name) {
 		this.coonti.setItem('response', {});
 		if(!name || !this.request['query']) {
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			return;
 		}
 
 		var th = templateManager.getTheme(name);
 		if(!th) {
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -1155,7 +1155,7 @@ function CoontiAdmin(cnti) {
 		}
 
 		if(!res) {
-			this.status = (500);
+			this.status=(500); // eslint-disable-line space-infix-ops
 		}
 	};
 
@@ -1244,7 +1244,7 @@ function CoontiAdmin(cnti) {
 			yield func(this);
 		}
 		else {
-			this.status = (404);
+			this.status=(404); // eslint-disable-line space-infix-ops
 			return;
 		}
 

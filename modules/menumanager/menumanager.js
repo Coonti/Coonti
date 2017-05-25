@@ -504,7 +504,7 @@ function MenuManager(cnti) {
 			}
 			var ret = yield self.getMenu(name);
 			if(!ret) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			this.coonti.setItem('response', ret);
@@ -518,12 +518,12 @@ function MenuManager(cnti) {
 		 */
 		updateMenu: function*(name) {
 			if(!name) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			if(!this.request.body.fields ||
 			   !this.request.body.fields['_id']) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 			var id = this.request.body.fields['_id'];
@@ -537,12 +537,12 @@ function MenuManager(cnti) {
 				var ret = yield self.getMenu(name);
 			}
 			if(!ret) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 
 			if(ret._id != id) {
-				this.status = (404);
+				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
 
@@ -560,7 +560,7 @@ function MenuManager(cnti) {
 				this.coonti.setItem('response', {});
 			}
 			else {
-				this.status = (500);
+				this.status=(500); // eslint-disable-line space-infix-ops
 			}
 		},
 
@@ -576,7 +576,7 @@ function MenuManager(cnti) {
 				this.coonti.setItem('response', true);
 			}
 			else {
-				this.status = (406);
+				this.status=(406); // eslint-disable-line space-infix-ops
 				this.coonti.setItem('response', false);
 			}
 		},
@@ -593,7 +593,7 @@ function MenuManager(cnti) {
 				this.coonti.setItem('response', true);
 			}
 			else {
-				this.status = (406);
+				this.status=(406); // eslint-disable-line space-infix-ops
 				this.coonti.setItem('response', false);
 			}
 		}

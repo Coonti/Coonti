@@ -149,8 +149,8 @@ function CoontiMediaManager(cnti) {
 				if(dir.length > 0) {
 					if(dir[0] == '_') {
 						if(dir.length < 4) {
-							this.res.status = (404);
-							this.res.body = ('Not found');
+							this.res.status=(404); // eslint-disable-line space-infix-ops
+							this.res.body=('Not found'); // eslint-disable-line space-infix-ops
 							return;
 						}
 						dir = dir[0] + '/' + dir[1] + '/' + dir[2];
@@ -174,8 +174,8 @@ function CoontiMediaManager(cnti) {
 				}
 			}
 			// ##TODO## get 404 from template/config/etc.
-			this.res.status = (404);
-			this.res.body = ('Not found');
+			this.res.status=(404); // eslint-disable-line space-infix-ops
+			this.res.body=('Not found'); // eslint-disable-line space-infix-ops
 			yield next;
 		});
 
@@ -539,8 +539,8 @@ function CoontiMediaManager(cnti) {
 	this._cacheCreateServe = function*(ctx, dir, file) {
 		if(!gmInstalled) {
 			// ##TODO## get 404 from template/config/etc.
-			ctx.status = (404);
-			ctx.body = ('Not found');
+			ctx.status=(404); // eslint-disable-line space-infix-ops
+			ctx.body=('Not found'); // eslint-disable-line space-infix-ops
 			return;
 		}
 
@@ -658,8 +658,8 @@ function CoontiMediaManager(cnti) {
 		}
 
 		// ##TODO## get 404 from template/config/etc.
-		this.status = (404);
-		this.body = ('Not found');
+		this.status=(404); // eslint-disable-line space-infix-ops
+		this.body=('Not found'); // eslint-disable-line space-infix-ops
 	};
 
 	/**

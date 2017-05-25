@@ -82,12 +82,12 @@ function CoontiFormManager(cnti) {
 
 						// ##TODO## check whether form can be sent over JSON and whether some information should be stripped.
 						this.body = ret;
-						this.type = ('application/json');
+						this.type=('application/json'); // eslint-disable-line space-infix-ops
 						return;
 					}
 				}
-				this.status = (404);
-				this.body = ('Not found');
+				this.status=(404); // eslint-disable-line space-infix-ops
+				this.body=('Not found'); // eslint-disable-line space-infix-ops
 			});
 		}
 
@@ -99,12 +99,12 @@ function CoontiFormManager(cnti) {
 					var ret = self.getTemplate(lang, tmpl);
 					if(ret) {
 						this.body = ret;
-						this.type = ('text/html');
+						this.type=('text/html'); // eslint-disable-line space-infix-ops
 						return;
 					}
 				}
-				this.status = (404);
-				this.body = ('Not found');
+				this.status=(404); // eslint-disable-line space-infix-ops
+				this.body=('Not found'); // eslint-disable-line space-infix-ops
 			});
 		}
 	};

@@ -89,8 +89,8 @@ function CoontiModuleManager(cnti) {
 					logger.warn('Requested module file %s/%s/%s does not exist.', webPath, module, file);
 
 					// ##TODO## get 404 from template/config/etc.
-					this.status = (404);
-					this.body = ('Not found');
+					this.status=(404); // eslint-disable-line space-infix-ops
+					this.body=('Not found'); // eslint-disable-line space-infix-ops
 				}
 			});
 		}
