@@ -369,8 +369,8 @@ function ExampleModule(cnti) {
 		 * Adds a new quote.
 		 */
 		addQuote: function*() {
-			if(this.request.body && this.request.body['fields'] && this.request.body['fields']['quote']) {
-				var quote = this.request.body['fields']['quote'];
+			if(this.request.fields && this.request.fields['quote']) {
+				var quote = this.request.fields['quote'];
 				var ret = yield self.addQuote(quote);
 				if(ret) {
 					this.coonti.setItem('response', true);

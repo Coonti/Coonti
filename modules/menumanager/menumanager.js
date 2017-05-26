@@ -521,17 +521,17 @@ function MenuManager(cnti) {
 				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
-			if(!this.request.body.fields ||
-			   !this.request.body.fields['_id']) {
+			if(!this.request.fields ||
+			   !this.request.fields['_id']) {
 				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
-			var id = this.request.body.fields['_id'];
+			var id = this.request.fields['_id'];
 
 			var ret = false;
-			if(this.request.body.fields &&
-			   this.request.body.fields['originalName']) {
-				var ret = yield self.getMenu(this.request.body.fields['originalName']);
+			if(this.request.fields &&
+			   this.request.fields['originalName']) {
+				var ret = yield self.getMenu(this.request.fields['originalName']);
 			}
 			else {
 				var ret = yield self.getMenu(name);
@@ -547,8 +547,8 @@ function MenuManager(cnti) {
 			}
 
 			var menuItems = [];
-			if(this.request.body.fields['menuItems']) {
-				menuItems = this.request.body.fields['menuItems'];
+			if(this.request.fields['menuItems']) {
+				menuItems = this.request.fields['menuItems'];
 			}
 			var menu = {
 				_id: id,

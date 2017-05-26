@@ -1,20 +1,22 @@
-<h1 class="page-header">Menus</h1>
-<table class="table table-striped table-condensed table-responsive">
-  <thead>
-	<tr>
-	  <th>Name</th>
-	  <th>Actions</th>
-	</tr>
-  </thead>
-  <tbody>
-	<tr ng-repeat="item in menu.items">
-	  <td>{{ item.name }}</td>
-	  <td>
-		<a href="#/module/menu/edit/{{ item.name }}">Edit</a> |
-		<a ng-click="remove(item)" href="">Remove</a>
-	  </td>
-	</tr>
-  </tbody>
-</table>
+<div id="moduleMenuManager">
+  <h1 class="page-header">Menus</h1>
+  <table class="table table-striped table-condensed table-responsive">
+	<thead>
+	  <tr>
+		<th>Name</th>
+		<th>Actions</th>
+	  </tr>
+	  </thead>
+	<tbody>
+	  <tr ng-repeat="item in menu.items|orderBy:'name'">
+		<td>{{ item.name }}</td>
+		<td>
+		  <a href="#/module/menu/edit/{{ item.name }}">Edit</a> |
+		  <a ng-click="remove(item)" href="">Remove</a>
+		</td>
+	  </tr>
+	</tbody>
+  </table>
 
-<p><button goto="/module/menu/add">Add a New Menu</button></p>
+  <p><button goto="/module/menu/add">Add a New Menu</button></p>
+</div>
