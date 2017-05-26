@@ -36,19 +36,16 @@ function WidgetManager(cnti) {
 
 	var started = false;
 
-	var storage = false;
+	let storage = false;
 
-	var widgetAreaCache = cacheManager.caching({ store: 'memory', max: 100 });
-	var _getWidgetAreaFromCache = thunkify(widgetAreaCache.get);
-	var _setWidgetAreaToCache = thunkify(widgetAreaCache.set);
-	var _delWidgetAreaFromCache = thunkify(widgetAreaCache.del);
+	const widgetAreaCache = cacheManager.caching({ store: 'memory', max: 100 });
+	const _getWidgetAreaFromCache = thunkify(widgetAreaCache.get);
+	const _setWidgetAreaToCache = thunkify(widgetAreaCache.set);
+	const _delWidgetAreaFromCache = thunkify(widgetAreaCache.del);
 
-	var widgetCache = cacheManager.caching({ store: 'memory', max: 100 });
-	var _getWidgetFromCache = thunkify(widgetCache.get);
-	var _setWidgetToCache = thunkify(widgetCache.set);
-	var _delWidgetFromCache = thunkify(widgetCache.del);
+	const widgets = {};
 
-	var logger;
+	let logger;
 
 	/**
 	 * Initialises the module.
@@ -60,7 +57,6 @@ function WidgetManager(cnti) {
 		logger = params.logger;
 
 		config.widgetAreaCollection = 'widgetarea';
-		config.widgetCollection = 'widget';
 
 		const templates = coonti.getManager('template');
 		if(templates) {
@@ -147,12 +143,11 @@ function WidgetManager(cnti) {
 				logger.warn('WidgetManager - No module asset path found.');
 				return false;
 			}
-			/*
+
 			modules.addModuleAsset('WidgetManager', 'angular/widget-list.html');
 			modules.addModuleAsset('WidgetManager', 'angular/widget-edit.html');
 			modules.addModuleAsset('WidgetManager', 'js/widgetmanager.js');
 			modules.addModuleAsset('WidgetManager', 'css/widgetmanager.css');
-			*/
 		}
 		else {
 			logger.warn('WidgetManager - Could not add assets.');
@@ -162,16 +157,14 @@ function WidgetManager(cnti) {
 
 		var admin = coonti.getManager('admin');
 		if(admin) {
-			/*
-			admin.addRoute('widget', '', modulePath + '/WidgetManager/angular/widget-list.html', 'WidgetManagerWidgetCtrl', 'admin.manageContent');
-			admin.addRoute('widget', '/add', modulePath + '/WidgetManager/angular/widget-edit.html', 'WidgetManagerWidgetCtrl', 'admin.manageContent');
-			admin.addRoute('widget', '/edit/:name', modulePath + '/WidgetManager/angular/widget-edit.html', 'WidgetManagerWidgetCtrl', 'admin.manageContent');
-			admin.addWidgetItem('content-widget', 'Manage Widgets', '#/module/widget', 'admin.manageContent', 1, 'content-add');
-*/
+			admin.addRoute('widget', '', modulePath + '/WidgetManager/angular/widget-list.html', 'WidgetManagerAreaCtrl', 'admin.manageContent');
+			admin.addRoute('widget', '/add', modulePath + '/WidgetManager/angular/widget-edit.html', 'WidgetManagerAreaCtrl', 'admin.manageContent');
+			admin.addRoute('widget', '/edit/:name', modulePath + '/WidgetManager/angular/widget-edit.html', 'WidgetManagerAreaCtrl', 'admin.manageContent');
+			admin.addMenuItem('content-widget', 'Widgets', '#/module/widget', 'admin.manageContent', 0, 'themes');
 
 			var rah = new RestApiHelper(coonti,
 				{ allow: 'admin.manageContent',
-				  handler: widgetManagerAdmin.getWidgetAreas },
+				  handler: widgetManagerAdmin.getWidgetArea },
 				{ allow: 'admin.manageContent',
 				  handler: widgetManagerAdmin.updateWidgetArea },
 				{ allow: 'admin.manageContent',
@@ -179,6 +172,7 @@ function WidgetManager(cnti) {
 				{ allow: 'admin.manageContent',
 				  handler: widgetManagerAdmin.removeWidgetArea });
 			admin.addAdminRoute('WidgetManager', 'widgetarea', 'widgetarea(?:\/(.+))?', rah.serve);
+			admin.addAdminRoute('WidgetManager', 'widget', 'widget', widgetManagerAdmin.getWidget);
 
 			// ##TODO## Add widget routes
 		}
@@ -190,6 +184,9 @@ function WidgetManager(cnti) {
 		}
 
 		started = true;
+
+		self.addDefaultWidgets();
+
 		logger.debug('WidgetManager - Started.');
 		return true;
 	};
@@ -207,7 +204,8 @@ function WidgetManager(cnti) {
 		var admin = coonti.getManager('admin');
 		if(admin) {
 			admin.removeAdminRoute('WidgetManager', 'widgetarea');
-			admin.removeWidgetItem('content-widget');
+			admin.removeAdminRoute('WidgetManager', 'widget');
+			admin.removeMenuItem('content-widget');
 			admin.removeRoute('/widgetarea');
 			admin.removeRoute('/widgetarea/add');
 			admin.removeRoute('/widgetarea/edit/:name');
@@ -334,7 +332,7 @@ function WidgetManager(cnti) {
 		widgetArea.name = name;
 
 		yield storage.updateData(config.widgetAreaCollection, widgetArea);
-		yield _setWidgetToCache(name, widgetArea);
+		yield _setWidgetAreaToCache(name, widgetArea);
 
 		return true;
 	};
@@ -344,9 +342,8 @@ function WidgetManager(cnti) {
 	 *
 	 * @return {Array} Widget names.
 	 */
-	this.listWidgets = function*() {
-		var res = yield storage.getAllData(config.widgetCollection, {}, { fields: { name: 1, _id: 1 } });
-		return res;
+	this.listWidgets = function() {
+		return widgets;
 	};
 
 	/**
@@ -355,33 +352,16 @@ function WidgetManager(cnti) {
 	 * @param {String} name - The name of the widget.
 	 * @return {Object} The widget or false, if the widget does not exist.
 	 */
-	this.getWidget = function*(name) {
-		logger.debug("WidgetManager - getWidget called with widget '%s'.", name);
+	this.getWidget = function(name) {
 		if(!started || !name) {
 			return false;
 		}
 
-		var res = yield _getWidgetFromCache(name);
-		if(res) {
-			return res;
+		const res = widgets['name'];
+		if(!res) {
+			return false;
 		}
-
-		var query = { name: name };
-		var res = yield storage.getData(config.widgetCollection, query);
-
-		if(res) {
-			if(res.widgetItems && res.widgetItems.length > 0) {
-				for(var i = 0; i < res.widgetItems.length; i++) {
-					if(!res.widgetItems[i].external) {
-						res.widgetItems[i].url = coonti.getWebPath(res.widgetItems[i].url);
-					}
-				}
-			}
-
-			yield _setWidgetToCache(name, res);
-			return res;
-		}
-		return false;
+		return res;
 	};
 
 	/**
@@ -391,23 +371,17 @@ function WidgetManager(cnti) {
 	 * @param {Object} widget - The widget.
 	 * @return {bool} True on success, false on failure.
 	 */
-	this.addWidget = function*(name, widget) {
+	this.addWidget = function(name, widget) {
 		if(!started || !name || !widget) {
 			return false;
 		}
 
-		var res = yield this.getWidget(name);
-		if(res) {
+		if(widgets[name]) {
 			return false;
 		}
 
 		widget.name = name;
-		delete widget._id;
-
-		// ##TODO## Return value
-		yield storage.insertData(config.widgetCollection, widget);
-
-		yield _setWidgetToCache(name, widget);
+		widgets[name] = widget;
 		return true;
 	};
 
@@ -417,18 +391,14 @@ function WidgetManager(cnti) {
 	 * @param {String} name - The name of the widget.
 	 * @return {bool} True on success, false on failure.
 	 */
-	this.removeWidget = function*(name) {
+	this.removeWidget = function(name) {
 		if(!started || !name) {
 			return false;
 		}
 
-		const res = yield this.getWidget(name);
-		if(!res) {
-			return true;
+		if(widgets['name']) {
+			delete widgets['name'];
 		}
-
-		yield storage.removeData(config.widgetCollection, { name: name });
-		yield _delWidgetFromCache(name);
 		return true;
 	};
 
@@ -436,23 +406,46 @@ function WidgetManager(cnti) {
 	 * Updates an existing widget.
 	 *
 	 * @param {String} name - The name of the widget.
-	 * @param {Object} widget - The new content of the widget. Key _id must be defined.
+	 * @param {Object} widget - The new content of the widget.
 	 * @return {bool} True on success, false on failure.
 	 */
-	this.updateWidget = function*(name, widget) {
+	this.updateWidget = function(name, widget) {
 		if(!started || !name || !widget) {
 			return false;
 		}
 
-		if(!widget._id) {
-			return false;
-		}
 		widget.name = name;
-
-		yield storage.updateData(config.widgetCollection, widget);
-		yield _setWidgetToCache(name, widget);
+		widgets[name] = widget;
 
 		return true;
+	};
+
+	/**
+	 * Adds the default widgets. Called when the module is started.
+	 */
+	this.addDefaultWidgets = function() {
+		this.addWidget('text',
+					   {
+						   title: 'Simple Text',
+						   description: 'Shows a snippet of text',
+						   renderWidget: function(config) {
+							   return '##TODO## Text here';
+						   },
+						   getConfigForm: function() {
+							   // ##TODO##
+						   }
+					   });
+		this.addWidget('image',
+					   {
+						   title: 'Image',
+						   description: 'Shows an image',
+						   renderWidget: function(config) {
+							   return '##TODO## Text here';
+						   },
+						   getConfigForm: function() {
+							   // ##TODO##
+						   }
+					   });
 	};
 
 	/**
@@ -526,8 +519,8 @@ function WidgetManager(cnti) {
 		 * @return {Array} Widget names.
 		 * @ignore
 		 */
-		listWidgets: function*() {
-			return yield self.listWidgets();
+		listWidgets: function() {
+			return self.listWidgets();
 		},
 
 		/**
@@ -537,8 +530,8 @@ function WidgetManager(cnti) {
 		 * @return {Object} The widget or false, if the widget does not exist.
 		 * @ignore
 		 */
-		getWidget: function*(name) {
-			return yield self.getWidget(name);
+		getWidget: function(name) {
+			return self.getWidget(name);
 		},
 
 		/**
@@ -549,8 +542,8 @@ function WidgetManager(cnti) {
 		 * @return {bool} True on success, false on failure.
 		 * @ignore
 		 */
-		addWidget: function*(name, widget) {
-			return yield self.addWidget(name, widget);
+		addWidget: function(name, widget) {
+			return self.addWidget(name, widget);
 		},
 
 		/**
@@ -560,8 +553,8 @@ function WidgetManager(cnti) {
 		 * @return {bool} True on success, false on failure.
 		 * @ignore
 		 */
-		removeWidget: function*(name) {
-			return yield self.removeWidget(name);
+		removeWidget: function(name) {
+			return self.removeWidget(name);
 		},
 
 		/**
@@ -572,8 +565,8 @@ function WidgetManager(cnti) {
 		 * @return {bool} True on success, false on failure.
 		 * @ignore
 		 */
-		updateWidget: function*(name, widget) {
-			return yield self.updateWidget(name, widget);
+		updateWidget: function(name, widget) {
+			return self.updateWidget(name, widget);
 		}
 	};
 
@@ -615,17 +608,17 @@ function WidgetManager(cnti) {
 				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
-			if(!this.request.body.fields ||
-			   !this.request.body.fields['_id']) {
+			if(!this.request.fields ||
+			   !this.request.fields['_id']) {
 				this.status=(404); // eslint-disable-line space-infix-ops
 				return;
 			}
-			var id = this.request.body.fields['_id'];
+			var id = this.request.fields['_id'];
 
 			var ret = false;
-			if(this.request.body.fields &&
-			   this.request.body.fields['originalName']) {
-				var ret = yield self.getWidgetArea(this.request.body.fields['originalName']);
+			if(this.request.fields &&
+			   this.request.fields['originalName']) {
+				var ret = yield self.getWidgetArea(this.request.fields['originalName']);
 			}
 			else {
 				var ret = yield self.getWidgetArea(name);
@@ -641,8 +634,8 @@ function WidgetManager(cnti) {
 			}
 
 			var widgets = [];
-			if(this.request.body.fields['widgets']) {
-				widgets = this.request.body.fields['widgets'];
+			if(this.request.fields['widgets']) {
+				widgets = this.request.fields['widgets'];
 			}
 			var widgetArea = {
 				_id: id,
@@ -698,13 +691,13 @@ function WidgetManager(cnti) {
 		 * @param {String=} name - The name of the widget. Optional.
 		 * @ignore
 		 */
-		getWidget: function*(name) {
+		getWidget: function*(name) { // eslint-disable-line require-yield
 			if(!name) {
-				var ret = yield self.listWidgets();
+				var ret = self.listWidgets();
 				this.coonti.setItem('response', { items: ret });
 				return;
 			}
-			var ret = yield self.getWidget(name);
+			var ret = self.getWidget(name);
 			if(!ret) {
 				this.status=(404); // eslint-disable-line space-infix-ops
 				return;

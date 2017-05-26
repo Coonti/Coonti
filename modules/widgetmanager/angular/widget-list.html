@@ -1,0 +1,22 @@
+<div id="moduleWidgetManager">
+  <h1 class="page-header">Widget Areas</h1>
+  <table class="table table-striped table-condensed table-responsive">
+	<thead>
+	  <tr>
+		<th>Name</th>
+		<th>Actions</th>
+	  </tr>
+	  </thead>
+	<tbody>
+	  <tr ng-repeat="item in widgetarea.items|orderBy:'name'">
+		<td>{{ item.name }}</td>
+		<td>
+		  <a href="#/module/widget/edit/{{ item.name }}">Edit</a> |
+		  <a ng-click="remove(item)" href="">Remove</a>
+		</td>
+	  </tr>
+	</tbody>
+  </table>
+
+  <p><button goto="/module/widget/add">Add a New Widget Area</button></p>
+</div>

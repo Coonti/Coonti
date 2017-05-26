@@ -1,0 +1,23 @@
+#moduleWidgetManager .availableWidgets {
+    border: 1px solid #999;
+    padding: 5px;
+    margin-bottom: 1em;
+}
+
+#moduleWidgetManager .availableWidgets .widgetName {
+    font-weight: bold;
+}
+
+#moduleWidgetManager .availableWidgets .widgetAdd {
+    float: right;
+}
+
+#moduleWidgetManager .editable-click, a.editable-click {
+    color: #6fa717;
+    border-bottom: 1px dashed #6fa717;
+}
+
+#moduleWidgetManager a:hover.editable-click {
+    color: #44660e;
+    border-bottom: 1px dashed #44660e;
+}

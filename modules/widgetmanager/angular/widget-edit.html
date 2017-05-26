@@ -1,0 +1,61 @@
+<div id="moduleWidgetManager">
+  <h1 class="page-header" ng-if="!add">Edit Widget Area '{{ widgetarea.name }}'</h1>
+  <h1 class="page-header" ng-if="add">Add a New Widget Area</h1>
+
+  <div class="form-group row">
+    <div class="col-md-3">
+	  <label for="widgetAreaName" class="formElementRequired">Widget Area Name</label>
+	</div>
+	<div class="col-md-9">
+	  <input class="col-sm-12" type="text" id="widgetAreaName" name="widgetAreaName" ng-model="widgetarea.name" ng-model-options="{updateOn: 'blur'}" required/>
+	</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+	  <h2>Available Widgets</h2>
+	  <div class="availableWidgets" ng-repeat="item in widgets.items">
+		<div class="widgetAdd"><a class="ng-binding" ng-click="onContentAction(item)">Add</a></div>
+	    <div class="widgetName">{{ item.title }}</div>
+		<div class="widgetDescr">{{ item.description }}</div>
+	  </div>
+    </div>
+
+    <div class="col-md-6">
+	  <h2>Widgets in the Area</h2>
+	  <ul dnd-list="widgetarea.widgets">
+		<li ng-repeat="item in widgetarea.widgets" dnd-draggable="item" dnd-moved="widgetarea.widgets.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="selected = item" ng-class="{selected: selected===item, error: item.error==true }">
+		  <dnd-nodrag>
+		    <div class="row">
+			  <div class="col-sm-1" dnd-handle class="handle">
+				<i class="fa fa-bars" aria-hidden="true"></i>
+			  </div>
+			  <div class="col-sm-1">
+				<a ng-click="toggle(this)" data-nodrag="">
+				  <span class="glyphicon glyphicon-chevron-down" ng-class="{ 'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }"> </span>
+				</a>
+			  </div>
+			  <div class="col-sm-9">
+			    <div>
+				  <span ng-if="item.name">{{ item.name }}</span>
+				  <span ng-if="item.name">{{ item.description }}</span>
+				  
+				</div>
+			  </div>
+			  <div class="col-sm-1">
+				<a class="pull-right btn btn-danger btn-xs" ng-click="removeItem(this)" data-nodrag="">
+				  <i class="fa fa-times" aria-hidden="true"></i>
+				</a>
+			  </div>
+			</div>
+		  </dnd-nodrag>
+		</li>
+	  </ul>
+    </div>
+  </div>
+
+  <form ng-submit="save(widgetarea)" role="form" class="form-horizontal" validate-on-form-submit="true" novalidate="novalidate">
+
+    <p><button ng-if="add" type="submit">Add</button><button ng-if="!add" type="submit">Save</button> <button back>Cancel</button></p>
+  </form>
+</div>
