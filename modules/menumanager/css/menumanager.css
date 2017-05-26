@@ -1,16 +1,16 @@
-.angular-ui-tree ol.angular-ui-tree-nodes {
+#moduleMenuManager .angular-ui-tree ol.angular-ui-tree-nodes {
     border: none;
 }
 
-.angular-ui-tree > ol.angular-ui-tree-nodes {
+#moduleMenuManager .angular-ui-tree > ol.angular-ui-tree-nodes {
     border-bottom: 1px solid #ddd;
 }
 
-.angular-ui-menu-node {
+#moduleMenuManager .angular-ui-menu-node {
     background-color: #fff;
 }
 
-.angular-ui-tree-handle {
+#moduleMenuManager .angular-ui-tree-handle {
     background-color: #fff;
     border: none;
     border-top: 1px solid #ddd;
@@ -18,27 +18,28 @@
     font-weight: normal;
 }
 
-.angular-ui-tree-handle:hover {
+#moduleMenuManager .angular-ui-tree-handle:hover {
     background-color: #f9f9f9;
 }
 
-.angular-ui-tree-placeholder {
+#moduleMenuManager .angular-ui-tree-placeholder {
     border: 1px dashed #ddd;
     background-color: #f9f9f9;
 }
 
-.angular-ui-tree-drag {
+#moduleMenuManager .angular-ui-tree-drag {
     font-size: 14px;
     color: #333;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
     
-.editable-click, a.editable-click {
+#moduleMenuManager .editable-click,
+#moduleMenuManager a.editable-click {
     color: #6fa717;
     border-bottom: 1px dashed #6fa717;
 }
 
-a:hover.editable-click {
+#moduleMenuManager a:hover.editable-click {
     color: #44660e;
     border-bottom: 1px dashed #44660e;
 }

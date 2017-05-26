@@ -1,90 +1,93 @@
-<h1 class="page-header" ng-if="!add">Edit Menu '{{ menu.name }}'</h1>
-<h1 class="page-header" ng-if="add">Add a New Menu</h1>
-
-<script type="text/ng-template" id="menu_edit_tree_renderer.html">
-  <div ui-tree-handle>
-    <div class="row">
-	  <div class="col-sm-1">
-		<i class="fa fa-bars" aria-hidden="true"></i>
+<div id="moduleMenuManager">
+  <h1 class="page-header" ng-if="!add">Edit Menu '{{ menu.name }}'</h1>
+  <h1 class="page-header" ng-if="add">Add a New Menu</h1>
+  
+  <script type="text/ng-template" id="menu_edit_tree_renderer.html">
+    <div ui-tree-handle>
+	  <div class="row">
+	    <div class="col-sm-1">
+		  <i class="fa fa-bars" aria-hidden="true"></i>
+		</div>
+		<div class="col-sm-1">
+		  <a ng-click="toggle(this)" data-nodrag="">
+		    <span class="glyphicon glyphicon-chevron-down" ng-class="{ 'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }"> </span>
+		  </a>
+		</div>
+		<div class="col-sm-9">
+		  <a href="#" editable-text="item.title" buttons="no" data-nodrag="">{{item.title}}</a>
+		</div>
+		<div class="col-sm-1">
+		  <a class="pull-right btn btn-danger btn-xs" ng-click="remove(this)" data-nodrag="">
+		    <i class="fa fa-times" aria-hidden="true"></i>
+		  </a>
+		</div>
 	  </div>
-	  <div class="col-sm-1">
-		<a ng-click="toggle(this)" data-nodrag="">
-		  <span class="glyphicon glyphicon-chevron-down" ng-class="{ 'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }"> </span>
-		</a>
-	  </div>
-	  <div class="col-sm-9">
-		<a href="#" editable-text="item.title" buttons="no" data-nodrag="">{{item.title}}</a>
-	  </div>
-	  <div class="col-sm-1">
-		<a class="pull-right btn btn-danger btn-xs" ng-click="remove(this)" data-nodrag="">
-		  <i class="fa fa-times" aria-hidden="true"></i>
-		</a>
+	  <div class="row">
+	    <div class="col-sm-2"></div>
+	    <div class="col-sm-9">
+		  <span ng-if="item.external">
+		    <a href="#" editable-text="item.url" buttons="no" data-nodrag="">{{item.url}}</a>
+		  </span>
+		  <span ng-if="!item.external">/{{coonti.coontiPath}}{{item.url}}</span>
+		</div>
 	  </div>
 	</div>
-    <div class="row">
-	  <div class="col-sm-2"></div>
-	  <div class="col-sm-9">
-		<span ng-if="item.external">
-		  <a href="#" editable-text="item.url" buttons="no" data-nodrag="">{{item.url}}</a>
-		</span>
-		<span ng-if="!item.external">/{{coonti.coontiPath}}{{item.url}}</span>
-	  </div>
+	<ol ui-tree-nodes="" ng-model="item.menuItems" ng-class="{hidden: collapsed}">
+	  <li ng-repeat="item in item.menuItems" ui-tree-node ng-include="'menu_edit_tree_renderer.html'">
+	  </li>
+	</ol>
+  </script>
+
+  <div class="form-group row">
+    <div class="col-md-3">
+	  <label for="menuName" class="formElementRequired">Menu Name</label>
+	</div>
+	<div class="col-md-9">
+	  <input class="col-sm-12" type="text" id="menuName" name="menuName" ng-model="menu.name" ng-model-options="{updateOn: 'blur'}" required/>
 	</div>
   </div>
-  <ol ui-tree-nodes="" ng-model="item.menuItems" ng-class="{hidden: collapsed}">
-    <li ng-repeat="item in item.menuItems" ui-tree-node ng-include="'menu_edit_tree_renderer.html'">
-    </li>
-  </ol>
-</script>
 
-<div class="form-group row">
-  <div class="col-md-3">
-	<label for="menuName" class="formElementRequired">Menu Name</label>
+  <div class="row">
+    <div class="col-md-6">
+	  <h2>Available Content</h2>
+	  <coonti-content></coonti-content>
+
+	  <h2>External Links</h2>
+	  <div class="row coontiNgFormElement">
+	    <div class="col-md-3">
+		  <label for="menuNewItemTitle">Title</label>
+		</div>
+		<div class="col-md-7">
+		  <input name="menuNewItemTitle" class="col-sm-12" type="text" value="" ng-model="menuNewItemTitle"/>
+		</div>
+		<div class="col-md-2">
+		  <a class="ng-binding" ng-click="addURL()">Add</a>
+		</div>
+	  </div>
+	  <div class="row coontiNgFormElement">
+	    <div class="col-md-3">
+		  <label for="menuNewItemURL">Address</label>
+		</div>
+		<div class="col-md-7">
+		  <input name="menuNewItemURL" class="col-sm-12" type="text" value="" ng-model="menuNewItemURL"/>
+		</div>
+	  </div>
+	</div>
+
+	<div class="col-md-6">
+	  <h2>Menu</h2>
+	  <div ui-tree>
+		<ol ui-tree-nodes="" ng-model="menuItems" id="tree-root">
+		  <li ng-repeat="item in menuItems" ui-tree-node ng-include="'menu_edit_tree_renderer.html'"></li>
+		</ol>
+	  </div>
+	  <p>Order the menu using drag and drop. Dragging an item to right makes it child of the previous item.</p>
+	</div>
   </div>
-  <div class="col-md-9">
-	<input class="col-sm-12" type="text" id="menuName" name="menuName" ng-model="menu.name" ng-model-options="{updateOn: 'blur'}" required/>
-  </div>
+
+  <form ng-submit="save(menu)" role="form" class="form-horizontal" validate-on-form-submit="true" novalidate="novalidate">
+
+    <p><button ng-if="add" type="submit">Add</button><button ng-if="!add" type="submit">Save</button> <button back>Cancel</button></p>
+  </form>
 </div>
-
-<div class="row">
-  <div class="col-md-6">
-	<h2>Available Content</h2>
-	<coonti-content></coonti-content>
-
-	<h2>External Links</h2>
-    <div class="row coontiNgFormElement">
-	  <div class="col-md-3">
-		<label for="menuNewItemTitle">Title</label>
-	  </div>
-	  <div class="col-md-7">
-		<input name="menuNewItemTitle" class="col-sm-12" type="text" value="" ng-model="menuNewItemTitle"/>
-	  </div>
-	  <div class="col-md-2">
-		<a class="ng-binding" ng-click="addURL()">Add</a>
-	  </div>
-	</div>
-    <div class="row coontiNgFormElement">
-	  <div class="col-md-3">
-		<label for="menuNewItemURL">Address</label>
-	  </div>
-	  <div class="col-md-7">
-		<input name="menuNewItemURL" class="col-sm-12" type="text" value="" ng-model="menuNewItemURL"/>
-	  </div>
-	</div>
-  </div>
-
-  <div class="col-md-6">
-	<h2>Menu</h2>
-    <div ui-tree>
-	  <ol ui-tree-nodes="" ng-model="menuItems" id="tree-root">
-		<li ng-repeat="item in menuItems" ui-tree-node ng-include="'menu_edit_tree_renderer.html'"></li>
-	  </ol>
-	</div>
-	<p>Order the menu using drag and drop. Dragging an item to right makes it child of the previous item.</p>
-  </div>
-</div>
-
-<form ng-submit="save(menu)" role="form" class="form-horizontal" validate-on-form-submit="true" novalidate="novalidate">
-
-<p><button ng-if="add" type="submit">Add</button><button ng-if="!add" type="submit">Save</button> <button back>Cancel</button></p>
-</form>
+  
