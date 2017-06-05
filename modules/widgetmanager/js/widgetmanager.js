@@ -8,7 +8,17 @@ if(coonti && coonti['user']) {
 		function($resource) {
 			return $resource(coonti.routing.prefix + '/api/module/WidgetManager/widgetarea/:name', { name: '@name' }, {
 				create: { method: 'PUT',
-						  interceptor: { responseError: resourceErrorHandler } }
+						  interceptor: { responseError: resourceErrorHandler } },
+				get: { method: 'GET',
+					   transformResponse: function(data, headersGetter, status) {
+						   var ret = angular.fromJson(data);
+						   if(ret && ret.widgets) {
+							   for(var i = 0; i < ret.widgets.length; i++) {
+								   ret.widgets[i].counter = i;
+							   }
+						   }
+						   return ret;
+					   } }
 			});
 		}
 	]);
@@ -19,12 +29,12 @@ if(coonti && coonti['user']) {
 		}
 	]);
 
-	angular.module('coontiAdmin').controller('WidgetManagerAreaCtrl', ['$scope', '$location', '$routeParams', 'WidgetArea', 'Widget', 'Content', 'ngDialog', 'notifications', function($scope, $location, $routeParams, WidgetArea, Widget, Content, ngDialog, notifications) {
+	angular.module('coontiAdmin').controller('WidgetManagerAreaCtrl', ['$scope', '$location', '$routeParams', 'WidgetArea', 'Widget', 'Content', 'ngDialog', 'notifications', 'coontiCounter', function($scope, $location, $routeParams, WidgetArea, Widget, Content, ngDialog, notifications, coontiCounter) {
 		$scope.add = false;
 		$scope.coonti = coonti;
 		$scope.contentAction = 'Add';
+		var counter = 0;
 		$scope.onContentAction = function(item) {
-			console.log(item);
 			if(!$scope['widgetarea']) {
 				return;
 			}
@@ -32,7 +42,8 @@ if(coonti && coonti['user']) {
 				name: item.name,
 				title: item.title,
 				description: item.description,
-				config: {}
+				config: {},
+				counter: counter++
 			});
 		};
 
@@ -47,18 +58,26 @@ if(coonti && coonti['user']) {
 			$scope.widgetarea.widgets = [];
 		}
 		else {
-			$scope.widgetarea = WidgetArea.get($routeParams);
-			$scope.widgetarea.$promise.then(function() {
-				$scope.widgetarea.originalName = $scope.widgetarea.name;
+			$scope.widgetarea = WidgetArea.get($routeParams, function() {
+				if($scope.widgetarea.widgets) {
+					counter = $scope.widgetarea.widgets.length;
+					$scope.widgetarea.originalName = $scope.widgetarea.name;
+				}
 			});
 		}
 
-		$scope.save = function(widgetArea) {
+		$scope.submit = function(widgetArea) {
 			if(!widgetArea.name) {
 				notifications.error('', 'Widget area needs a name. Please provide it and try again.');
 				return;
 			}
 			widgetArea.widgets = $scope.widgetarea.widgets;
+			for(var i = 0; i < widgetArea.widgets.length; i++) {
+				var widgetCounter = 'widgetForm' + widgetArea.widgets[i].counter;
+				if($scope[widgetCounter]) {
+					$scope[widgetCounter].submit(widgetArea.widgets[i].config);
+				}
+			}
 
 			if($scope.add) {
 				widgetArea.$create({}, function() {
@@ -97,7 +116,6 @@ if(coonti && coonti['user']) {
 		};
 
 		$scope.removeItem = function(dragItem) {
-			console.log(dragItem);
 			ngDialog.openConfirm({
 				data: {
 					message: "Are you sure to remove widget '" + dragItem.item.name + "'? All configurations will be lost.",

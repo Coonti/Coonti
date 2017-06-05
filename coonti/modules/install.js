@@ -532,16 +532,25 @@ function CoontiInstall(cnti) {
 									yield cm.addContent(ct['contentType'], ct);
 								}
 							}
-							if(content['menus']) {
-								var sm = coonti.getManager('storage');
-								var mongodb = sm.getStorageHandler('mongo');
 
+							const sm = coonti.getManager('storage');
+							const mongodb = sm.getStorageHandler('mongo');
+							if(content['menus']) {
 								for(let i = 0; i < content.menus.length; i++) {
-									var mn = content.menus[i];
+									const mn = content.menus[i];
 									if(!mn['name']) {
 										continue;
 									}
 									yield mongodb.insertData('menu', mn);
+								}
+							}
+							if(content['widgetareas']) {
+								for(let i = 0; i < content.widgetareas.length; i++) {
+									const wa = content.widgetareas[i];
+									if(!wa['name']) {
+										continue;
+									}
+									yield mongodb.insertData('widgetarea', wa);
 								}
 							}
 						}

@@ -30,11 +30,11 @@ var RestApiHelper = require('../../coonti/libraries/restapihelper.js');
  * @return {MenuManager} The new instance.
  */
 function WidgetManager(cnti) {
-	var coonti = cnti;
-	var config = {};
-	var self = this;
+	const coonti = cnti;
+	const config = {};
+	const self = this;
 
-	var started = false;
+	let started = false;
 
 	let storage = false;
 
@@ -46,6 +46,8 @@ function WidgetManager(cnti) {
 	const widgets = {};
 
 	let logger;
+
+	let formManager;
 
 	/**
 	 * Initialises the module.
@@ -64,29 +66,48 @@ function WidgetManager(cnti) {
 				var ret =
 					{
 						extension: 'tag',
-						type: 'widgetarea',
-						regex: /^widgetarea\s+([a-zA-Z0-9_]+)$/,
+						type: 'widgetArea',
+						regex: /^widgetArea\s+([a-zA-Z0-9_]+)$/,
 						next: [],
 						open: true,
 						compile: function(token) {
 							token.name = token.match[1].trim();
-
 							delete token.match;
 							return token;
 						},
 						parseGenerator: function*(token, context, chain) {
 							let widgetArea = false;
+							let output = '';
 
 							if(started) {
 								widgetArea = yield self.getWidgetArea(token.name);
 								if(widgetArea) {
-									// ##TODO## Add widget code
+									output += '<div class="widgetArea widgetArea-' + widgetArea.name + '" id="widgetArea-' + widgetArea.name + '">'; // ##TODO## Tokenise name
+									if(widgetArea.widgets) {
+										for(let i = 0; i < widgetArea.widgets.length; i++) {
+											const widget = widgetArea.widgets[i];
+											const widgetCode = self.getWidget(widget.name);
+											let widgetClass = '';
+											if(i == 0) {
+												widgetClass += ' widget-first';
+											}
+											if(i == widgetArea.widgets.length - 1) {
+												widgetClass += ' widget-last';
+											}
+											if(widgetCode) {
+												output += '<div class="widget widget-' + i + ' widget-' + widget.name + widgetClass + '">'; // ##TODO## Tokenise name + add id
+												output += widgetCode.renderWidget(widget.config); // ##TODO## Add support for yield
+												output += '</div>';
+											}
+										}
+									}
+									output += '</div>';
 								}
 							}
 
 							return {
-								chain: chain,
-								content: context
+								chain: false,
+								output: output
 							};
 						}
 					};
@@ -94,7 +115,18 @@ function WidgetManager(cnti) {
 			});
 		}
 		else {
-			logger.warn("WidgetManager - Could not add 'widgetarea' tag to Twig");
+			logger.warn("WidgetManager - Could not add 'widgetarea' tag to Twig.");
+			return false;
+		}
+
+		formManager = coonti.getManager('form');
+		if(!formManager) {
+			logger.warn('WidgetManager - Could not get form manager.');
+			return false;
+		}
+
+		if(!formManager.addCollection('widget')) {
+			logger.warn('WidgetManager - Could not add form collection.');
 			return false;
 		}
 
@@ -120,6 +152,11 @@ function WidgetManager(cnti) {
 	this.start = function*() { // eslint-disable-line require-yield
 		if(started) {
 			return true;
+		}
+
+		if(!self.addDefaultWidgets()) {
+			logger.warn('WidgetManager - Could not add default widgets.');
+			return false;
 		}
 
 		const sm = coonti.getManager('storage');
@@ -184,8 +221,6 @@ function WidgetManager(cnti) {
 		}
 
 		started = true;
-
-		self.addDefaultWidgets();
 
 		logger.debug('WidgetManager - Started.');
 		return true;
@@ -357,7 +392,7 @@ function WidgetManager(cnti) {
 			return false;
 		}
 
-		const res = widgets['name'];
+		const res = widgets[name];
 		if(!res) {
 			return false;
 		}
@@ -372,7 +407,21 @@ function WidgetManager(cnti) {
 	 * @return {bool} True on success, false on failure.
 	 */
 	this.addWidget = function(name, widget) {
-		if(!started || !name || !widget) {
+		if(started) {
+			return _addWidget(name, widget);
+		}
+		return false;
+	};
+
+	/**
+	 * Internally adds a new widget, does not check whether the module has been started or not.
+	 *
+	 * @param {String} name - The name of the new widget.
+	 * @param {Object} widget - The widget.
+	 * @return {bool} True on success, false on failure.
+	 */
+	const _addWidget = function(name, widget) {
+		if(!name || !widget) {
 			return false;
 		}
 
@@ -422,30 +471,48 @@ function WidgetManager(cnti) {
 
 	/**
 	 * Adds the default widgets. Called when the module is started.
+	 *
+	 * @return {Bool} True on success, false on failure.
 	 */
 	this.addDefaultWidgets = function() {
-		this.addWidget('text',
+		let fm = formManager.addForm('widget', 'simpleText');
+		if(!fm) {
+			return false;
+		}
+		fm.addField('content', 'wysiwyg', {
+			label: 'Content',
+			value: ''
+		});
+
+		fm = formManager.addForm('widget', 'image');
+		if(!fm) {
+			return false;
+		}
+		fm.addField('image', 'image', {
+			label: 'Image'
+		});
+
+		_addWidget('text',
 					   {
 						   title: 'Simple Text',
 						   description: 'Shows a snippet of text',
 						   renderWidget: function(config) {
-							   return '##TODO## Text here';
+							   return config.content;
 						   },
-						   getConfigForm: function() {
-							   // ##TODO##
-						   }
+						   configForm: 'widget/simpleText'
 					   });
-		this.addWidget('image',
+
+
+		_addWidget('image',
 					   {
 						   title: 'Image',
 						   description: 'Shows an image',
 						   renderWidget: function(config) {
 							   return '##TODO## Text here';
 						   },
-						   getConfigForm: function() {
-							   // ##TODO##
-						   }
+						   configForm: 'widget/image'
 					   });
+		return true;
 	};
 
 	/**

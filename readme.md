@@ -49,6 +49,7 @@ As Coonti is extensible and modular in nature, the exact set of features depends
 * **Built-in media management.** Coonti provides media management tools to handle images, videos, and attachments of any kind to be included on your site.
 * **Themes.** Coonti supports several themes at once, allowing you to create subsites inside your main site and have a precise control over your site layouts.
 * **Menus.** Your site structure is defined with drag-and-drop menus. Of course, you can have several menus to offer different views to your content.
+* **Widgets** Widgets are small snippets of content and functionality that can be added to various parts of your site and controlled independently of the content of the pages.
 * **Users and access rights.** Coonti has a full-fledged user management with user groups and roles that can be used to allow and restrict access to certain parts of the system.
 
 ### Technical Features
@@ -386,6 +387,10 @@ Fetches list of files in a static collection. Syntax `{{ static variableName = s
 
 Prints out the current name of the template. Syntax `{{ templateName }}`, prints out the name of the current template.
 
+#### WidgetArea
+
+Adds the given widget area to the template. When the template is rendered, the widgets on the area are rendered with their content. Syntax `{{ widgetArea name }}`, where `name` is the widget area name, as defined in the admin area.
+
 ### Forms
 
 Coonti contains a built-in form manager that generates and processes forms and user inputs. Forms are stored in form collections that create a simple hierarchy and help to avoid name collisions. Forms functionality is contained in FormManager.
@@ -588,3 +593,8 @@ The system is currently missing tests, the documentation could be improved, nume
 Coonti is licensed under [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
 
 Coonti is a trademark of Janne Kalliola.
+
+## Releases
+
+* 0.1.0 Pine - The initial release.
+* 0.1.1 Pine - Support for widgets

@@ -12,8 +12,8 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6">
-	  <h2>Available Widgets</h2>
+    <div class="col-md-3">
+	  <h2>Widgets</h2>
 	  <div class="availableWidgets" ng-repeat="item in widgets.items">
 		<div class="widgetAdd"><a class="ng-binding" ng-click="onContentAction(item)">Add</a></div>
 	    <div class="widgetName">{{ item.title }}</div>
@@ -21,7 +21,7 @@
 	  </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-9">
 	  <h2>Widgets in the Area</h2>
 	  <ul dnd-list="widgetarea.widgets">
 		<li ng-repeat="item in widgetarea.widgets" dnd-draggable="item" dnd-moved="widgetarea.widgets.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="selected = item" ng-class="{selected: selected===item, error: item.error==true }">
@@ -31,15 +31,13 @@
 				<i class="fa fa-bars" aria-hidden="true"></i>
 			  </div>
 			  <div class="col-sm-1">
-				<a ng-click="toggle(this)" data-nodrag="">
-				  <span class="glyphicon glyphicon-chevron-down" ng-class="{ 'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }"> </span>
+				<a ng-click="shown = !shown" data-nodrag="">
+				  <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !shown, 'glyphicon-chevron-down': shown }"> </span>
 				</a>
 			  </div>
 			  <div class="col-sm-9">
 			    <div>
-				  <span ng-if="item.name">{{ item.name }}</span>
-				  <span ng-if="item.name">{{ item.description }}</span>
-				  
+				  <span ng-if="item.name">{{ item.title }}</span>
 				</div>
 			  </div>
 			  <div class="col-sm-1">
@@ -48,13 +46,18 @@
 				</a>
 			  </div>
 			</div>
+		    <div class="row" ng-if="shown">
+			  <div class="col-sm-12">
+				<coonti-form form-name="{{ widgets.items[item.name].configForm }}" form-data="item.config" form-options="{skipTypes:['submit'], formKey: 'widgetForm{{ item.counter }}'}"></coonti-form>
+			  </div>
+			</div>
 		  </dnd-nodrag>
 		</li>
 	  </ul>
     </div>
   </div>
 
-  <form ng-submit="save(widgetarea)" role="form" class="form-horizontal" validate-on-form-submit="true" novalidate="novalidate">
+  <form ng-submit="submit(widgetarea)" role="form" class="form-horizontal" validate-on-form-submit="true" novalidate="novalidate">
 
     <p><button ng-if="add" type="submit">Add</button><button ng-if="!add" type="submit">Save</button> <button back>Cancel</button></p>
   </form>

@@ -37,6 +37,11 @@
 			"collection": "module",
 			"name": "MenuManager",
 			"states": "started"
+		},
+		{
+			"collection": "module",
+			"name": "WidgetManager",
+			"states": "started"
 		}
 	]
 }

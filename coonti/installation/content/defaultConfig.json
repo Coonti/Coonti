@@ -123,7 +123,9 @@
 			  } 
 			},
 			"MenuManager":
-			{ "name": "MenuManager", "initialise": true, "start": true }
+			{ "name": "MenuManager", "initialise": true, "start": true },
+			"WidgetManager":
+			{ "name": "WidgetManager", "initialise": true, "start": true }
 		}
 	}
 }

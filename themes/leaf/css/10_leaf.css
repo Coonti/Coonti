@@ -322,22 +322,20 @@ body#coontiFront {
     background-color: #ddd;
 }
 
-#footerLeft {
-    float: left;
-    width: 33%;
-    padding-right: 11px;
-}
-
-#footerMiddle {
+#footerContent #widgetArea-Footer div {
     float: left;
     width: 33%;
     padding: 0 11px;
 }
 
-#footerRight {
-    float: left;
-    width: 33%;
+#footerContent #widgetArea-Footer div.widget-first {
+    padding-left: 0px;
+    padding-right: 11px;
+}
+
+#footerContent #widgetArea-Footer div.widget-last {
     padding-left: 11px;
+    padding-right: 0px;
 }
 
 #footerCommon {

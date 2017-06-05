@@ -1445,6 +1445,9 @@ if(coonti && coonti['user']) {
 						if(parts.length == 2 && parts[0].length > 0 && parts[1].length > 0) {
 							$http.get(coonti.routing.coontiPath + '/_/form/' + formId).success(function(dt) {
 								scope.form = dt;
+								if(!!options.formKey) {
+									scope.form.name = options.formKey;
+								}
 								scope.form.id = 'coonti-form-' + (++formCount) + '-';
 								if(!!scope.formData) {
 									var dt = false;
@@ -1521,8 +1524,12 @@ if(coonti && coonti['user']) {
 									}
 									parentScope = parentScope.$parent;
 								}
-								
-								parentScope.form = scope.form;
+								if(!!options.formKey) {
+									parentScope[options.formKey] = scope.form;
+								}
+								else {
+									parentScope.form = scope.form;
+								}
 							});
 						}
 					}
@@ -1776,5 +1783,17 @@ if(coonti && coonti['user']) {
 	                });
 	        }
 	    };
+	});
+
+	angular.module('coontiAdmin').service('coontiCounter', function() {
+		var count = 0;
+		return {
+			increase: function() {
+				count++;
+			},
+			value: function() {
+				return count;
+			}
+		}
 	});
 }
