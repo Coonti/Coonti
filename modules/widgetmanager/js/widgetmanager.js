@@ -118,7 +118,7 @@ if(coonti && coonti['user']) {
 		$scope.removeItem = function(dragItem) {
 			ngDialog.openConfirm({
 				data: {
-					message: "Are you sure to remove widget '" + dragItem.item.name + "'? All configurations will be lost.",
+					message: "Are you sure to remove widget '" + dragItem.item.title + "'? All configurations will be lost.",
 					close: 'No',
 					confirm: 'Yes'
 				}

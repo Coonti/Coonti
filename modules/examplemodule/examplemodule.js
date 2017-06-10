@@ -30,18 +30,21 @@ var RestApiHelper = require('../../coonti/libraries/restapihelper.js');
  * @return {ExampleModule} The new instance.
  */
 function ExampleModule(cnti) {
-	var coonti = cnti;
-	var config = {
+	const coonti = cnti;
+	const config = {
 		configurationName: 'exampleModuleConfig'
 	};
 
 	// Use self to access the module itself, helpful inside nested classes and objects
-	var self = this;
+	const self = this;
 
-	var configManager = false;
-	var quoteStorage = {};
+	let configManager = false;
+	let widgetManager = false;
+	let quoteStorage = {};
 
-	var started = false;
+	let started = false;
+
+	const widgetName = 'exampleModule-widget';
 
 	/*
 	 * First, the methods that are used to initialise, start, stop, and remove the module within Coonti.
@@ -76,12 +79,12 @@ function ExampleModule(cnti) {
 							return token;
 						},
 
-					// We could also use parseGenerator function* should we need a yieldable function. For an example, study MenuManager module
+						// We could also use parseGenerator function* should we need a yieldable function. For an example, study MenuManager module
 						parse: function(token, context, chain) {
 							var key = token.key;
 							var mn = '';
 
-						// If the module is stopped, it needs to return an empty string.
+							// If the module is stopped, it needs to return an empty string.
 							if(started) {
 								mn = self.getQuote();
 							}
@@ -175,6 +178,18 @@ function ExampleModule(cnti) {
 			admin.addAdminRoute('ExampleModule', 'quote', 'quote(?:\/(.+))?', rah.serve);
 		}
 
+		widgetManager = coonti.getManager('widget');
+		if(widgetManager) {
+			widgetManager.addWidget(widgetName, {
+				title: 'Quote',
+				description: 'Shows a random quote.',
+				renderWidget: function(config) {
+					return self.getQuote();
+				},
+				configForm: false
+			});
+		}
+
 		started = true;
 		return true;
 	};
@@ -209,6 +224,11 @@ function ExampleModule(cnti) {
 		var modules = coonti.getManager('module');
 		if(modules) {
 			modules.removeAllModuleAssets('ExampleModule');
+		}
+
+		// Remove widget
+		if(widgetManager) {
+			widgetManager.removeWidget(widgetName);
 		}
 
 		started = false;

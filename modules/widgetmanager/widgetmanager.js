@@ -445,8 +445,8 @@ function WidgetManager(cnti) {
 			return false;
 		}
 
-		if(widgets['name']) {
-			delete widgets['name'];
+		if(widgets[name]) {
+			delete widgets[name];
 		}
 		return true;
 	};
@@ -495,7 +495,7 @@ function WidgetManager(cnti) {
 		_addWidget('text',
 					   {
 						   title: 'Simple Text',
-						   description: 'Shows a snippet of text',
+						   description: 'Shows a snippet of text.',
 						   renderWidget: function(config) {
 							   return config.content;
 						   },
@@ -506,9 +506,10 @@ function WidgetManager(cnti) {
 		_addWidget('image',
 					   {
 						   title: 'Image',
-						   description: 'Shows an image',
+						   description: 'Shows an image.',
 						   renderWidget: function(config) {
-							   return '##TODO## Text here';
+							   console.log(config);
+							   return '<img class="widgetImage" src="' + config.image + '"/>';
 						   },
 						   configForm: 'widget/image'
 					   });

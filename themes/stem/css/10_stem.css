@@ -403,6 +403,8 @@ ul[dnd-list] li.error {
     color: #0576ba;
 }
 
-.coontiDependencyNotOk {
+.coontiDependencyNotOk,
+.coontiItemNotOk {
     color: #f05c25;
 }
+
