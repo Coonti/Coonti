@@ -508,7 +508,6 @@ function WidgetManager(cnti) {
 						   title: 'Image',
 						   description: 'Shows an image.',
 						   renderWidget: function(config) {
-							   console.log(config);
 							   return '<img class="widgetImage" src="' + config.image + '"/>';
 						   },
 						   configForm: 'widget/image'
