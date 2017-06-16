@@ -661,6 +661,9 @@ function CoontiUserManager(cnti) {
 		userManager.addRight({ name: 'admin.manageModules',
 							   displayName: 'Manage Modules',
 							   description: 'Allows user to configure and change states of modules.' });
+		userManager.addRight({ name: 'admin.editConfiguration',
+							   displayName: 'Edit Configuration',
+							   description: 'Allows user to configure Coonti.' });
 	};
 
 	/**

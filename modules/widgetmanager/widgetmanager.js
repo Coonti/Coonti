@@ -197,7 +197,7 @@ function WidgetManager(cnti) {
 			admin.addRoute('widget', '', modulePath + '/WidgetManager/angular/widget-list.html', 'WidgetManagerAreaCtrl', 'admin.manageContent');
 			admin.addRoute('widget', '/add', modulePath + '/WidgetManager/angular/widget-edit.html', 'WidgetManagerAreaCtrl', 'admin.manageContent');
 			admin.addRoute('widget', '/edit/:name', modulePath + '/WidgetManager/angular/widget-edit.html', 'WidgetManagerAreaCtrl', 'admin.manageContent');
-			admin.addMenuItem('content-widget', 'Widgets', '#/module/widget', 'admin.manageContent', 0, 'themes');
+			admin.addMenuItem('content-widget', 'Widgets', '#/module/widget', 'admin.manageContent', 0, 'media');
 
 			var rah = new RestApiHelper(coonti,
 				{ allow: 'admin.manageContent',

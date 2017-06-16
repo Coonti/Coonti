@@ -35,7 +35,12 @@ function CoontiAdmin(cnti) {
 
 	var adminPath = [
 		{ name: 'session', priority: 700 },
-		{ name: 'route', priority: 600 },
+		{ name: 'route',
+		  priority: 600,
+		  config: {
+			  inhibitRedirects: true
+		  }
+		},
 		{ name: 'access',
 		  priority: 500,
 		  config: {
@@ -53,7 +58,12 @@ function CoontiAdmin(cnti) {
 
 	var adminJsonPath = [
 		{ name: 'session', priority: 700 },
-		{ name: 'route', priority: 600 },
+		{ name: 'route',
+		  priority: 600,
+		  config: {
+			  inhibitRedirects: true
+		  }
+		},
 		{ name: 'accessJson',
 		  priority: 500,
 		  config: {
@@ -83,6 +93,7 @@ function CoontiAdmin(cnti) {
 	var userManager = false;
 	var moduleManager = false;
 	var templateManager = false;
+	var router = false;
 
 	var minirouter = new MiniRouter(this);
 
@@ -125,6 +136,7 @@ function CoontiAdmin(cnti) {
 
 		contentManager = coonti.getManager('content');
 		mediaManager = coonti.getManager('media');
+		router = coonti.getManager('router');
 
 		// Create required forms
 		formManager = coonti.getManager('form');
@@ -150,7 +162,7 @@ function CoontiAdmin(cnti) {
 			required: true
 		});
 		fm.addField('submit', 'submit', {
-			value: 'Login'
+			value: 'Sign In'
 		});
 
 		fm = formManager.addForm('admin', 'contentType');
@@ -275,6 +287,16 @@ function CoontiAdmin(cnti) {
 								false, false);
 		minirouter.addRoute('theme', '\/themes(?:\/(.+))?', rah.serve);
 
+		rah = new RestApiHelper(coonti,
+			{ allow: 'admin.editConfiguration',
+								  handler: this.getRedirect },
+			{ allow: 'admin.editConfiguration',
+								  handler: this.updateRedirect },
+			{ allow: 'admin.editConfiguration',
+								  handler: this.addRedirect },
+			{ allow: 'admin.editConfiguration',
+								  handler: this.removeRedirect });
+		minirouter.addRoute('redirect', '\/redirects(?:\/(.+))?', rah.serve);
 		self._setDefaults();
 
 		initialised = true;
@@ -1159,6 +1181,110 @@ function CoontiAdmin(cnti) {
 		}
 	};
 
+
+	/**
+	 * Lists redirects or show one redirect
+	 *
+	 * @param {String=} path - The redirect path. Optional.
+	 */
+	this.getRedirect = function*(path) { // eslint-disable-line require-yield
+		if(!!path) {
+			var redirect = router.getRedirect(path);
+			if(redirect) {
+				this.coonti.setItem('response', redirect);
+			}
+			else {
+				this.status=(404); // eslint-disable-line space-infix-ops
+			}
+			return;
+		}
+
+		const redirects = router.listRedirects();
+		const ret = getQueryParams(this.query);
+
+		ret.redirects = redirects;
+		this.coonti.setItem('response', ret);
+	};
+
+	/**
+	 * Updates a redirect.
+	 */
+	this.updateRedirect = function*() {
+		if(this.request['fields']) {
+			var fields = this.request.fields;
+			if(!fields['olderPath'] || !fields['oldPath'] || !fields['newPath']) {
+				this.status=(400); // eslint-disable-line space-infix-ops
+				return;
+			}
+
+			if(!fields['weight']) {
+				fields['weight'] = 0;
+			}
+			if(!fields['external']) {
+				fields['external'] = false;
+			}
+
+			yield router.removeRedirect(fields['olderPath']);
+			var ret = yield router.addRedirect(fields['oldPath'], fields['newPath'], fields['external'], fields['weight']);
+
+			if(!ret) { // ##TODO## Use some other error mechanism
+				this.status=(500); // eslint-disable-line space-infix-ops
+				return;
+			}
+
+			this.coonti.setItem('response', {});
+			return;
+		}
+		this.status=(404); // eslint-disable-line space-infix-ops
+	};
+
+	/**
+	 * Adds a new redirect.
+	 */
+	this.addRedirect = function*() {
+		if(this.request['fields']) {
+			var fields = this.request.fields;
+			if(!fields['oldPath'] || !fields['newPath']) {
+				this.status=(400); // eslint-disable-line space-infix-ops
+				return;
+			}
+
+			if(!fields['weight']) {
+				fields['weight'] = 0;
+			}
+			if(!fields['external']) {
+				fields['external'] = false;
+			}
+
+			var ret = yield router.addRedirect(fields['oldPath'], fields['newPath'], fields['external'], fields['weight']);
+			if(!ret) { // ##TODO## Use some other error mechanism
+				this.status=(500); // eslint-disable-line space-infix-ops
+				return;
+			}
+
+			this.coonti.setItem('response', {});
+			return;
+		}
+		this.status=(404); // eslint-disable-line space-infix-ops
+	};
+
+	/**
+	 * Removes a redirect.
+	 *
+	 * @param {String} path - The redirect path.
+	 */
+	this.removeRedirect = function*(path) {
+		this.coonti.setItem('response', {});
+		if(!!path) {
+			var res = yield router.removeRedirect(path);
+			if(!res) {
+				this.status=(404); // eslint-disable-line space-infix-ops
+			}
+			return;
+		}
+		this.status=(404); // eslint-disable-line space-infix-ops
+	};
+
 	/**
 	 * Handles Coonti administration
 	 *
@@ -1200,22 +1326,29 @@ function CoontiAdmin(cnti) {
 				formSubmitted.addMessage('Invalid user account or password. Please try again.');
 			}
 
+			let error = false;
+			if(!!this.session['coontiLoginError']) {
+				error = this.session['coontiLoginError'];
+			}
+
 			this.coonti.setItem('content', {
 				content: {
 					title: 'Coonti Admin',
+					formError: error,
 					form: 'admin/login'
 				},
 				contentType: 'Admin'
 			});
 			yield next;
+			delete this.session['coontiLoginError'];
 			return;
 		}
 		if(route == '/logout') {
 			yield userManager.logout(this);
 			this.coonti.setItem('content', {
 				content: {
-					title: 'Logged Out',
-					content: 'You have logged out.'
+					title: 'Signed Out',
+					content: 'You have signed out.'
 				},
 				contentType: 'Admin'
 			});
@@ -1545,18 +1678,12 @@ function CoontiAdmin(cnti) {
 				depth: 0
 			},
 			{
-				allow: 'admin.manageThemes',
-				name: 'themes',
-				title: 'Themes',
-				url: '#/themes',
-				depth: 0
-			},
-			{
 				allow: 'admin.manageUsers',
 				name: 'users',
 				title: 'Accounts',
 				url: '#/users/user',
-				depth: 0
+				depth: 0,
+				separated: true
 			},
 			{
 				allow: 'admin.manageGroups',
@@ -1579,11 +1706,30 @@ function CoontiAdmin(cnti) {
 				depth: 1
 			},
 			{
+				title: 'Configuration',
+				depth: 0,
+				separated: true
+			},
+			{
+				allow: 'admin.manageThemes',
+				name: 'themes',
+				title: 'Themes',
+				url: '#/themes',
+				depth: 1
+			},
+			{
 				allow: 'admin.manageModules',
 				name: 'modules',
 				title: 'Modules',
 				url: '#/modules',
-				depth: 0
+				depth: 1
+			},
+			{
+				allow: 'admin.editConfiguration',
+				name: 'redirects',
+				title: 'Redirects',
+				url: '#/redirects',
+				depth: 1
 			}
 		];
 
@@ -1768,6 +1914,24 @@ function CoontiAdmin(cnti) {
 				route: '/modules',
 				template: '/angular/stem/modules-list.html',
 				controller: 'ModulesCtrl'
+			},
+			{
+				allow: 'admin.editConfiguration',
+				route: '/redirects/edit/:oldPath*',
+				template: '/angular/stem/redirects-edit.html',
+				controller: 'RedirectsCtrl'
+			},
+			{
+				allow: 'admin.editConfiguration',
+				route: '/redirects/add',
+				template: '/angular/stem/redirects-edit.html',
+				controller: 'RedirectsCtrl'
+			},
+			{
+				allow: 'admin.editConfiguration',
+				route: '/redirects',
+				template: '/angular/stem/redirects-list.html',
+				controller: 'RedirectsCtrl'
 			},
 			{
 				route: '/error/400',

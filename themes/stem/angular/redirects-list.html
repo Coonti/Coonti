@@ -1,0 +1,29 @@
+<h1 class="page-header">Redirects</h1>
+<table class="table table-striped table-condensed table-responsive">
+  <thead>
+	<tr>
+	  <th>Old Path</th>
+	  <th>New Path</th>
+	  <th>Type</th>
+	  <th>Weight</th>
+	  <th>Actions</th>
+	</tr>
+  </thead>
+  <tbody>
+	<tr ng-repeat="item in redirect.redirects">
+	  <td>{{ item.oldPath }}</td>
+	  <td>{{ item.newPath }}</td>
+	  <td>
+		<span ng-if="item.external == 1">External</span>
+		<span ng-if="item.external == 0">Internal</span>
+	  </td>
+	  <td>{{ 0-item.weight }}</td>
+	  <td>	
+		<a ng-href="#/redirects/edit/{{ item.oldPath | encodeURIComponent }}">Edit</a> |
+		<a ng-click="remove(item)" href="">Remove</a></span>
+	  </td>
+	</tr>
+  </tbody>
+</table>
+
+<p><button goto="/redirects/add">Add a New Redirect</button></p>

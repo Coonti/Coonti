@@ -54,12 +54,22 @@ table {
   }
 }
 
-.nav > li > a {
+.nav > li > a,
+.nav > li > span {
     padding: 5px 10px;
 }
 
-.nav > li > a.coontiAdminMenuItem-1 {
+.nav > li > span {
+    color: #989898;
+}
+
+.nav > li > a.coontiAdminMenuItem-1,
+.nav > li > span.coontiAdminMenuItem-1 {
     padding-left: 20px;
+}
+
+.nav > li.separated {
+    padding-top: 20px;
 }
 
 .navbar-toggle span.icon-bar {

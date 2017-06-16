@@ -161,4 +161,35 @@ SortedArray.prototype.iterator = function*(...args) {
 	}
 };
 
+/**
+ * Returns the contents of the SortedArray as an Object that can be stored as JSON object.
+ *
+ * @return {Object} The SortedArray ready for JSON.
+ */
+SortedArray.prototype.toJSONObject = function() {
+	return {
+		array: _.clone(this.array),
+		weights: _.clone(this.weights)
+	};
+};
+
+/**
+ * Copies the contents of a JSON Object into SortedArray.
+ *
+ * @param {Object} jsonObject - The JSON Object containing the data.
+ * @return {Boolean} True on success, false on failure.
+ */
+SortedArray.prototype.fromJSONObject = function(jsonObject) {
+	if(!jsonObject || !jsonObject.array || !jsonObject.weights || Object.prototype.toString.call(jsonObject.array) !== '[object Array]' || Object.prototype.toString.call(jsonObject.weights) !== '[object Array]') {
+		return false;
+	}
+	if(jsonObject.array.length != jsonObject.weights.length) {
+		return false;
+	}
+
+	this.array = _.clone(jsonObject.array);
+	this.weights = _.clone(jsonObject.weights);
+	return true;
+};
+
 module.exports = SortedArray;

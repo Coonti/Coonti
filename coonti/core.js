@@ -45,7 +45,7 @@ var CoontiMediaManager = require('./mediamanager');
 function Coonti(koaApp) {
 	var meta = {
 		name: 'Coonti',
-		version: '0.1.1',
+		version: '0.1.2',
 		release: 'Pine',
 		author: 'Coonti Project',
 		authorUrl: 'http://coonti.org'

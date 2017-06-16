@@ -62,7 +62,7 @@ As Coonti is extensible and modular in nature, the exact set of features depends
 * **Events and hooks.** Coonti provides numerous events and hooks to listen to changes in the system and also to control the execution of requests.
 * **Headless by nature.** The system provides - based on configuration - a ready-made headless interface to all content stored in Coonti.
 * **Extensible logging.** Coonti's logging system is based on Winston and it allows you to define different logging levels to different parts of the system, down to module level.
-
+* **Redirects.** Coonti supports both internal and external redirects with regular expression matching.
 
 ## Architecture
 
@@ -88,7 +88,7 @@ Coonti ships with the following managers:
 * **LogManager** - handles Coonti logging using Winston logging library. Supports finegrained logging with different levels, down to a single component.
 * **MediaManager** - provides support for asset files, such as images, videos, and attachments.
 * **ModuleManager** - controls the Coonti extension modules.
-* **Router** - routes incoming requests through Coonti.
+* **Router** - routes incoming requests through Coonti and handles redirects.
 * **StorageManager** - manages storages that store content items.
 * **TemplateManager** - executes Twig.js templates that transform content typically to HTML pages. Contains extension mechanism to add new Twig.js commands.
 * **UserManager** - handles user accounts, roles and groups, and provides access control features for the rest of the system.
@@ -193,6 +193,27 @@ When the configuration is read in, the `CoontiRouter` forms the pipelines by fet
 To add new states, use `addStateHandler` method in your modules. To see practical examples, look at the admin module that defines new states and also a new pipeline for Coonti administration interface.
 
 Typically, the pipelines end with `template` and `end` states that output the content using templates - see below - and clean up the request. It is also possible to produce other kind of output, and Coonti includes JSON version for outputing the content. See below about headless usage.
+
+Some available state handlers, such as `route` and `access`, can be configured further by adding `config` object to the state handler definition object, as follows:
+
+```
+  { name: 'route',
+    priority: 600,
+    config: {
+      inhibitRedirects: true
+    }
+  }
+```
+
+The snippet above instructs `route` handler not to use redirects. As redirects are shared with all pipelines, it might be wise to protect certain pipelines, such as administrative ones, from accidental bad redirect definitions. The following table defines the available configuration options for built-in handlers.
+
+| Handler | Config | Type | Description
+| --- | --- | --- | --- |
+| Access | loginRoute | String | The path to the login page. |
+| Access | logoutRoute | String | The path to the logout page. This URL is used to destroy session of the user. |
+| Access | requireAccess | String | Contains the access right that needs to be set by the current user in order to continue with the pipeline. |
+| Access | requireLogin | Boolean | If set, the pipeline can be accessed only by logged in users. |
+| Route | inhibitRedirects | Boolean | If set, the routing does not use redirects at all. |
 
 There is a specific error handler that is currently shared between all pipelines. Coonti calls this handler when it cannot fulfil the request with normal pipeline process, and the execution of the request stops there.
 
@@ -573,6 +594,14 @@ Only Coonti core functionality can use `Coonti-` at the beginning of the event n
 
 Coonti also may fire two events for the same situation, for example `Coonti-Module-Init` and `Coonti-Module-Init-` *`ModuleName`*. The first version has the name as a parameter for the functions. This approach allows listeners to bind themselves into very specific events - for example, to check whether a certain module has been started or not - instead of using the more generic version and then always comparing parameters to decide whether the event needs to be reacted or not.
 
+## Redirects
+
+Coonti supports both internal and external redirects that can contain regular expressions. A redirect consists of the path matching regular expression (old path), the new path with replacement markers $1-$n (new path), and weight of the redirect. The redirects are matched in order of weights, from highest to lowest, and only the first redirect is executed.
+
+If the redirect is internal, Coonti does not change the user visible URL, but internally changes the path from old to new. External redirects cause HTTP redirect to be sent to the client.
+
+Redirects are stored into a single MongoDB document in the `config` collection.
+
 ## Coonti API
 
 Coonti code has been documented using JSDoc syntax and the documentation can be generated with `jsdoc-conf.json` configuration file in the root of the Coonti directory. To generate, issue the following command:
@@ -597,4 +626,5 @@ Coonti is a trademark of Janne Kalliola.
 ## Releases
 
 * 0.1.0 Pine - The initial release.
-* 0.1.1 Pine - Support for widgets
+* 0.1.1 Pine - Support for widgets.
+* 0.1.2 Pine - Support for redirects and a redirect management UI in core.

@@ -1,0 +1,46 @@
+<h1 class="page-header" ng-if="!add">Edit Redirect '{{ redirect.oldPath }}'</h1>
+<h1 class="page-header" ng-if="add">Add a New Redirect</h1>
+
+<section>
+<div class="coontiNgFormElement row">
+  <div class="col-sm-2">
+	<label for="oldPath" class="formElementRequired">Old Path</label>
+  </div>
+  <div class="col-sm-10">
+	<input type="text" id="oldPath" name="oldPath" ng-model="redirect.oldPath" class="col-xs-6"/>
+	<p class="inputNote">You may use regular expressions in the path.</p>
+  </div>
+</div>
+<div class="coontiNgFormElement row">
+  <div class="col-sm-2">
+	<label for="newPath" class="formElementRequired">New Path</label>
+  </div>
+  <div class="col-sm-10">
+	<input type="text" id="newPath" name="newPath" ng-model="redirect.newPath" class="col-xs-6"/>
+	<p class="inputNote">You may use regular expressions substitutions in the path.</p>
+  </div>
+</div>
+<div class="coontiNgFormElement row">
+  <div class="col-sm-2">
+	<label for="type" class="formElementRequired">Type</label>
+  </div>
+  <div class="col-sm-10">
+	<select name="type" id="type" ng-model="redirect.external">
+	  <option value="1" ng-selected="redirect.external == 1">External</option>
+	  <option value="0" ng-selected="redirect.external == 0">Internal</option>
+	</select>
+  </div>
+</div>
+<div class="coontiNgFormElement row">
+  <div class="col-sm-2">
+	<label for="newPath" class="formElementRequired">Weight</label>
+  </div>
+  <div class="col-sm-10">
+	<input type="text" id="weight" name="weight" ng-model="redirect.weight" class="col-xs-1"/>
+  </div>
+</div>
+</section>
+
+<section>
+<p><button ng-if="add" ng-click="create(redirect)">Add</button><button ng-if="!add" ng-click="save(redirect)">Save</button> <button back>Cancel</button></p>
+</section>

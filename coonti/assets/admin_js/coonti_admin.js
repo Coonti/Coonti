@@ -1255,6 +1255,94 @@ if(coonti && coonti['user']) {
 		}
 	}]);
 	
+	angular.module('coontiAdmin').factory('Redirect', ['$resource',
+		function($resource) {
+			return $resource(coonti.routing.prefix + '/api/redirects/:oldPath', { oldPath: "@oldPath" }, {
+				'create': { method: 'PUT' }
+			});
+		}
+	]);
+	
+	angular.module('coontiAdmin').controller('RedirectsCtrl', ['$scope', '$routeParams', '$location', 'Redirect', 'ngDialog', 'notifications', function($scope, $routeParams, $location, Redirect, ngDialog, notifications) {
+		$scope.add = false;
+
+		if($location.path() == '/redirects/add') {
+			$scope.add = true;
+			$scope.redirect = new Redirect();
+			$scope.redirect.external = 0;
+		}
+		else {
+			$scope.redirect = Redirect.get($routeParams, function() {
+				if($scope.redirect.weight) {
+					$scope.redirect.weight = -parseInt($scope.redirect.weight, 10);
+				}
+				if($scope.redirect.oldPath) {
+					$scope.redirect.olderPath = $scope.redirect.oldPath;
+				}
+			});
+		}
+
+		$scope.create = function(redirect) {
+			if(!redirect.oldPath || !redirect.newPath) {
+				notifications.error('', 'Please input both paths.');
+				return;
+			}
+			redirect.weight = -parseInt(redirect.weight, 10);
+			if(redirect.external == '1') {
+				redirect.external = true;
+			}
+			else {
+				redirect.external = false;
+			}
+			redirect.$create({}, function() {
+				$location.path('/redirects');
+				notifications.success('', 'Added redirect.');
+			}, function() {
+				notifications.error('', 'Redirect could not be added.');
+			});
+		}
+		
+		$scope.save = function(redirect) {	
+			if(!redirect.oldPath || !redirect.newPath) {
+				notifications.error('', 'Please input both paths.');
+				return;
+			}
+			redirect.weight = -parseInt(redirect.weight, 10);
+			if(redirect.external == '1') {
+				redirect.external = true;
+			}
+			else {
+				redirect.external = false;
+			}
+			var op = redirect.oldPath;
+			redirect.$save(function() {
+				$location.path('redirects');
+				notifications.success('', "Saved redirect '" + op + "'.");
+			}, function() {
+				notifications.error('', "Could not save redirect.");
+			});
+		}
+		
+		$scope.remove = function(item) {
+			ngDialog.openConfirm({
+				data: {
+					message: "Are you sure to remove redirect '" + item.oldPath + "'?",
+					close: 'No',
+					confirm: 'Yes'
+				}
+			}).then(function(value) {
+				var redirect = new Redirect({ oldPath: item.oldPath });
+				redirect.$delete(function() {
+					notifications.success('', "Removed redirect.");
+					$scope.redirect = Redirect.get($routeParams);
+				}, function() {
+					notifications.error('', "Could not remove redirect.");
+				});
+			});
+		};
+
+	}]);
+	
 	angular.module('coontiAdmin').controller('WysiwygInsertImageCtrl', ['$scope', function($scope) {
 		$scope.media = {};
 		$scope.coonti = coonti;
@@ -1741,6 +1829,18 @@ if(coonti && coonti['user']) {
 		return function(input) {
 			return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
 		}
+	});
+
+	angular.module('coontiAdmin').filter('encodeURIComponent', function($window) {
+		return function(input) {
+			return $window.encodeURIComponent(input).replace(/[!'()*]/g, function(c) {
+				return '%' + c.charCodeAt(0).toString(16);
+			});
+		};
+		/*
+		return $window.encodeURIComponent.replace(/[!'()*]/g, function(c) {
+			return '%' + c.charCodeAt(0).toString(16);
+		});*/
 	});
 	
 	angular.module('coontiAdmin').filter('isSet', function() {

@@ -39,7 +39,7 @@ function CoontiRouter(cnti) {
 	var router;
 	var users;
 
-	var redirects = new SortedArray();  // eslint-disable-line no-unused-vars
+	var redirects = new SortedArray();
 	var firstInit = true;
 
 	var stateMachines = {};
@@ -52,6 +52,7 @@ function CoontiRouter(cnti) {
 	var templates;
 	var contents;
 
+	var config;
 	var logger;
 
 	// ##TODO## Add uploaddir etc.
@@ -59,7 +60,8 @@ function CoontiRouter(cnti) {
 		multipart: true,
 	};
 
-	var self = this;
+	const redirectDb = 'RedirectsConfig';
+	const self = this;
 
 	/**
 	 * Initialises CoontiRouter instance by setting up routing as specified in the Coonti configuration.
@@ -101,6 +103,7 @@ function CoontiRouter(cnti) {
 	 */
 	var configInitialised = function*() { // eslint-disable-line require-yield
 		coontiPath = coonti.getConfigParam('pathPrefix');
+		config = coonti.getConfig();
 
 		sessionConfig = coonti.getConfigParam('session');
 		if(!sessionConfig.key) {
@@ -116,7 +119,6 @@ function CoontiRouter(cnti) {
 		app.keys = [coonti.getConfigParam('cookieKey')];
 
 		if(firstInit) {
-			// app.use(session(app));
 			app.use(convert(session(app)));
 			app.use(router.routes());
 			forms = coonti.getManager('form');
@@ -132,6 +134,11 @@ function CoontiRouter(cnti) {
 		_.each(sms, function(sm, name) {
 			self.addExecutionPath(name, sm);
 		});
+
+		const tmp = yield config.readConfigFromDb(redirectDb);
+		if(tmp) {
+			redirects.fromJSONObject(tmp);
+		}
 	};
 
 	/**
@@ -381,16 +388,119 @@ function CoontiRouter(cnti) {
 		return true;
 	};
 
+	/**
+	 * Gets all redirects.
+	 *
+	 * @return {Array} The redirects in order of execution.
+	 */
+	this.listRedirects = function() {
+		return redirects.toArray();
+	};
+
+	/**
+	 * Gets a single redirect based on the old path.
+	 *
+	 * @param {String} oldPath - The path.
+	 * @return {Object} The redirect object containing all redirect data or false, if no redirect was found.
+	 */
+	this.getRedirect = function(oldPath) {
+		if(!!oldPath) {
+			for(let i = 0; i < redirects.size(); i++) {
+				const r = redirects.valueAt(i);
+				if(r && r.oldPath == oldPath) {
+					return _.clone(r);
+				}
+			}
+		}
+		return false;
+	};
+
+	/**
+	 * Match a redirect based on the path.
+	 *
+	 * @param {String} path - The path.
+	 * @return {Object} The matched redirect with a new path.
+	 */
+	this.matchRedirect = function(path) {
+		if(!!path) {
+			for(let i = 0; i < redirects.size(); i++) {
+				const r = redirects.valueAt(i);
+				if(r) {
+					const m = path.match(r.oldPathRegexp);
+					if(m) {
+						const ret = _.clone(r);
+						ret.newPathReplaced = r.newPath;
+						for(let j = 1; j < m.length; j++) {
+							ret.newPathReplaced = ret.newPathReplaced.replace(new RegExp('\\$' + j, 'g'), m[j]);
+						}
+						ret.newPathReplaced = ret.newPathReplaced.replace(new RegExp('\\$[0-9]+', 'g'), '');
+						return ret;
+					}
+				}
+			}
+		}
+		return false;
+	};
 
 	/**
 	 * Adds a new redirect.
 	 *
-	 * @param {String} oldPath - The path that needs to be redirected.
+	 * @param {String} oldPath - The path that needs to be redirected. Needs to be unique.
 	 * @param {String} newPath - The destination for the redirection.
+	 * @param {Boolean} external - True if the redirect is outside of this Coonti instance, false if inside.
 	 * @param {integer} weight - The weight of the the redirect (higher is handled earlier).
+	 * @return {Boolean} True on success, false on failure.
 	 */
-	this.addRedirect = function(oldPath, newPath, weight) {
-		// ##TODO## Implement
+	this.addRedirect = function*(oldPath, newPath, external, weight) {
+		if(!!oldPath && !!newPath) {
+			if(this.getRedirect(oldPath) !== false) {
+				return false;
+			}
+			const r = {
+				oldPath: oldPath,
+				oldPathRegexp: new RegExp(oldPath, 'i'),
+				external: external,
+				newPath: newPath,
+				weight: weight
+			};
+
+			redirects.insert(r, weight);
+			var ret = yield _saveRedirects();
+			return ret;
+		}
+		return false;
+	};
+
+	/**
+	 * Removes a redirect based on the old path.
+	 *
+	 * @param {String} oldPath - The path.
+	 * @return {Boolean} True on success, false on failure
+	 */
+	this.removeRedirect = function*(oldPath) {
+		if(!!oldPath) {
+			for(let i = 0; i < redirects.size(); i++) {
+				const r = redirects.valueAt(i);
+				if(r && r.oldPath == oldPath) {
+					redirects.remove(r);
+					var ret = yield _saveRedirects();
+					return ret;
+				}
+			}
+			return true;
+		}
+		return false;
+	};
+
+	/**
+	 * Saves redirects to the database.
+	 *
+	 * @return {bool} True on success, false on failure.
+	 */
+	const _saveRedirects = function*() {
+		var tmp = redirects.toJSONObject();
+		var ret = yield config.writeConfigToDb(redirectDb, tmp);
+		return ret;
 	};
 
 	/**
@@ -420,7 +530,7 @@ function CoontiRouter(cnti) {
 	};
 
 	/**
-	 * Calculates route from the request.
+	 * Calculates route from the request and handles also redirects.
 	 *
 	 * @param {CoontiStateMachine} csm - The CoontiStateMachine instance.
 	 * @param {Object} config - The configuration of the state.
@@ -429,6 +539,19 @@ function CoontiRouter(cnti) {
 	this.handleRoute = function*(csm, config, next) {
 		logger.debug('HandleRoute');
 		var path = this.path;
+
+		if(!config['inhibitRedirects']) {
+			const match = self.matchRedirect(path);
+			if(match !== false) {
+				if(match.external) {
+					this.redirect(match.newPathReplaced);
+					return;
+				}
+				this.path = match.newPathReplaced;
+				path = this.path;
+			}
+		}
+
 		var route = this.path;
 		var smPath = csm.getPath();
 		if(_s.endsWith(smPath, '*')) {
@@ -486,6 +609,7 @@ function CoontiRouter(cnti) {
 					logout = prefix + logout;
 				}
 				if(r != login && r != logout) {
+					this.session['coontiLoginError'] = 'You need to be signed in to access that resource.';
 					this.redirect(login);
 					return;
 				}
@@ -500,7 +624,7 @@ function CoontiRouter(cnti) {
 				if(user) {
 					var allowed = yield user.isAllowed(access);
 					if(!allowed) {
-						// ##TODO## Add error message through session
+						this.session['coontiLoginError'] = 'You do not have rights to access that resource.';
 						this.redirect(login);
 						return;
 					}

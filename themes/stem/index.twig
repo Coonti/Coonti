@@ -51,9 +51,13 @@
       <div class="row">
         <div class="col-xs-12 col-sm-3 col-md-3 sidebar" ng-class="{ collapse: isCollapsed }" ng-click="isCollapsed = true">
           <ul class="nav nav-sidebar" ng-controller="AdminMenuCtrl">
-	    <li ng-repeat="item in menu">
-	      <a id="coontiAdminMenu-{% ng item.name %}" class="coontiAdminMenuItem-{% ng item.depth %}" href="{%ng item.url %}">{% ng item.title %}</a>
+	    <li ng-repeat="item in menu" ng-class="{ 'separated': item.separated }">
+	      <a ng-if="item.url" id="coontiAdminMenu-{% ng item.name %}" class="coontiAdminMenuItem-{% ng item.depth %}" href="{% ng item.url %}">{% ng item.title %}</a>
+	      <span ng-if="!item.url" id="coontiAdminMenu-{% ng item.name %}" class="coontiAdminMenuItem-{% ng item.depth %}">{% ng item.title %}</span>
 	    </li>
+	    <li class="separated">
+	      <span>Coonti {{ coonti.version }} / {{ coonti.release }}</span>
+	    <li>
             <li class="visible-xs-block"><a href="#/profile">Profile for {{ user.account }} ({{ user.email }})</a></li>
 	    <li class="visible-xs-block"><a href="/{{ routing.coontiPath }}">View Site</a></li>
 	    <li class="visible-xs-block"><a href="{{ routing.prefix }}/logout">Sign Out</a></li>
@@ -74,6 +78,11 @@
       {{ content.content }}
       {% if content.form is defined %}
       <section id="adminForm">
+        {% if content.formError != false %}
+	  <div class="coontiFormMessage">
+	    {{ content.formError }}
+	  </div>
+	{% endif %}
 	{% form content.form %}
       </section>
       {% endif %}
