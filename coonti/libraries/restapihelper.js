@@ -52,7 +52,7 @@ function RestApiHelper(cnti, get, post, put, del) {
 		var method = this.request.method;
 		var handler = self.handlers[method];
 		if(!handler || !handler['handler']) {
-			// ##TODO## Add Allow header
+			this.set('Allow', 'GET, POST, PUT, DELETE');
 			this.status=(405); // eslint-disable-line space-infix-ops
 			return;
 		}
