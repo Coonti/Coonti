@@ -77,7 +77,7 @@ function CoontiAdmin(cnti) {
 		{ name: 'end', priority: 100 }
 	];
 
-	var defaultQueryValues = {
+	const defaultQueryValues = {
 		start: 0,
 		len: 20,
 		sort: '',
@@ -103,6 +103,8 @@ function CoontiAdmin(cnti) {
 	var logger;
 
 	var self = this;
+
+	const formCollection = 'user';
 
 	/**
 	 * Fetches the module information for admin users.
@@ -194,6 +196,16 @@ function CoontiAdmin(cnti) {
 			value: 'Save'
 		});
 
+		// Check whether user form collection exists and add it if needed
+		if(!formManager.checkCollection(formCollection)) {
+			if(!formManager.addCollection(formCollection)) {
+				logger.error('CoontiAdmin - Cannot add user form collection.');
+				throw new CoontiException(CoontiException.FATAL, 4102, 'Cannot add user form collection.');
+			}
+			formManager.addForm(formCollection, 'Test Form 1');
+			formManager.addForm(formCollection, 'Test Form 2');
+		}
+
 		minirouter.addRoute('menu', '/menu', this.getCoontiMenu);
 		minirouter.addRoute('routes', '/routes', this.getCoontiRoutes);
 		minirouter.addRoute('assets', '/assets', this.getCoontiAssets);
@@ -232,6 +244,17 @@ function CoontiAdmin(cnti) {
 			{ allow: 'admin.manageMedia',
 								  handler: this.removeMedia });
 		minirouter.addRoute('media', '\/media(?:\/([^\/]+))?(?:\/(.+))?', rah.serve);
+
+		rah = new RestApiHelper(coonti,
+			{ allow: 'admin.manageForms',
+								  handler: this.getForm },
+			{ allow: 'admin.manageForms',
+								  handler: this.updateForm },
+			{ allow: 'admin.manageForms',
+								  handler: this.addForm },
+			{ allow: 'admin.manageForms',
+								  handler: this.removeForm });
+		minirouter.addRoute('form', '\/form(?:\/(.+))?', rah.serve);
 
 		rah = new RestApiHelper(coonti, false, { loggedIn: true, handler: this.changePassword }, false, false);
 		minirouter.addRoute('password', '/users/user/password(?:\/(.+))?', rah.serve);
@@ -738,6 +761,64 @@ function CoontiAdmin(cnti) {
 			var res = yield mediaManager.removeFile(dir, name);
 			if(!res) {
 				this.status=(404); // eslint-disable-line space-infix-ops
+			}
+			return;
+		}
+		this.status=(404); // eslint-disable-line space-infix-ops
+	};
+
+
+	/**
+	 * Fetches forms or a single form. Besides parameters in URL, handles the following query string parameters: sort - The field used in sorting, start - The starting point of the listing, and len - The length of the listing. All are optional.
+	 *
+	 * @param {String=} name - The name of the form. Optional.
+	 */
+	this.getForm = function*(name) { // eslint-disable-line require-yield
+		const ret = getQueryParams(this.query);
+		if(!!name) {
+			// ##TODO##
+		}
+		let forms = formManager.listForms(formCollection);
+		if(!forms) {
+			this.status=(500); // eslint-disable-line space-infix-ops
+			return;
+		}
+		forms = forms.sort().slice(ret.pagination.start, ret.pagination.start + ret.pagination.len);
+		ret.items = [];
+		for(let i = 0; i < forms.length; i++) {
+			ret.items[i] = { name: forms[i] };
+		}
+		this.coonti.setItem('response', ret);
+	};
+
+	/**
+	 * Updates a form from Angular.
+	 */
+	this.updateForm = function*() { // eslint-disable-line require-yield
+		// ##TODO##
+		this.status=(400); // eslint-disable-line space-infix-ops
+		this.coonti.setItem('response', {});
+	};
+
+	/**
+	 * Adds a form file from Angular.
+	 */
+	this.addForm = function*() { // eslint-disable-line require-yield
+		// ##TODO##
+		this.status=(400); // eslint-disable-line space-infix-ops
+		this.coonti.setItem('response', {});
+	};
+
+	/**
+	 * Removes the specified form.
+	 *
+	 * @param {String} name - The name of the form.
+	 */
+	this.removeForm = function*(name) { // eslint-disable-line require-yield
+		this.coonti.setItem('response', {});
+		if(!!name) {
+			if(!formManager.removeForm(formCollection, name)) {
+				this.status=(400); // eslint-disable-line space-infix-ops
 			}
 			return;
 		}
@@ -1677,6 +1758,13 @@ function CoontiAdmin(cnti) {
 				url: '#/media',
 				depth: 0
 			},
+/*			{
+				allow: 'admin.manageForms',
+				name: 'forms',
+				title: 'Forms',
+				url: '#/forms',
+				depth: 0
+			},*/
 			{
 				allow: 'admin.manageUsers',
 				name: 'users',
@@ -1803,6 +1891,30 @@ function CoontiAdmin(cnti) {
 				route: '/media/add/:dir',
 				template: '/angular/stem/media-add.html',
 				controller: 'MediaCtrl'
+			},
+			{
+				allow: 'admin.manageForms',
+				route: '/forms/',
+				template: '/angular/stem/forms-list.html',
+				controller: 'FormsCtrl'
+			},
+			{
+				allow: 'admin.manageForms',
+				route: '/forms/view/:_id',
+				template: '/angular/stem/forms-view.html',
+				controller: 'FormsCtrl'
+			},
+			{
+				allow: 'admin.manageForms',
+				route: '/forms/add',
+				template: '/angular/stem/forms-edit.html',
+				controller: 'FormsCtrl'
+			},
+			{
+				allow: 'admin.manageForms',
+				route: '/forms/edit/:_id',
+				template: '/angular/stem/forms-edit.html',
+				controller: 'FormsCtrl'
 			},
 			{
 				allow: 'admin.manageThemes',

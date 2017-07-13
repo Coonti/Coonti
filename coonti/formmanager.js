@@ -153,6 +153,21 @@ function CoontiFormManager(cnti) {
 	};
 
 	/**
+	 * Checks whether the given form collection exists.
+	 *
+	 * @param {String} name - The name of the of collection.
+	 * @return {Boolean} True, if collection exists, false otherwise.
+	 */
+	this.checkCollection = function(name) {
+		if(!!name) {
+			if(formCollections[name]) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	/**
 	 * Creates a new form.
 	 *
 	 * @param {String} col - The name of the collection.
@@ -196,6 +211,21 @@ function CoontiFormManager(cnti) {
 		var col = formCollections[col];
 		delete col[nm];
 		return true;
+	};
+
+	/**
+	 * Fetches all form names in the given collection.
+	 *
+	 * @param {String} col - The name of the collection.
+	 * @return {Array} The forms or false, if the form is not found.
+	 */
+	this.listForms = function(col) {
+		// ##TODO## Check access rights for limited collections
+
+		if(!col || !formCollections[col]) {
+			return false;
+		}
+		return Object.keys(formCollections[col]);
 	};
 
 	/**

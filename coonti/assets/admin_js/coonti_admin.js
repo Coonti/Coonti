@@ -563,6 +563,63 @@ if(coonti && coonti['user']) {
 	    };
 	}]);
 	
+	angular.module('coontiAdmin').factory('Form', ['$resource',
+		function($resource) {
+			return $resource(coonti.routing.prefix + '/api/form/:name', { name: "@name" }, {
+				'create': { method: 'PUT' }
+			});
+		}
+	]);
+	
+	angular.module('coontiAdmin').controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'Form', 'ngDialog', 'notifications', function($scope, $routeParams, $location, Form, ngDialog, notifications) {
+		$scope.add = false;
+
+		if($location.path() == '/forms/add') {
+			$scope.add = true;
+			$scope.form = new Form();
+		}
+		else {
+			$scope.form = Form.get($routeParams);
+		}
+
+		$scope.create = function(form) {
+			form.$create({}, function() {
+				$location.path('/forms');
+				notifications.success('', 'Added form.');
+			}, function() {
+				notifications.error('', 'Form could not be added.');
+			});
+		}
+		
+		$scope.save = function(form) {	
+			var oldName = form.oldName;
+			form.$save(function() {
+				$location.path('/forms');
+				notifications.success('', "Saved form '" + oldName + "'.");
+			}, function() {
+				notifications.error('', "Could not save form.");
+			});
+		}
+		
+		$scope.remove = function(item) {
+			ngDialog.openConfirm({
+				data: {
+					message: "Are you sure to remove form '" + item.name + "'?",
+					close: 'No',
+					confirm: 'Yes'
+				}
+			}).then(function(value) {
+				var form = new Form({ name: item.name });
+				form.$delete(function() {
+					notifications.success('', "Removed form.");
+					$scope.form = Form.get($routeParams);
+				}, function() {
+					notifications.error('', "Could not remove form.");
+				});
+			});
+		};
+	}]);
+	
 	angular.module('coontiAdmin').factory('Theme', ['$resource',
 		function($resource) {
 			return $resource(coonti.routing.prefix + '/api/themes/:name', { name: '@name' }, {
@@ -1316,7 +1373,7 @@ if(coonti && coonti['user']) {
 			}
 			var op = redirect.oldPath;
 			redirect.$save(function() {
-				$location.path('redirects');
+				$location.path('/redirects');
 				notifications.success('', "Saved redirect '" + op + "'.");
 			}, function() {
 				notifications.error('', "Could not save redirect.");
@@ -1340,7 +1397,6 @@ if(coonti && coonti['user']) {
 				});
 			});
 		};
-
 	}]);
 	
 	angular.module('coontiAdmin').controller('WysiwygInsertImageCtrl', ['$scope', function($scope) {
@@ -1359,7 +1415,6 @@ if(coonti && coonti['user']) {
 			var md = '<img src="' + url + (!!alt ? '" alt="' + alt : '') + '"/>';
 			$scope.$close(md);
 		}
-
 	}]);
 	
 	angular.module('coontiAdmin').controller('SelectImageCtrl', ['$scope', function($scope) {

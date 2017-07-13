@@ -646,6 +646,9 @@ function CoontiUserManager(cnti) {
 		userManager.addRight({ name: 'admin.manageMedia',
 							   displayName: 'Manage Media',
 							   description: 'Allows user to add, edit and remove media files.' });
+		userManager.addRight({ name: 'admin.manageForms',
+							   displayName: 'Manage Forms',
+							   description: 'Allows user to add, edit and remove forms, and list, view, and remove form submissions.' });
 		userManager.addRight({ name: 'admin.manageThemes',
 							   displayName: 'Manage Themes',
 							   description: 'Allows user to configure and change themes.' });
