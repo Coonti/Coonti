@@ -154,7 +154,8 @@ function WidgetManager(cnti) {
 			return true;
 		}
 
-		if(!self.addDefaultWidgets()) {
+		const check = yield self.addDefaultWidgets();
+		if(!check) {
 			logger.warn('WidgetManager - Could not add default widgets.');
 			return false;
 		}
@@ -474,21 +475,21 @@ function WidgetManager(cnti) {
 	 *
 	 * @return {Bool} True on success, false on failure.
 	 */
-	this.addDefaultWidgets = function() {
-		let fm = formManager.addForm('widget', 'simpleText');
+	this.addDefaultWidgets = function*() {
+		let fm = yield formManager.addForm('widget', 'simpleText');
 		if(!fm) {
 			return false;
 		}
-		fm.addField('content', 'wysiwyg', {
+		yield fm.addField('content', 'wysiwyg', {
 			label: 'Content',
 			value: ''
 		});
 
-		fm = formManager.addForm('widget', 'image');
+		fm = yield formManager.addForm('widget', 'image');
 		if(!fm) {
 			return false;
 		}
-		fm.addField('image', 'image', {
+		yield fm.addField('image', 'image', {
 			label: 'Image'
 		});
 

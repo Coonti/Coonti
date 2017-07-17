@@ -120,74 +120,73 @@ function CoontiInstall(cnti) {
 			throw new CoontiException(CoontiException.FATAL, 4102, 'Cannot add installation form collection.');
 		}
 
-		var fm = formManager.addForm('installation', 'languageSelection');
+		var fm = yield formManager.addForm('installation', 'languageSelection');
 		if(!fm) {
 			logger.error('CoontiInstall - Cannot add installation language form.');
 			throw new CoontiException(CoontiException.FATAL, 4103, 'Cannot add installation language form.');
 		}
-		fm.addField('language', 'select', {
+		yield fm.addField('language', 'select', {
 			label: 'Please select language',
 			values: langsForForms
 		});
-		fm.addField('submit', 'submit', {
+		yield fm.addField('submit', 'submit', {
 			value: 'Next'
 		});
 
-		fm = formManager.addForm('installation', 'mongoDB');
+		fm = yield formManager.addForm('installation', 'mongoDB');
 		if(!fm) {
 			logger.error('CoontiInstall - Cannot add installation database form.');
 			throw new CoontiException(CoontiException.FATAL, 4103, 'Cannot add installation database form.');
 		}
-		fm.addField('mongoUrl', 'text', {
+		yield fm.addField('mongoUrl', 'text', {
 			label: 'MongoDB connection URL',
 			value: 'mongodb://localhost:27017/coonti',
 			required: true
 		});
-		fm.addField('submit', 'submit', {
+		yield fm.addField('submit', 'submit', {
 			value: 'Next'
 		});
 
-		fm = formManager.addForm('installation', 'userAccount');
+		fm = yield formManager.addForm('installation', 'userAccount');
 		if(!fm) {
 			logger.error('CoontiInstall - Cannot add installation user account form.');
 			throw new CoontiException(CoontiException.FATAL, 4103, 'Cannot add installation user account form.');
 		}
-		fm.addField('account', 'text', {
+		yield fm.addField('account', 'text', {
 			label: 'Administrator account',
 			required: true
 		});
-		fm.addField('password', 'password', {
+		yield fm.addField('password', 'password', {
 			label: 'Administrator password',
 			required: true
 		});
-		fm.addField('password2', 'password', {
+		yield fm.addField('password2', 'password', {
 			label: 'Please repeat the password',
 			required: true
 		});
-		fm.addField('email', 'email', {
+		yield fm.addField('email', 'email', {
 			label: 'Administrator email address',
 			required: true
 		});
-		fm.addField('submit', 'submit', {
+		yield fm.addField('submit', 'submit', {
 			value: 'Next'
 		});
 
-
-		fm = formManager.addForm('installation', 'dbContent');
+		fm = yield formManager.addForm('installation', 'dbContent');
 		if(!fm) {
 			logger.error('CoontiInstall - Cannot add installation example content form.');
 			throw new CoontiException(CoontiException.FATAL, 4103, 'Cannot add installation example content form.');
 		}
 
-		fm.addField('users', 'checkbox', {
+		yield fm.addField('users', 'checkbox', {
 			label: 'Default user roles and groups',
 			value: true
 		});
-		fm.addField('content', 'checkbox', {
+		yield fm.addField('content', 'checkbox', {
 			label: 'Demo content',
 			value: false
 		});
-		fm.addField('submit', 'submit', {
+		yield fm.addField('submit', 'submit', {
 			value: 'Next'
 		});
 

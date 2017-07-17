@@ -194,7 +194,7 @@ function MongoHandler(mongoCnnct, db) {
 	this.getAllData = function*(collection, key, params, pg) {
 		if(!collection || !key) {
 			// ##TODO## Throw an exception?
-			return {};
+			return [];
 		}
 
 		pg = pg || {};
@@ -230,33 +230,54 @@ function MongoHandler(mongoCnnct, db) {
 	};
 
 	/**
-	 * Writes new data to the database. ##TODO## Check success and return true/false.
+	 * Writes new data to the database.
 	 *
 	 * @param {String} collection - The name of the collection.
 	 * @param {Object} data - The data to be written.
+	 * @return {String|Boolean} The _id of the inserted data or false, if the data could not be inserted.
 	 */
 	this.insertData = function*(collection, data) {
 		if(!collection || !data) {
-			return;
+			return false;
 		}
 
-		var col = this.getCollection(collection);
-		yield col.insert(data);
+		const col = this.getCollection(collection);
+		try {
+			const res = yield col.insert(data);
+			if(!!res._id) {
+				return res._id;
+			}
+			return false;
+		}
+		catch(e) {
+			return false;
+		}
 	};
 
 	/**
-	 * Updates data to the database. The update is done based on _id field. ##TODO## Check success and return true/false.
+	 * Updates data to the database. The update is done based on _id field. If the _id field is not present, the method calls this.insertData().
 	 *
 	 * @param {String} collection - The name of the collection.
 	 * @param {Object} data - The data to be written.
+	 * @return {String|Boolean} The _id on success, false on failure.
 	 */
 	this.updateData = function*(collection, data) {
 		if(!collection || !data) {
-			return;
+			return false;
 		}
 
-		var col = this.getCollection(collection);
-		yield col.updateById(data['_id'], data);
+		const col = this.getCollection(collection);
+		let tmp;
+		if(!!data['_id']) {
+			tmp = yield col.update({ _id: data['_id'] }, data);
+		}
+		else {
+			return yield this.insertData(collection, data);
+		}
+		if(tmp && tmp.ok == 1) {
+			return data['_id'];
+		}
+		return false;
 	};
 
 	/**

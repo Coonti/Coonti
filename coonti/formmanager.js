@@ -24,6 +24,10 @@ var SortedArray = require('./libraries/sortedarray');
 var coonti;
 var formElements = {};
 var formManager;
+var storage;
+var logger;
+
+const formDbCollection = 'forms';
 
 /**
  * Creates a new instance of the form manager that handles form submissions and verifications.
@@ -46,11 +50,15 @@ function CoontiFormManager(cnti) {
 	 * Initialises the manager.
 	 */
 	this.initialise = function() {
+		logger = coonti.getManager('log').getLogger('coonti-core-formmanager');
+
 		addBasicValidators();
 		addBasicSanitisers();
 		addBasicElements();
 
 		coonti.addEventListener('Coonti-Config-Init', configInitialised);
+		coonti.addEventListener('Coonti-Module-Start-MongoConnect', this.mongoConnectStarted);
+		coonti.addEventListener('Coonti-Module-Stop-MongoConnect', this.mongoConnectStopped);
 	};
 
 	/**
@@ -107,6 +115,29 @@ function CoontiFormManager(cnti) {
 				this.body=('Not found'); // eslint-disable-line space-infix-ops
 			});
 		}
+	};
+
+	/**
+	 * Sets the storage when made available.
+	 */
+	this.mongoConnectStarted = function*() { // eslint-disable-line require-yield
+		var sm = coonti.getManager('storage');
+		storage = sm.getStorageHandler('mongo'); // ##TODO## Read from the configuration
+
+		if(!storage) {
+			logger.warn('FormManager - Could not find MongoDB storage, even if the MongoDB subsystem seems to be running.');
+		}
+		else {
+			logger.info('FormManager - MongoDB storage available.');
+		}
+	};
+
+	/**
+	 * Clears the storage when it becomes unavailable
+	 */
+	this.mongoConnectStopped = function*() { // eslint-disable-line require-yield
+		storage = false;
+		logger.info('FormManager - MongoDB storage unavailable.');
 	};
 
 	/**
@@ -172,10 +203,10 @@ function CoontiFormManager(cnti) {
 	 *
 	 * @param {String} col - The name of the collection.
 	 * @param {String} nm - The name of the form.
-	 * @param {String} hd - The route to the handler of the form, i.e. the submission URL. Optional, defaults to the page that contains the form.
+ * @param {Object} opts - The options for the form: handler (String) - the route to the handler of the form, i.e. the submission URL; store (Boolean) - whether the form should be stored in the database.
 	 * @return {Object} The newly created form or false, if creation failed.
 	 */
-	this.addForm = function(col, nm, hd) {
+	this.addForm = function*(col, nm, opts) {
 		if(!col || !formCollections[col] || !nm) {
 			return false;
 		}
@@ -184,11 +215,20 @@ function CoontiFormManager(cnti) {
 			return false;
 		}
 
-		if(!hd) {
-			hd = '';
+		if(!opts) {
+			opts = {};
 		}
 
-		var form = new CoontiForm(col, nm, hd);
+		if(!opts['handler']) {
+			opts['handler'] = '';
+		}
+
+		const form = new CoontiForm(col, nm, opts);
+		const stored = yield form.storeIfNeeded();
+		if(!stored) {
+			return false;
+		}
+
 		formCollections[col][nm] = form;
 		return form;
 	};
@@ -621,13 +661,14 @@ function CoontiFormManager(cnti) {
  * @classdesc CoontiForm is a collection of form elements with their validators
  * @param {String} col - The form collection.
  * @param {String} nm - The name/id of the form.
- * @param {String} hd - The route to the handler of the form.
+ * @param {Object} opts - The options for the form: handler (String) - the submission URL; store (Boolean) - whether the form should be stored in the database.
  * @return {CoontiForm} The new instance.
  */
-function CoontiForm(col, nm, hd) {
+function CoontiForm(col, nm, opts) {
 	var formCollection = col;
 	var formName = nm;
-	var formHandler = hd;
+	var formOptions = opts || {};
+	var formHandler = opts.handler || '';
 	var fields = [];
 	var fieldsByName = {};
 
@@ -640,7 +681,7 @@ function CoontiForm(col, nm, hd) {
 	 * @param {integer} - pos The position for the new field. Optional, defaults to the last position.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.addField = function(name, field, localDef, pos) {
+	this.addField = function*(name, field, localDef, pos) {
 		if(!name || !field || !formElements[field] || fieldsByName[name]) {
 			return false;
 		}
@@ -676,10 +717,35 @@ function CoontiForm(col, nm, hd) {
 			fields.splice(pos, 0, formField);
 		}
 		fieldsByName[name] = formField;
-		return true;
+
+		const stored = yield this.storeIfNeeded();
+		return stored;
 	};
 
-	// ##TODO## Add field removal functions (by pos + by name)
+	/**
+	 * Removes a field element from the form.
+	 *
+	 * @param {String} name - The name of the field to be removed.
+	 * @return {Boolean} True on success, false on failure.
+	 */
+	this.removeField = function*(name) {
+		if(!name || !fieldsByName[name]) {
+			return false;
+		}
+
+		for(let i = 0; i < fields.length; i++) {
+			if(fields[i].name == name) {
+				fields.splice(i, 1);
+				delete fieldsByName[name];
+				break;
+			}
+		}
+
+		const stored = yield this.storeIfNeeded();
+		return stored;
+	};
+
+	// ##TODO## Add field removal function by pos
 
 	/**
 	 * Gets the number of fields.
@@ -768,6 +834,22 @@ function CoontiForm(col, nm, hd) {
 	};
 
 	/**
+	 * Returns the given form option.
+	 *
+	 * @param {String} key - The form option name.
+	 * @return {*} The value of the option or null, if no such option exists.
+	 */
+	this.getOption = function(key) {
+		if(!!key) {
+			if(typeof formOptions[key] === 'undefined') {
+				return null;
+			}
+			return formOptions[key];
+		}
+		return null;
+	};
+
+	/**
 	 * Creates a CoontiFormSubmission object from the given data.
 	 *
 	 * @param {Object} data - The form submission key value pairs.
@@ -784,6 +866,74 @@ function CoontiForm(col, nm, hd) {
 			sub.addValue(i, d);
 		});
 		return sub;
+	};
+
+	/**
+	 * Checks whether the form needs to be stored and stores it, if required.
+	 *
+	 * @return {Boolean} True on success (no storing needed or stored successfully), false if storing failed.
+	 */
+	this.storeIfNeeded = function*() {
+		if(!formOptions['store']) {
+			return true;
+		}
+
+		if(!storage) {
+			logger.error('FormManager - Could not store form, as storage is missing.');
+			return false;
+		}
+
+		const ser = this.simpleSerialise();
+		const success = yield storage.updateData(formDbCollection, ser);
+		if(!!success) {
+			this._id = success;
+		}
+		return true;
+	};
+
+	/**
+	 * Serialises the form.
+	 *
+	 * @return {Object} The form serialisation.
+	 */
+	this.simpleSerialise = function() {
+		const ret = {};
+		ret.fields = {};
+
+		if(!!this._id) {
+			ret._id = this._id;
+		}
+		ret.collection = formCollection;
+		ret.name = formName;
+		ret.options = formOptions;
+		ret.handler = formHandler;
+
+		_.each(fields, function(f) {
+			const r = {};
+			r.name = f.name;
+			r.type = f.formElement.type;
+			r.required = f.localDef.required || false;
+
+			var copied = ['defaultValue', 'label', 'values'];
+			_.each(copied, function(c) {
+				if(f.localDef[c]) {
+					r[c] = f.localDef[c];
+				}
+				else if(f.formElement[c]) {
+					r[c] = f.formElement[c];
+				}
+			});
+
+			if((f.localDef.validators && _.size(f.localDef.validators) > 0) ||
+			   (f.formElement.validators && _.size(f.formElement.validators) > 0)) {
+				r.validators = true;
+			}
+			else {
+				r.validators = false;
+			}
+			ret['fields'][r.name] = r;
+		});
+		return ret;
 	};
 }
 
@@ -1151,11 +1301,14 @@ function CoontiFormSubmission(frm, sbm) {
 	 * @return {Object} The form serialisation.
 	 */
 	this.simpleSerialise = function() {
+		// ##TODO## Refactor to use form.simpleSerialise() as a base
+
 		var ret = {};
 		ret.fields = {};
 
 		ret.collection = form.formCollection;
 		ret.name = form.formName;
+		ret.options = form.formOptions;
 		ret.handler = form.formHandler;
 		ret.submitted = submitted;
 		ret.validated = validated;

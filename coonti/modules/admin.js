@@ -118,7 +118,12 @@ function CoontiAdmin(cnti) {
 			author: 'Coonti Project',
 			authorUrl: 'http://coonti.org',
 			version: '0.1.0',
-			moduleUrl: 'http://coonti.org'
+			moduleUrl: 'http://coonti.org',
+			dependencies: [{
+				collection: 'module',
+				name: 'MongoContent',
+				states: 'started'
+			}]
 		};
 	};
 
@@ -148,41 +153,41 @@ function CoontiAdmin(cnti) {
 			throw new CoontiException(CoontiException.FATAL, 4102, 'Cannot add admin form collection.');
 		}
 
-		var fm = formManager.addForm('admin', 'login');
+		var fm = yield formManager.addForm('admin', 'login');
 		if(!fm) {
 			logger.error('CoontiAdmin - Cannot add admin login form.');
 			throw new CoontiException(CoontiException.FATAL, 4103, 'Cannot add admin login form.');
 		}
-		fm.addField('account', 'text', {
+		yield fm.addField('account', 'text', {
 			label: 'User Account',
 			value: '',
 			required: true
 		});
-		fm.addField('password', 'password', {
+		yield fm.addField('password', 'password', {
 			label: 'Password',
 			value: '',
 			required: true
 		});
-		fm.addField('submit', 'submit', {
+		yield fm.addField('submit', 'submit', {
 			value: 'Sign In'
 		});
 
-		fm = formManager.addForm('admin', 'contentType');
+		fm = yield formManager.addForm('admin', 'contentType');
 		if(!fm) {
 			logger.error('CoontiAdmin - Cannot add admin content type form.');
 			throw new CoontiException(CoontiException.FATAL, 4103, 'Cannot add admin content type form.');
 		}
-		fm.addField('displayName', 'text', {
+		yield fm.addField('displayName', 'text', {
 			label: 'Content Type Name',
 			value: '',
 			required: true
 		});
-		fm.addField('fieldName', 'text', {
+		yield fm.addField('fieldName', 'text', {
 			label: 'Field Name',
 			value: '',
 			required: true
 		});
-		fm.addField('fieldType', 'select', {
+		yield fm.addField('fieldType', 'select', {
 			label: '',
 			value: '',
 			values: { // ##TODO## This should be configurable
@@ -192,7 +197,7 @@ function CoontiAdmin(cnti) {
 			},
 			required: true
 		});
-		fm.addField('submit', 'submit', {
+		yield fm.addField('submit', 'submit', {
 			value: 'Save'
 		});
 
@@ -202,8 +207,15 @@ function CoontiAdmin(cnti) {
 				logger.error('CoontiAdmin - Cannot add user form collection.');
 				throw new CoontiException(CoontiException.FATAL, 4102, 'Cannot add user form collection.');
 			}
-			formManager.addForm(formCollection, 'Test Form 1');
-			formManager.addForm(formCollection, 'Test Form 2');
+/*			const fm1 = yield formManager.addForm(formCollection, 'Test Form 1', { store: true });
+			yield fm1.addField('testField', 'text', {
+				label: 'Test Field',
+				value: 'Fred + Barney',
+				required: true
+			});
+			yield fm1.removeField('testField');
+
+			yield formManager.addForm(formCollection, 'Test Form 2', { store: true });*/
 		}
 
 		minirouter.addRoute('menu', '/menu', this.getCoontiMenu);
@@ -1758,13 +1770,13 @@ function CoontiAdmin(cnti) {
 				url: '#/media',
 				depth: 0
 			},
-/*			{
+			{
 				allow: 'admin.manageForms',
 				name: 'forms',
 				title: 'Forms',
 				url: '#/forms',
 				depth: 0
-			},*/
+			},
 			{
 				allow: 'admin.manageUsers',
 				name: 'users',

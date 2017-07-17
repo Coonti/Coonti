@@ -137,7 +137,7 @@ function CoontiContentManager(cnti) {
 		}
 
 		contentTypes[name] = { name: name, contentType: ct, contentHandler: ch };
-		this.saveContentTypeForm(name, ct);
+		yield this.saveContentTypeForm(name, ct);
 		return true;
 	};
 
@@ -149,7 +149,7 @@ function CoontiContentManager(cnti) {
 	 * @param {Object} ch - The content handler that manages this content type.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.registerContentType = function(name, ct, ch) {
+	this.registerContentType = function*(name, ct, ch) {
 		if(!name || !ct || !ch) {
 			return false;
 		}
@@ -159,7 +159,7 @@ function CoontiContentManager(cnti) {
 		}
 
 		contentTypes[name] = { name: name, contentType: ct, contentHandler: ch };
-		this.saveContentTypeForm(name, ct);
+		yield this.saveContentTypeForm(name, ct);
 		return true;
 	};
 
@@ -187,7 +187,7 @@ function CoontiContentManager(cnti) {
 
 		delete contentTypes[name];
 		contentTypes[ct['name']] = { name: ct['name'], contentType: ct, contentHandler: ch };
-		this.saveContentTypeForm(ct['name'], ct);
+		yield this.saveContentTypeForm(ct['name'], ct);
 		return true;
 	};
 
@@ -376,27 +376,28 @@ function CoontiContentManager(cnti) {
 	 * @param {Object} ct - The content type fields.
 	 * @return {boolean} True on success, false on failure.
 	 */
-	this.saveContentTypeForm = function(name, ct) {
+	this.saveContentTypeForm = function*(name, ct) {
 		formManager.removeForm(formCollection, name);
-		var form = formManager.addForm(formCollection, name);
+		var form = yield formManager.addForm(formCollection, name);
 		if(!form) {
 			return false;
 		}
 
 		if(ct['fields']) {
-			_.each(ct.fields, function(c, n) {
+			for(let i = 0; i < ct.fields.length; i++) {
+				const c = ct.fields[i];
 				if(c['type']) {
 					var field = c['type'];
 					var localDef = _.clone(c);
 					delete localDef['type'];
 					delete localDef['json'];
-					form.addField(c['id'], field, localDef);
+					yield form.addField(c['id'], field, localDef);
 				}
 
 				// ##TODO## Add some intelligence in the process
-			});
+			}
 
-			form.addField('coontiSubmit', 'submit', { value: 'Ok' });
+			yield form.addField('coontiSubmit', 'submit', { value: 'Ok' });
 		}
 		return true;
 	};

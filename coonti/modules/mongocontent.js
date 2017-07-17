@@ -50,7 +50,8 @@ function MongoContent(cnti) {
 			moduleUrl: 'http://coonti.org',
 			dependencies: [{
 				collection: 'module',
-				name: 'MongoConnect'
+				name: 'MongoConnect',
+				states: 'started'
 			}]
 		};
 	};
@@ -100,15 +101,18 @@ function MongoContent(cnti) {
 
 		var cm = coonti.getManager('content');
 		var tps = yield storage.getAllData(config.contentTypeCollection, {});
-		_.each(tps, function(r) {
-			if(!r || !r.name) {
-				logger.warn('MongoContent - Invalid contentType row', r);
-				return;
+		if(tps) {
+			for(let i = 0; i < tps.length; i++) {
+				const r = tps[i];
+				if(!r || !r.name) {
+					logger.warn('MongoContent - Invalid contentType row', r);
+				} else {
+					var nm = r.name;
+					yield cm.registerContentType(nm, r, self);
+					contentTypes[nm] = r;
+				}
 			}
-			var nm = r.name;
-			cm.registerContentType(nm, r, self);
-			contentTypes[nm] = r;
-		});
+		}
 
 		logger.debug('MongoContent - Initialised.');
 		return true;
