@@ -130,6 +130,27 @@ function CoontiFormManager(cnti) {
 		else {
 			logger.info('FormManager - MongoDB storage available.');
 		}
+
+		const storedForms = yield storage.getAllData(formDbCollection, {});
+		if(storedForms) {
+			for(let i = 0; i < storedForms.length; i++) {
+				const form = storedForms[i];
+				const name = form.name;
+				const col = form.collection;
+				if(!self.checkCollection(col)) {
+					if(!self.addCollection(col)) {
+						logger.error('FormManager - Could not add collection "' + col + '" when reading stored forms.');
+						return;
+					}
+				}
+				const nf = new CoontiForm(form);
+/*				form.options.stored = false;
+				const nf = new CoontiForm(col, name, form.options);
+*/
+				formCollections[col][name] = nf;
+			}
+		}
+		console.log(storedForms);
 	};
 
 	/**
@@ -659,16 +680,16 @@ function CoontiFormManager(cnti) {
  *
  * @class
  * @classdesc CoontiForm is a collection of form elements with their validators
- * @param {String} col - The form collection.
+ * @param {String|Object} col - The form collection or if this is an Object, the form in a serialised format.
  * @param {String} nm - The name/id of the form.
  * @param {Object} opts - The options for the form: handler (String) - the submission URL; store (Boolean) - whether the form should be stored in the database.
  * @return {CoontiForm} The new instance.
  */
 function CoontiForm(col, nm, opts) {
-	var formCollection = col;
-	var formName = nm;
-	var formOptions = opts || {};
-	var formHandler = opts.handler || '';
+	var formCollection = '';
+	var formName = '';
+	var formOptions = {};
+	var formHandler = '';
 	var fields = [];
 	var fieldsByName = {};
 
@@ -682,6 +703,24 @@ function CoontiForm(col, nm, opts) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.addField = function*(name, field, localDef, pos) {
+		if(internalAddField(name, field, localDef, pos)) {
+			const stored = yield this.storeIfNeeded();
+			return stored;
+		}
+		return false;
+	};
+
+	/**
+	 * Adds a new field element to the form. Internal to the object.
+	 *
+	 * @ignore
+	 * @param {String} name - The name of the new field.
+	 * @param {String} field - The form element that is used.
+	 * @param {Object} localDef - Local form element definitions that override the form element definitions. Optional.
+	 * @param {integer} - pos The position for the new field. Optional, defaults to the last position.
+	 * @return {boolean} True on success, false on failure.
+	 */
+	var internalAddField = function(name, field, localDef, pos) {
 		if(!name || !field || !formElements[field] || fieldsByName[name]) {
 			return false;
 		}
@@ -718,8 +757,7 @@ function CoontiForm(col, nm, opts) {
 		}
 		fieldsByName[name] = formField;
 
-		const stored = yield this.storeIfNeeded();
-		return stored;
+		return true;
 	};
 
 	/**
@@ -745,7 +783,25 @@ function CoontiForm(col, nm, opts) {
 		return stored;
 	};
 
-	// ##TODO## Add field removal function by pos
+	/**
+	 * Removes a field element from the form by the position.
+	 *
+	 * @param {Integer} pos - The position of the field to be removed.
+	 * @return {Boolean} True on success, false on failure.
+	 */
+	this.removeFieldByPos = function*(pos) {
+		pos = parseInt(pos, 10);
+		if(isNaN(pos) || pos < 0 || pos > fields.length) {
+			return false;
+		}
+
+		const n = fields[pos].name;
+		fields.splice(pos, 1);
+		delete fieldsByName[n];
+
+		const stored = yield this.storeIfNeeded();
+		return stored;
+	};
 
 	/**
 	 * Gets the number of fields.
@@ -913,6 +969,7 @@ function CoontiForm(col, nm, opts) {
 			r.name = f.name;
 			r.type = f.formElement.type;
 			r.required = f.localDef.required || false;
+			r.localDel = f.localDef;
 
 			var copied = ['defaultValue', 'label', 'values'];
 			_.each(copied, function(c) {
@@ -935,6 +992,54 @@ function CoontiForm(col, nm, opts) {
 		});
 		return ret;
 	};
+
+	/**
+	 * Unserialises the form and replaces the data inside the object with the serialised data.
+	 *
+	 * @param {Object} ser The form in serialised format.
+	 * @return {Boolean} True on success, false on failure. In case of failure, the form is not changed.
+	 */
+	this.simpleUnserialise = function(ser) {
+		if(!ser) {
+			return false;
+		}
+
+		if(!ser.collection || !ser.name || !ser.fields || !ser.options) {
+			return false;
+		}
+
+		if(!!ser._id) {
+			this._id = ser._id;
+		}
+
+		formCollection = ser.collection;
+		formName = ser.name;
+		formOptions = ser.options;
+		formHandler = ser.options.handler || '';
+
+		let c = 0;
+		fields = [];
+		fieldsByName = {};
+		_.each(ser.fields, function(f) {
+			internalAddField(f.name, f.type, f.localDef, c++);
+		});
+
+		return true;
+	};
+
+	// Initialise the Object data structure after defining the methods
+	if(col === Object(col) && Object.prototype.toString.call(col) !== '[object Array]') {
+		console.log(this);
+		this.simpleUnserialise(col);
+	}
+	else {
+		formCollection = col;
+		formName = nm;
+		formOptions = opts || {};
+		formHandler = opts.handler || '';
+		fields = [];
+		fieldsByName = {};
+	}
 }
 
 /**

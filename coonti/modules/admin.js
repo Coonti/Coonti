@@ -213,7 +213,11 @@ function CoontiAdmin(cnti) {
 				value: 'Fred + Barney',
 				required: true
 			});
-			yield fm1.removeField('testField');
+			yield fm1.addField('testField 2', 'text', {
+				label: 'Test Field 2',
+				value: 'Fred + Barney 2',
+				required: true
+			});
 
 			yield formManager.addForm(formCollection, 'Test Form 2', { store: true });*/
 		}
