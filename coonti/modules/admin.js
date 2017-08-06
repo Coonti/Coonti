@@ -833,7 +833,8 @@ function CoontiAdmin(cnti) {
 	this.removeForm = function*(name) { // eslint-disable-line require-yield
 		this.coonti.setItem('response', {});
 		if(!!name) {
-			if(!formManager.removeForm(formCollection, name)) {
+			const res = yield formManager.removeForm(formCollection, name);
+			if(!res) {
 				this.status=(400); // eslint-disable-line space-infix-ops
 			}
 			return;

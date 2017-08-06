@@ -258,7 +258,7 @@ function CoontiFormManager(cnti) {
 	 * @param {String} nm - The name of the form.
 	 * @return {Boolean} true on success, false on failure.
 	 */
-	this.removeForm = function(col, nm) {
+	this.removeForm = function*(col, nm) {
 		if(!col || !formCollections[col] || !nm) {
 			return false;
 		}
@@ -266,8 +266,10 @@ function CoontiFormManager(cnti) {
 		if(!formCollections[col][nm]) {
 			return false;
 		}
-		var col = formCollections[col];
-		delete col[nm];
+
+		yield formCollections[col][nm].removeIfNeeded();
+		const fcol = formCollections[col];
+		delete fcol[nm];
 		return true;
 	};
 
@@ -942,6 +944,30 @@ function CoontiForm(col, nm, opts) {
 			this._id = success;
 		}
 		return true;
+	};
+
+	/**
+	 * Checks whether the form needs to be removed from the database and removes it, if required.
+	 *
+	 * @return {Boolean} True on success (no storing needed or stored successfully), false if storing failed.
+	 */
+	this.removeIfNeeded = function*() {
+		if(!formOptions['store']) {
+			return true;
+		}
+
+		if(!storage) {
+			logger.error('FormManager - Could not remove form, as storage is missing.');
+			return false;
+		}
+
+		if(!this._id) {
+			logger.error('FormManager - Could not remove form, as _id is missing.');
+			return false;
+		}
+
+		const success = yield storage.removeDataById(formDbCollection, this._id);
+		return success;
 	};
 
 	/**

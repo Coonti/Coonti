@@ -204,7 +204,7 @@ function CoontiContentManager(cnti) {
 
 		var ch = contentTypes[name].contentHandler;
 		delete (contentTypes[name]);
-		formManager.removeForm(formCollection, name);
+		yield formManager.removeForm(formCollection, name);
 		return yield ch.removeContentType(name);
 	};
 
@@ -377,7 +377,7 @@ function CoontiContentManager(cnti) {
 	 * @return {boolean} True on success, false on failure.
 	 */
 	this.saveContentTypeForm = function*(name, ct) {
-		formManager.removeForm(formCollection, name);
+		yield formManager.removeForm(formCollection, name);
 		var form = yield formManager.addForm(formCollection, name);
 		if(!form) {
 			return false;
