@@ -144,13 +144,10 @@ function CoontiFormManager(cnti) {
 					}
 				}
 				const nf = new CoontiForm(form);
-/*				form.options.stored = false;
-				const nf = new CoontiForm(col, name, form.options);
-*/
+
 				formCollections[col][name] = nf;
 			}
 		}
-		console.log(storedForms);
 	};
 
 	/**
@@ -1029,7 +1026,6 @@ function CoontiForm(col, nm, opts) {
 
 	// Initialise the Object data structure after defining the methods
 	if(col === Object(col) && Object.prototype.toString.call(col) !== '[object Array]') {
-		console.log(this);
 		this.simpleUnserialise(col);
 	}
 	else {
