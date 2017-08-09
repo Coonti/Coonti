@@ -409,6 +409,10 @@ ul[dnd-list] li.error {
     float: right;
 }
 
+.clear {
+    clear: both;
+}
+
 .coontiDependencyOk {
     color: #0576ba;
 }

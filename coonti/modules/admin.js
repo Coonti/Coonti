@@ -225,7 +225,10 @@ function CoontiAdmin(cnti) {
 		minirouter.addRoute('menu', '/menu', this.getCoontiMenu);
 		minirouter.addRoute('routes', '/routes', this.getCoontiRoutes);
 		minirouter.addRoute('assets', '/assets', this.getCoontiAssets);
-		minirouter.addRoute('formElements', '/formelements', this.getCoontiFormElements);
+		minirouter.addRoute('formElements', '/formdata/all', this.getCoontiFormData);
+		minirouter.addRoute('formElements', '/formdata/elements', this.getCoontiFormElements);
+		minirouter.addRoute('formValidators', '/formdata/validators', this.getCoontiFormValidators);
+		minirouter.addRoute('formSanitisers', '/formdata/sanitisers', this.getCoontiFormSanitisers);
 		minirouter.addRoute('templates', '/templates/(.+)', this.getTemplate);
 
 		var rah = new RestApiHelper(coonti,
@@ -485,11 +488,37 @@ function CoontiAdmin(cnti) {
 	};
 
 	/**
+	 * Provides Coonti form elements, validators, and sanitisers for Angular.
+	 */
+	this.getCoontiFormData = function*() { // eslint-disable-line require-yield
+		const ret = {};
+		ret.elements = formManager.getFormElements();
+		ret.validators = formManager.getFormValidators();
+		ret.sanitisers = formManager.getFormSanitisers();
+		this.coonti.setItem('response', ret);
+	};
+
+	/**
 	 * Provides Coonti form elements for Angular.
 	 */
 	this.getCoontiFormElements = function*() { // eslint-disable-line require-yield
-		var ret = formManager.getFormElements();
+		const ret = formManager.getFormElements();
+		this.coonti.setItem('response', ret);
+	};
 
+	/**
+	 * Provides Coonti form validators for Angular.
+	 */
+	this.getCoontiFormValidators = function*() { // eslint-disable-line require-yield
+		const ret = formManager.getFormValidators();
+		this.coonti.setItem('response', ret);
+	};
+
+	/**
+	 * Provides Coonti form sanitisers for Angular.
+	 */
+	this.getCoontiFormSaniters = function*() { // eslint-disable-line require-yield
+		const ret = formManager.getFormSanitisers();
 		this.coonti.setItem('response', ret);
 	};
 
@@ -790,10 +819,16 @@ function CoontiAdmin(cnti) {
 	 * @param {String=} name - The name of the form. Optional.
 	 */
 	this.getForm = function*(name) { // eslint-disable-line require-yield
-		const ret = getQueryParams(this.query);
 		if(!!name) {
-			// ##TODO##
+			const fm = formManager.getForm(formCollection, name);
+			if(!fm) {
+				this.status=(404); // eslint-disable-line space-infix-ops
+			}
+			this.coonti.setItem('response', fm.simpleSerialise());
+			return;
 		}
+
+		const ret = getQueryParams(this.query);
 		let forms = formManager.listForms(formCollection);
 		if(!forms) {
 			this.status=(500); // eslint-disable-line space-infix-ops
@@ -1917,7 +1952,7 @@ function CoontiAdmin(cnti) {
 			},
 			{
 				allow: 'admin.manageForms',
-				route: '/forms/view/:_id',
+				route: '/forms/view/:name',
 				template: '/angular/stem/forms-view.html',
 				controller: 'FormsCtrl'
 			},
@@ -1929,7 +1964,7 @@ function CoontiAdmin(cnti) {
 			},
 			{
 				allow: 'admin.manageForms',
-				route: '/forms/edit/:_id',
+				route: '/forms/edit/:name',
 				template: '/angular/stem/forms-edit.html',
 				controller: 'FormsCtrl'
 			},

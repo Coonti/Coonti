@@ -1,0 +1,111 @@
+<h1 class="page-header" ng-if="!add">Edit Form '{{ form.name}}'</h1>
+<h1 class="page-header" ng-if="add">Add a New Form</h1>
+
+<section>
+<div class="coontiNgFormElement row">
+  <div class="col-sm-2">
+	<label for="fName" class="formElementRequired">Name</label>
+  </div>
+  <div class="col-sm-10">
+	<input type="text" id="fName" name="fName" ng-model="form.name" class="col-xs-6"/>
+  </div>
+</div>
+
+<section>
+<h2>Fields</h2>
+<ul dnd-list="form.fields">
+  <li ng-repeat="item in form.fields" dnd-draggable="item" dnd-moved="form.fields.splice($index, 1)" dnd-effect-allowed="move" dnd-selected="data.selected = item" ng-class="{selected: data.selected===item, error: item.error==true }">
+    <dnd-nodrag>
+      <div class="row">
+        <div class="col-sm-12">
+		  <button ng-click="removeField($index)" class="floatRight">Remove</button>
+		  <span dnd-handle class="handle">
+			<i class="fa fa-bars" aria-hidden="true"></i>
+		  </span>
+		  <span>
+			<a ng-click="item.collapsed = !item.collapsed" data-nodrag="">
+		      <span class="glyphicon glyphicon-chevron-down" ng-class="{ 'glyphicon-chevron-right': item.collapsed, 'glyphicon-chevron-down': !item.collapsed }"> </span>
+			</a>
+		  </span>
+		  <span dnd-handle class="handle">
+			<span ng-if="item.localDef.name">{{ item.localDef.name }}</span>
+			<span ng-if="!item.localDef.name"><i>Nameless</i></span>
+			<span ng-if="item.name">[{{ item.name }}]</span>
+		    <span ng-if="!item.name">[<i>No id</i>]</span>
+		    <span ng-if="item.collapsed">{{ item.type | capitalise }} field</span>
+		  </span>
+		</div>
+	  </div>
+      <div class="row" ng-class="{hidden: item.collapsed}">
+  	    <div class="col-sm-4">
+	  	  <label for="fieldId-{{ $index }}">Id</label><br/>
+		  <input type="text" id="fieldId-{{ $index }}" name="fieldId-{{ $index }}" ng-model="item.name" class="col-xs-12"/>
+	    </div>
+	    <div class="col-sm-4">
+	 	  <label for="fieldName-{{$index}}">Display Name</label><br/>
+		  <input type="text" id="fieldName-{{ $index }}" name="fieldName-{{ $index }}" ng-model="item.localDef.name" class="col-xs-12"/>
+	    </div>
+	    <div class="col-sm-4">
+		  <label for="fieldType-{{ $index }}">Type</label><br/>
+		  <select id="fieldType-{{ $index }}" name="fieldType-{{ $index }}" ng-model="item.type">
+			<option ng-selected="option.type == item.type" ng-repeat="option in formData.elements" value="{{ option.type }}">{{ option.name | capitalise }}</option>
+		  </select>
+	    </div>
+	  </div>
+
+	  <div class="row" ng-class="{hidden: item.collapsed}">
+  	    <div class="col-sm-4">
+	  	  <label for="fieldDefaultValue-{{ $index }}">Default Value</label><br/>
+		  <input type="text" id="fieldDefaultValue-{{ $index }}" name="fieldDefaultValue-{{ $index }}" ng-model="item.localDef.defaultValue" class="col-xs-12"/>
+	    </div>
+	  </div>
+		
+	  <div class="row" ng-class="{hidden: item.collapsed}">
+	    <div class="col-sm-4">
+		  <label>Options</label>
+		  <div class="checkbox">
+			<label>
+			  <input type="checkbox" id="fieldRequired-{{ $index }}" name="fieldRequired-{{ $index }}" ng-model="item.required"/>
+			  Required
+			</label>
+		  </div>
+	    </div>
+
+		<div class="col-sm-4">
+		  <label class="floatRight">Weight</label>
+		  <label>Validators</label>
+		  <div class="checkbox clear" ng-repeat="val in formData.validators">
+			<label>
+			  <input type="checkbox" id="fieldValidator-{{ $index }}-{{ val.name }}" name="fieldValidator-{{ $index }}-{{ val.name }}" ng-model="form.validators.zot"/>
+			  <abbr title="{{ val.description }}" ng-if="val.description">{{ val.displayName }}</abbr>
+			  <span ng-if="!val.description">{{ val.displayName }}</span>
+			</label>
+			<span class="floatRight">
+			  <input size="4" type="text" id="fieldValidator-{{ $index }}-{{ val.name }}-weight" name="fieldValidator-{{ $index }}-{{ val.name }}-weight" ng-model="form.validators.zot.weight"/>
+			</span>
+		  </div>
+		</div>
+		  
+		<div class="col-sm-4">
+		  <label class="floatRight">Weight</label>
+		  <label>Sanitisers</label>
+		  <div class="checkbox clear" ng-repeat="val in formData.sanitisers">
+			<label>
+			  <input type="checkbox" id="fieldSanitiser-{{ $index }}-{{ val.name }}" name="fieldSanitiser-{{ $index }}-{{ val.name }}" ng-model="form.sanitisers.zot"/>
+			  <abbr title="{{ val.description }}" ng-if="val.description">{{ val.displayName }}</abbr>
+			  <span ng-if="!val.description">{{ val.displayName }}</span>
+			</label>
+			<span class="floatRight">
+			  <input size="4" type="text" id="fieldSanitiser-{{ $index }}-{{ val.name }}-weight" name="fieldSanitiser-{{ $index }}-{{ val.name }}-weight" ng-model="form.sanitisers.zot.weight"/>
+			</span>
+		  </div>
+		</div>
+	  </div>
+	</dnd-nodrag>
+  </li>
+</ul>
+
+<p><button ng-click="addField(form)">Add Field</button></p>
+</section>
+
+<p><button ng-click="save(form)">Save</button> <button back>Cancel</button></p>

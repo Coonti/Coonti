@@ -345,8 +345,16 @@ if(coonti && coonti['user']) {
 	
 	angular.module('coontiAdmin').factory('FormElements', ['$resource',
 		function($resource) {
-			return $resource(coonti.routing.prefix + '/api/formelements', {}, {
+			return $resource(coonti.routing.prefix + '/api/formdata/elements', {}, {
 				fetch: { method: 'GET', params: {}, isArray: true}
+			});
+		}
+	]);
+	
+	angular.module('coontiAdmin').factory('FormData', ['$resource',
+		function($resource) {
+			return $resource(coonti.routing.prefix + '/api/formdata/all', {}, {
+				fetch: { method: 'GET', params: {}}
 			});
 		}
 	]);
@@ -571,14 +579,19 @@ if(coonti && coonti['user']) {
 		}
 	]);
 	
-	angular.module('coontiAdmin').controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'Form', 'ngDialog', 'notifications', function($scope, $routeParams, $location, Form, ngDialog, notifications) {
+	angular.module('coontiAdmin').controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'Form', 'FormData', 'ngDialog', 'notifications', function($scope, $routeParams, $location, Form, formData, ngDialog, notifications) {
 		$scope.add = false;
+		if($location.path().startsWith('/forms/edit')) {
+			$scope.formData = formData.fetch();
+		}
 
 		if($location.path() == '/forms/add') {
+			$scope.formData = formData.fetch();
 			$scope.add = true;
 			$scope.form = new Form();
 		}
-		else {
+
+		if(!$scope.add) {
 			$scope.form = Form.get($routeParams);
 		}
 
@@ -618,6 +631,21 @@ if(coonti && coonti['user']) {
 				});
 			});
 		};
+
+		$scope.addField = function(item) {
+			var newItem = {
+				name: '',
+				type: 'text',
+				localDef: {},
+				required: false,
+				validators: {}
+			};
+			item.fields.push(newItem);
+		};
+
+		$scope.removeField = function(index) {
+			$scope.form.fields.splice(index, 1);
+		}
 	}]);
 	
 	angular.module('coontiAdmin').factory('Theme', ['$resource',

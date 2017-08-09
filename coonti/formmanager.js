@@ -357,6 +357,24 @@ function CoontiFormManager(cnti) {
 	};
 
 	/**
+	 * Lists form validators.
+	 *
+	 * @return {Array} The available form validators.
+	 */
+	this.getFormValidators = function() {
+		return _.values(validators);
+	};
+
+	/**
+	 * Lists form sanitisers.
+	 *
+	 * @return {Array} The available form sanitisers.
+	 */
+	this.getFormSanitisers = function() {
+		return _.values(sanitisers);
+	};
+
+	/**
 	 * Handles form submission by finding suitable form based on the input data and creating a form submission object to encapsulate the data.
 	 *
 	 * @param {Object} fields - The form submission data.
@@ -401,6 +419,7 @@ function CoontiFormManager(cnti) {
 	 */
 	this.addValidator = function(name, validator) {
 		if(!!name && validator && !validators[name]) {
+			validator.name = name;
 			validators[name] = validator;
 			return true;
 		}
@@ -438,6 +457,7 @@ function CoontiFormManager(cnti) {
 	 */
 	this.addSanitiser = function(name, sanitiser) {
 		if(!!name && sanitiser && !sanitisers[name]) {
+			sanitiser.name = name;
 			sanitisers[name] = sanitiser;
 			return true;
 		}
@@ -626,7 +646,9 @@ function CoontiFormManager(cnti) {
 							  validate: function(str) {
 								  return validator.isEmail(str);
 							  },
-							  message: 'Please input a valid email address.'
+							  message: 'Please input a valid email address.',
+							  displayName: 'Email address',
+							  description: 'Check whether the value is a valid email address.'
 						  });
 
 		self.addValidator('isInteger',
@@ -634,7 +656,9 @@ function CoontiFormManager(cnti) {
 							  validate: function(str) {
 								  return validator.isInt(str);
 							  },
-							  message: 'Please input a whole number.'
+							  message: 'Please input a whole number.',
+							  displayName: 'Integer',
+							  description: 'Check whether the value is an integer.'
 						  });
 		self.addValidator('inIntegerRange',
 						  {
@@ -648,7 +672,9 @@ function CoontiFormManager(cnti) {
 								  }
 								  return true;
 							  },
-							  message: 'Please input a whole number.'
+							  message: 'Please input a whole number.',
+							  displayName: 'Integer range',
+							  description: 'Check whether the value is an integer inside the given range.'
 						  });
 	};
 
@@ -660,7 +686,9 @@ function CoontiFormManager(cnti) {
 						  {
 							  sanitise: function(str) {
 								  return validator.toInt(str);
-							  }
+							  },
+							  displayName: 'Convert to integer',
+							  description: 'Converts the value to an integer.'
 						  });
 		self.addSanitiser('handleCheckboxValue',
 						  {
@@ -669,7 +697,9 @@ function CoontiFormManager(cnti) {
 									  return true;
 								  }
 								  return false;
-							  }
+							  },
+							  displayName: 'Checkbox to boolean',
+							  description: 'Converts the checkbox value onto JavaScript boolean.'
 						  });
 	};
 }
@@ -977,7 +1007,7 @@ function CoontiForm(col, nm, opts) {
 	 */
 	this.simpleSerialise = function() {
 		const ret = {};
-		ret.fields = {};
+		ret.fields = [];
 
 		if(!!this._id) {
 			ret._id = this._id;
@@ -992,7 +1022,7 @@ function CoontiForm(col, nm, opts) {
 			r.name = f.name;
 			r.type = f.formElement.type;
 			r.required = f.localDef.required || false;
-			r.localDel = f.localDef;
+			r.localDef = f.localDef;
 
 			var copied = ['defaultValue', 'label', 'values'];
 			_.each(copied, function(c) {
@@ -1011,7 +1041,7 @@ function CoontiForm(col, nm, opts) {
 			else {
 				r.validators = false;
 			}
-			ret['fields'][r.name] = r;
+			ret['fields'].push(r);
 		});
 		return ret;
 	};
@@ -1431,7 +1461,7 @@ function CoontiFormSubmission(frm, sbm) {
 		// ##TODO## Refactor to use form.simpleSerialise() as a base
 
 		var ret = {};
-		ret.fields = {};
+		ret.fields = [];
 
 		ret.collection = form.formCollection;
 		ret.name = form.formName;
@@ -1467,7 +1497,7 @@ function CoontiFormSubmission(frm, sbm) {
 			else {
 				r.validators = false;
 			}
-			ret['fields'][r.name] = r;
+			ret['fields'].push(r);
 		});
 		return ret;
 	};
