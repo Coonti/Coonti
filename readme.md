@@ -6,6 +6,8 @@ Coonti is a powerful, flexible and easy to use content management system for [No
 
 Coonti has also a Slack team [Coonti.slack.com](https://coonti.slack.com). To join, go to [https://coonti-slack.herokuapp.com](https://coonti-slack.herokuapp.com) to request an invitation by email.
 
+Presentations about Coonti are collected into [https://www.slideshare.net/coonticms](https://www.slideshare.net/coonticms).
+
 ## Demo Docker Container
 
 The repository contains a "demo" dockerfile that can be used to build a toy Docker container containing MongoDB and Coonti.
