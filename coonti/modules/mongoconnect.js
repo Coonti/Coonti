@@ -157,12 +157,14 @@ function MongoHandler(mongoCnnct, db) {
 	 */
 	this.getId = function*(collection) { // eslint-disable-line require-yield
 		return mongo.id();
-/*		var col = this.getCollection(collection);
+		/*
+		var col = this.getCollection(collection);
 		if(!col) {
 			return false;
 		}
 
-		return col.id();*/
+		return col.id();
+		*/
 	};
 
 	/**

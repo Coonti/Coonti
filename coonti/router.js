@@ -1040,10 +1040,11 @@ function CoontiStateMachine(rtr, nm) {
 			}
 		}
 
-/*
+		/*
 		if(!error) {
 			st.handler(crr, this, executeAfterStates);
-		}*/
+		}
+		*/
 
 		return true;
 	};

@@ -2240,11 +2240,13 @@ function CoontiStaticCollection(tm, nm, cf) {
  * @param {String} nm - The name of the collection.
  * @param {Object} cf - The configuration for the collection.
  */
-/* function CoontiDirectoryCollection(tm, nm, cf) {
+/*
+function CoontiDirectoryCollection(tm, nm, cf) {
 	var templateManager = tm;
 	var name = nm;
 	var config = cf;
 	var files = {};
-}*/
+}
+*/
 
 module.exports = CoontiTemplateManager;
