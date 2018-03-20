@@ -204,7 +204,7 @@ function MongoHandler(mongoCnnct, db) {
 			pg['start'] = 0;
 		}
 		if(!pg['len']) {
-			pg['len'] = Number.MAX_VALUE;
+			pg['len'] = Number.MAX_SAFE_INTEGER;
 		}
 		if(!pg['sort']) {
 			pg['sort'] = false;
