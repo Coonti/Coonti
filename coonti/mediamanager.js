@@ -349,7 +349,7 @@ function CoontiMediaManager(cnti) {
 			pg['start'] = 0;
 		}
 		if(!pg['len']) {
-			pg['len'] = Number.MAX_VALUE;
+			pg['len'] = Number.MAX_SAFE_INTEGER;
 		}
 		var reader = thunkify(tools.readDirs);
 		var files = yield reader(dirs[dir].path);

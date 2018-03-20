@@ -157,12 +157,14 @@ function MongoHandler(mongoCnnct, db) {
 	 */
 	this.getId = function*(collection) { // eslint-disable-line require-yield
 		return mongo.id();
-/*		var col = this.getCollection(collection);
+		/*
+		var col = this.getCollection(collection);
 		if(!col) {
 			return false;
 		}
 
-		return col.id();*/
+		return col.id();
+		*/
 	};
 
 	/**
@@ -202,7 +204,7 @@ function MongoHandler(mongoCnnct, db) {
 			pg['start'] = 0;
 		}
 		if(!pg['len']) {
-			pg['len'] = Number.MAX_VALUE;
+			pg['len'] = Number.MAX_SAFE_INTEGER;
 		}
 		if(!pg['sort']) {
 			pg['sort'] = false;

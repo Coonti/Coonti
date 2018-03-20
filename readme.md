@@ -6,6 +6,8 @@ Coonti is a powerful, flexible and easy to use content management system for [No
 
 Coonti has also a Slack team [Coonti.slack.com](https://coonti.slack.com). To join, go to [https://coonti-slack.herokuapp.com](https://coonti-slack.herokuapp.com) to request an invitation by email.
 
+Presentations about Coonti are collected into [https://www.slideshare.net/coonticms](https://www.slideshare.net/coonticms).
+
 ## Demo Docker Container
 
 The repository contains a "demo" dockerfile that can be used to build a toy Docker container containing MongoDB and Coonti.
@@ -21,7 +23,7 @@ Coonti should now be available at http://localhost:8080/ on your host machine.
 
 ## Installation
 
-Coonti requires Node.js 7.6 or higher and MongoDB 2.6.5 or higher - actually Coonti might work with earlier versions, but it has not been tested with them. **MongoDB series 3 is currently not working, please use 2 instead.** Install Node and MongoDB first, and then start MongoDB - note down the port that MongoDB listens to. Then follow these instructions:
+Coonti requires Node.js 7.6 or higher and MongoDB 2.6.5 or higher - actually Coonti might work with earlier versions, but it has not been tested with them. Install Node and MongoDB first, and then start MongoDB - note down the port that MongoDB listens to. Then follow these instructions:
 
 1. Either clone this repository, or download Coonti as an archive from GitHub (find green "Clone or download" button at the top of the page) and unpack it to the location of your choice.
 2. In shell, run `npm install` to install required libraries.
